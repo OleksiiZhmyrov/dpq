@@ -1,0 +1,55 @@
+<form class="form-horizontal">
+  <div class="well well-small">
+    <div class="control-group">
+      <label class="control-label" for="dpq-add-queue-ps">Pair station:</label>
+      <div class="controls">
+        <input type="text" name="ps" id="dpq-add-queue-ps" value="{{ item.ps }}">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="dpq-add-queue-description">Description:</label>
+      <div class="controls">
+        <input type="text" name="description" id="dpq-add-queue-description">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="dpq-add-queue-branch">Branch:</label>
+      <div class="controls">
+        <select name="branch" id="dpq-add-queue-branch">
+		  {% for branch in active_branches %}
+		      {% if item %}
+		          <option
+                      {% if item.branch == branch.name %} selected="selected" {% endif %}
+                      value={{ branch.name }}>{{ branch.name }}</option>
+		      {% else %}
+		          <option
+                      {% if branch.name == 'master' %} selected="selected" {% endif %}
+                      value={{ branch.name }}>{{ branch.name }}</option>
+		      {% endif %}
+		  {% endfor %}
+        </select> 
+      </div>
+    </div>
+  </div>
+  <div class="well well-small">
+    <div class="control-group">
+      <label class="control-label" for="dpq-add-queue-devA">Developer A:</label>
+      <div class="controls">
+        <input type="text" name="devA" id="dpq-add-queue-devA" value="{{ item.developerA }}">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="dpq-add-queue-devB">Developer B:</label>
+      <div class="controls">
+        <input type="text" name="devB" id="dpq-add-queue-devB" value="{{ item.developerB }}">
+      </div>
+    </div>
+    <div class="control-group">
+      <label class="control-label" for="dpq-add-queue-tester">Tester:</label>
+      <div class="controls">
+        <input type="text" name="tester" id="dpq-add-queue-tester" value="{{ item.tester }}">
+      </div>
+    </div>
+  </div>
+  <input type="hidden" id="dpq-add-owner" value="{{ user.username }}" />
+</form>

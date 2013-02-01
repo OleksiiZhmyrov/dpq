@@ -1,0 +1,25 @@
+{% extends "dpq_base.html" %}
+{% block title %}Push History{% endblock %}
+{% block main %}
+
+<div id="history-table">
+  {% include "queue_history.html" %}
+</div>
+<center>
+  <div class="pagination">
+    <span class="step-links">
+          {% if queue.has_previous %}
+              [<a href="?page={{ queue.previous_page_number }}">previous</a>]
+          {% endif %}
+
+          <span class="current">
+              [page {{ queue.number }} of {{ queue.paginator.num_pages }}]
+          </span>
+
+          {% if queue.has_next %}
+              [<a href="?page={{ queue.next_page_number }}">next</a>]
+          {% endif %}
+      </span>
+  </div>
+</center>
+{% endblock %}

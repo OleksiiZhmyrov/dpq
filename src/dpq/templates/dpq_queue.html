@@ -1,0 +1,35 @@
+{% extends "dpq_base.html" %}
+{% block title %}Push Queue{% endblock %}
+{% block navbar_menu %}
+<li><a href="/history/">History</a></li>
+<li><a href="/charts/">Charts</a></li>
+{% endblock %}
+{% block main %}
+
+<div class="alert" id="dpq-refresh-alert" style="display: none;">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>Warning!</strong> Last attempt to automatically update the list failed. Probably it is a server issue. Please refresh page manually.
+</div>
+
+<div class="btn-group" style="margin-bottom: 20px;">
+  {% if user.is_authenticated %}
+    <a href="#dpq-add-queue"
+       role="button"
+       class="btn btn-small btn-success"
+       data-toggle="modal"
+       onclick="fetchLastQueueData()">Add</a>
+  {% endif %}
+</div>
+
+<div id="queue-table">
+  {% include "queue_table.html" %}
+</div>
+
+{% if user.is_authenticated %}
+  {% include "add_modal.html" %}
+  {% include "modify_modal.html" %}
+{% endif %}
+
+
+
+{%endblock %}

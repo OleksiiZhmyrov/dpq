@@ -1,0 +1,76 @@
+{% extends "dpq_base.html" %}
+{% block title %}Push Statistics{% endblock %}
+{% block main %}
+
+<script type="text/javascript" src="http://www.google.com/jsapi"></script>
+<div class="container">
+
+<div class="offset1 span4 well">
+  <h5>Push hero</h5>
+  {{ hero.0 }} pushed {{ hero.1 }} times.
+</div>
+<div class="span4 well">
+  <h5>Push Villain</h5>
+  {{ villain.0 }} reverted {{ villain.1}} times.
+</div>
+
+  {# Push duration for current day #}
+  <div class="span12">
+    <script type="text/javascript">
+
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Pair Station', 'Push duration, mins'],
+          {% for push in last_pushes %}
+            {% autoescape off %}{{ push.get_record }}{% endautoescape %},
+          {% endfor %}
+          ]);
+
+        var options = {
+          title: 'Last pushes timings',
+          legend: 'none',
+          vAxis: {title: 'Time, mins'},
+          hAxis: {title: 'Pair Station'}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+
+    <div id="chart_div" style="width: 900px; height: 500px;"></div>
+  </div>
+
+  {# Average push duration for last week #}
+  <div class="span12">
+    <script type="text/javascript">
+      google.load('visualization', '1', {packages: ['corechart']});
+
+      function drawVisualizationWeekly() {
+
+        var stats = [['Date','Push duration, mins.'],
+        {% for day in weekly %}
+            {% autoescape off %}{{ day.get_record }}{% endautoescape %},
+        {% endfor %} ];
+        var data = google.visualization.arrayToDataTable(stats);
+        var ac = new google.visualization.AreaChart(document.getElementById('visualization'));
+            ac.draw(data, {
+            legend: 'none',
+            title : 'Avg. push duration for last week',
+            isStacked: true,
+            width: 950,
+            height: 500,
+            vAxis: {title: "Avg. push duration, mins"},
+            hAxis: {title: "Date"}
+        });
+      }
+      google.setOnLoadCallback(drawVisualizationWeekly);
+    </script>
+
+    <div id="visualization" style="width: 950px; height: 500px;"></div>
+  </div>
+
+</div>
+{% endblock %}

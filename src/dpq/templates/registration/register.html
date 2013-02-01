@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Register Page</title>
+    <link href="/media/bootstrap/css/bootstrap.css" rel="stylesheet">
+    <link href="/media/css/style.css" rel="stylesheet">
+  </head>
+  <body>
+    <div class="container">
+      <div class="content">
+        <div class="row">
+          <div class="login-form">
+            <h2>Register</h2>
+            <form class="form-vertical" method="post" action="."> {% csrf_token %}
+              {{ form.non_field_errors }}
+              <fieldset>
+                <div class="control-group clearfix">
+                  <label class="control-label" for="dpq-register-username">Login:</label>
+                  <div class="controls"> {{ form.username }} </div>
+                </div>
+                <div class="control-group clearfix">
+                  <label class="control-label" for="dpq-register-password1">Password:</label>
+                  <div class="controls"> {{ form.password1 }} </div>
+                  {{ form.password1.errors }}
+                </div>
+                <div class="control-group clearfix">
+                  <label class="control-label" for="dpq-register-password2">Repeat password:</label>
+                  <div class="controls"> {{ form.password2 }} </div>
+                  {{ form.password2.errors }}
+                </div>
+                <input type="submit" class="btn primary" value="Register" />
+              </fieldset>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

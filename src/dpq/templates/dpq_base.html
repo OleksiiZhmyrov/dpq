@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Push Queue</title>
+    <link href="/media/bootstrap/css/bootstrap.css" rel="stylesheet">
+  </head>
+  <body style="padding-top: 5px;" onload="timedRefresh();">
+    <script src="/media/js/jquery-latest.js"></script>
+    <!-- <script src="http://code.jquery.com/jquery-latest.js"></script> -->
+    <script src="/media/bootstrap/js/bootstrap.js"></script>
+    <script src="/media/js/jquery.cookie.js"></script>
+    <script src="/media/js/ajax.js"></script>
+
+    <div class="container" style="width: 90%;">
+      <div class="navbar">
+        <div class="navbar-inner">
+          <a class="brand" href="">{% block title %}{% endblock %}</a>
+          <ul class="nav pull-right">
+              <li class="divider-vertical"></li>
+              <li><a href="/">Queue</a></li>
+              <li><a href="/history/">History</a></li>
+              <li><a href="/charts/">Charts</a></li>
+              <li><a href="/help/">Help</a></li>
+            {% if user.is_authenticated %}
+              <li class="divider-vertical"></li>
+              <li><a href="/logout/">Sign Out</a></li>
+            {% else %}
+              <li class="divider-vertical"></li>
+              <li><a href="/register/">Get account</a></li>
+              <li><a href="/login/">Sign In</a></li>
+            {% endif %}
+          </ul>
+
+          {% if user.is_authenticated %}
+            <p class="navbar-text pull-right" style="margin-right: 20px;">Welcome, {{ user.username }}!</p>
+          {% endif %}
+
+        </div>
+      </div>
+
+<div class="alert" id="dpq-demo-alert" style="display: none;">
+  <button type="button" class="close" data-dismiss="alert">&times;</button>
+  <strong>Warning!</strong> Please note that this is a low-end demo environment. Therefore application performance might be low.
+</div>
+
+      {% block main %}{% endblock %}
+
+    </div>
+  </body>
+</html>

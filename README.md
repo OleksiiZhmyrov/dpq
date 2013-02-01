@@ -1,5 +1,4 @@
-Django Push Queue Application
-------------------------------------------------------------------------------
+# Django Push Queue Application
 
 This application requires Django 1.4 to run.
 It is recommended to deploy application inside virtualenv.
@@ -7,10 +6,8 @@ It is recommended to deploy application inside virtualenv.
 Default database is Sqlite but other options are available.
 See settings.py for details.
 
-
-
-Deployment with Django development server
-------------------------------------------------------------------------------
+## Deployment with Django development server
+```bash
 $ cd /some/where
 $ virtualenv venv
 New python executable in venv/bin/python2.7
@@ -38,12 +35,10 @@ Validating models...
 Django version 1.4, using settings 'dpq.settings'
 Development server is running at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
+```
 
-
-
-Notes
-------------------------------------------------------------------------------
-  1. Repository contains sample Sqlite database.
-  2. Default administrator credentials: admin/admin.
-  3. Repository contains Bootstrap and jQuery files.
+## Notes
+  * Repository contains sample Sqlite database.
+  * Default administrator credentials: admin/admin.
+  * Repository contains Bootstrap and jQuery files.
 

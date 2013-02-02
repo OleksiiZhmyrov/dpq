@@ -49,7 +49,6 @@ $(document).ready(function () {
                     }
                 },
                 submitHandler: function (form) {
-                    console.log(form);
                     $(form).find('button[type="submit"]').addClass('disabled');
                     $(form).submit();
                     return false;

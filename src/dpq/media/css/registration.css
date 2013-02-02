@@ -4,7 +4,7 @@ html, body {
 }
 
 body {
-    padding-top: 40px; 
+    padding-top: 40px;
 }
 
 .container {
@@ -14,7 +14,7 @@ body {
 .container > .content {
     background-color: #fff;
     padding: 20px;
-    margin: 0 -20px; 
+    margin: 0 -20px;
     -webkit-border-radius: 10px 10px 10px 10px;
        -moz-border-radius: 10px 10px 10px 10px;
             border-radius: 10px 10px 10px 10px;
@@ -29,17 +29,4 @@ body {
 
 .errorlist li {
     list-style: none;
-}
-
-label.valid {
-    width: 24px;
-    height: 24px;
-    display: inline-block;
-    text-indent: -9999px;
-}
-label.error {
-    font-weight: bold;
-    color: #e3001f;
-    padding: 2px 8px;
-    margin-top: 2px;
 }

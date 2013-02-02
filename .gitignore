@@ -3,4 +3,6 @@
 venv
 .coverage
 deploy
+.idea
+*.iml
 *~

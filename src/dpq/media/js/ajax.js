@@ -1,11 +1,28 @@
+$(document).ready(function () {
+    $('#dpq-add-queue #btn-save').click(function () {
+        if (isValidCreateForm()) {
+            createQueueObject();
+        }
+    });
+
+    $('#dpq-modify-queue #btn-save').click(function () {
+        if (isValidModifyForm()) {
+            modifyQueueObject();
+        }
+    });
+
+    $.ajaxSetup(
+        {
+            type: "POST",
+            dataType: "html",
+            cache: false
+        });
+});
 
 function createQueueObject()
 {
     $.ajax({
-        type: "POST",
         url: "/update/create/",
-        dataType: "html",
-        cache: false,
         headers: {
             "Content-type" : "application/x-www-form-urlencoded",
             "X-CSRFToken" : $.cookie('csrftoken')
@@ -26,11 +43,9 @@ function createQueueObject()
 
 function modifyQueueObject()
 {
+
     $.ajax({
-        type: "POST",
         url: "/update/modify/",
-        dataType: "html",
-        cache: false,
         headers: {
             "Content-type" : "application/x-www-form-urlencoded",
             "X-CSRFToken" : $.cookie('csrftoken')
@@ -58,9 +73,7 @@ function refreshQueue()
     if($('div#queue-table').length != 0) {
       $.ajax({
           type: "GET",
-          url: "/update/refresh/" + $("div.dpq-queue-tabs > ul > li.active").attr("id") + "/",
-          dataType: "html",
-          cache: false
+          url: "/update/refresh/" + $("div.dpq-queue-tabs > ul > li.active").attr("id") + "/"
       }).done(function(data) {
           $('div#queue-table').html(data);
           $('div#dpq-refresh-alert').hide("slow");
@@ -73,10 +86,7 @@ function refreshQueue()
 function fetchQueueObject(queue_id)
 {
     $.ajax({
-        type: "POST",
         url: "/update/fetch/",
-        dataType: "html",
-        cache: false,
         headers: {
             "Content-type" : "application/x-www-form-urlencoded",
             "X-CSRFToken" : $.cookie('csrftoken')
@@ -93,10 +103,7 @@ function fetchQueueObject(queue_id)
 function fetchLastQueueData()
 {
     $.ajax({
-        type: "POST",
         url: "/update/fetch/",
-        dataType: "html",
-        cache: false,
         headers: {
             "Content-type" : "application/x-www-form-urlencoded",
             "X-CSRFToken" : $.cookie('csrftoken')

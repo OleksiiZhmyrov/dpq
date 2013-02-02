@@ -30,3 +30,16 @@ body {
 .errorlist li {
     list-style: none;
 }
+
+label.valid {
+    width: 24px;
+    height: 24px;
+    display: inline-block;
+    text-indent: -9999px;
+}
+label.error {
+    font-weight: bold;
+    color: #e3001f;
+    padding: 2px 8px;
+    margin-top: 2px;
+}

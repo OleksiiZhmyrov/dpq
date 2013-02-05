@@ -13,6 +13,7 @@ $(document).ready(function () {
         $('#register-form').validate(
             {
                 onkeyup: false,
+                onfocusout: false,
                 rules: {
                     username: {
                         required: true,
@@ -47,11 +48,6 @@ $(document).ready(function () {
                         required: "Password confirmation is required",
                         equalTo: "Confirmation password does not match the password"
                     }
-                },
-                submitHandler: function (form) {
-                    $(form).find('button[type="submit"]').addClass('disabled');
-                    $(form).submit();
-                    return false;
                 }
             });
     });

@@ -1,6 +1,6 @@
 <div class="dpq-queue-tabs">
   <ul id="dpq-queue-branches" class="nav nav-tabs">
-	  <li {% if current_tab == None or current_tab == 'all' %} class="active" {% endif %}
+      <li {% if current_tab == None or current_tab == 'all' %} class="active" {% endif %}
         id="all"><a href="#all_tab" data-toggle="tab">All</a></li>
   {% for branch in active_branches %}
     {% if current_tab %}
@@ -11,16 +11,16 @@
     {% endif %}
   {% endfor %}
   </ul>
-                    
+
   <div id="myTabContent" class="tab-content">
-	{% for branch in active_branches %}
-	  <div class="tab-pane fade in 
-	    {% if current_tab %}
-	      {% if branch.name == current_tab %}active{% endif %}
-	    {% endif %}
-	  " id="{{ branch.name }}_tab">
-	  
-	    <table class="table table-condensed">
+    {% for branch in active_branches %}
+      <div class="tab-pane fade in
+        {% if current_tab %}
+          {% if branch.name == current_tab %}active{% endif %}
+        {% endif %}
+      " id="{{ branch.name }}_tab">
+
+        <table class="table table-condensed">
           <thead>
             <tr>
               <th style="width: 30px;">#</th>
@@ -48,7 +48,7 @@
               <td>{{ item.done_date.date.isoformat }}</td>
               <!-- <td>{{ item.branch.name }}</td> -->
               <td>
-                {% if item.owner == user or user.is_staff %}
+                {% if item.owner == user or user.is_superuser %}
                 {% if item.status != item.DONE and item.status != item.REVERTED %}
                 <a href="#dpq-modify-queue"
                    data-toggle="modal"
@@ -64,14 +64,14 @@
             {% endfor %}
           </tbody>
         </table>
-	  </div>
-	{% endfor %}  
-	
+      </div>
+    {% endfor %}
+
     <div class="tab-pane fade in
       {% if current_tab == None or current_tab == 'all' %}active{% endif %}
-	  " id="all_tab">
-	  
-	    <table class="table table-condensed">
+      " id="all_tab">
+
+        <table class="table table-condensed">
           <thead>
             <tr>
               <th style="width: 30px;">#</th>
@@ -99,7 +99,7 @@
               <td>{{ item.done_date.date.isoformat }}</td>
               <td>{{ item.branch.name }}</td>
               <td>
-                {% if item.owner == user or user.is_staff %}
+                {% if item.owner == user or user.is_superuser %}
                 {% if item.status != item.DONE and item.status != item.REVERTED %}
                 <a href="#dpq-modify-queue"
                    data-toggle="modal"
@@ -114,6 +114,6 @@
             {% endfor %}
           </tbody>
         </table>
-	  </div> 
+      </div>
   </div>
 </div>

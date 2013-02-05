@@ -17,8 +17,8 @@ $(document).ready(function () {
                 rules: {
                     username: {
                         required: true,
-                        minlength: 3
-
+                        minlength: 3,
+                        regexp: '^[A-Za-z0-9_]+$'
                     },
                     password1: {
                         required: true,
@@ -37,8 +37,9 @@ $(document).ready(function () {
                 },
                 messages: {
                     username: {
-                        required: "Field login is required",
-                        minlength: "Login must contain not less than 3 characters"
+                        required: "Field username is required",
+                        minlength: "Username must contain not less than 3 characters",
+                        regexp: "Username can only contain alphanumeric characters and the underscores"
                     },
                     password1: {
                         required: "Field passsword is required",
@@ -59,13 +60,28 @@ function isValidCreateForm() {
         {
             rules: {
                 ps: {
-                    required: true
+                    required: true,
+                    maxlength: 10,
+                    regexp: '^[A-Za-z0-9_]+$'
                 },
                 description: {
-                    required: true
+                    required: true,
+                    maxlength: 128,
+                    minlength: 2
                 },
                 devA: {
-                    required: true
+                    required: true,
+                    maxlength: 64,
+                    minlength: 2,
+                    regexp: '^[A-Za-z \']+$'
+                },
+                devB: {
+                    maxlength: 64,
+                    regexp: '^[A-Za-z \']+$'
+                },
+                tester: {
+                    maxlength: 64,
+                    regexp: '^[A-Za-z \']+$'
                 }
             },
             highlight: function (label) {
@@ -73,6 +89,32 @@ function isValidCreateForm() {
             },
             success: function (label) {
                 label.closest('.control-group').addClass('success').removeClass('error');
+            },
+            messages: {
+                ps: {
+                    required: "PS code is mandatory",
+                    maxlength: "Max length is 10 characters",
+                    regexp: "Allowed characters are latin letters, digits and undescore"
+                },
+                description: {
+                    required: "Description field is mandatory",
+                    maxlength: "Max length is 128 characters",
+                    minlength: "Description is too short!"
+                },
+                devA: {
+                    required: "There must be at least one developer",
+                    maxlength: "Max length is 64 characters",
+                    minlength: "Even Chinese have names more than 2 letters long",
+                    regexp: "Allowed characters are latin letters and space"
+                },
+                devB: {
+                    maxlength: "Max length is 64 characters",
+                    regexp: "Allowed characters are latin letters and space"
+                },
+                tester: {
+                    maxlength: "Max length is 64 characters",
+                    regexp: "Allowed characters are latin letters and space"
+                }
             }
         });
     return $("#add-to-queue-form").valid();
@@ -83,13 +125,28 @@ function isValidModifyForm() {
         {
             rules: {
                 ps: {
-                    required: true
+                    required: true,
+                    maxlength: 10,
+                    regexp: '^[A-Za-z0-9_]+$'
                 },
                 description: {
-                    required: true
+                    required: true,
+                    maxlength: 128,
+                    minlength: 2
                 },
                 devA: {
-                    required: true
+                    required: true,
+                    maxlength: 64,
+                    minlength: 2,
+                    regexp: '^[A-Za-z \']+$'
+                },
+                devB: {
+                    maxlength: 64,
+                    regexp: '^[A-Za-z \']+$'
+                },
+                tester: {
+                    maxlength: 64,
+                    regexp: '^[A-Za-z \']+$'
                 },
                 place: {
                     required: true,
@@ -101,6 +158,36 @@ function isValidModifyForm() {
             },
             success: function (label) {
                 label.closest('.control-group').addClass('success').removeClass('error');
+            },
+            messages: {
+                ps: {
+                    required: "PS code is mandatory",
+                    maxlength: "Max length is 10 characters",
+                    regexp: "Allowed characters are latin letters, digits and undescore"
+                },
+                description: {
+                    required: "Description field is mandatory",
+                    maxlength: "Max length is 128 characters",
+                    minlength: "Description is too short!"
+                },
+                devA: {
+                    required: "There must be at least one developer",
+                    maxlength: "Max length is 64 characters",
+                    minlength: "Even Chinese have names more than 2 letters long",
+                    regexp: "Allowed characters are latin letters and space"
+                },
+                devB: {
+                    maxlength: "Max length is 64 characters",
+                    regexp: "Allowed characters are latin letters and space"
+                },
+                tester: {
+                    maxlength: "Max length is 64 characters",
+                    regexp: "Allowed characters are latin letters and space"
+                },
+                place: {
+                    required: "Please enter desired place number",
+                    number: "Must be a number"
+                }
             }
         });
     return $("#modify-queue-form").valid();

@@ -19,8 +19,9 @@
               {{ form.non_field_errors }}
               <fieldset>
                 <div class="control-group">
-                  <label class="control-label" for="{{ form.username.auto_id }}">Login:</label>
+                  <label class="control-label" for="{{ form.username.auto_id }}">Username:</label>
                   <div class="controls"> {{ form.username }} </div>
+                  {{ form.username.errors }}
                 </div>
                 <div class="control-group">
                   <label class="control-label" for="{{ form.password1.auto_id }}">Password:</label>

@@ -123,3 +123,14 @@ function clearModal() {
 function timedRefresh() {
     setInterval(function(){refreshQueue()},30000);
 }
+
+function fetchSuperusersList() {
+	$.ajax({
+        type: "GET",
+        url: "/update/superusers/"
+      }).done(function(data) {
+          $('div#dpq-superusers-list').html(data);
+      }).fail(function() {
+          $('div#dpq-superusers-list').html('<center>Request failed.</center>');
+    });
+}

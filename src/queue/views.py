@@ -87,9 +87,9 @@ def modify_queue_item(request):
         item.developerA = data["devA"]
         item.developerB = data["devB"]
         item.tester = data["tester"]
-        
+
         item.branch = Branch.objects.get(name__iexact = data["branch"])
-        
+
         item.description = data["description"]
         item.status = data["status"]
 
@@ -234,3 +234,10 @@ def register_page(request):
     else:
         form = RegistrationForm()
     return render_to_response('registration/register.html', RequestContext(request, {'form': form}))
+
+def fetch_superusers_list(request):
+    try:
+        superusers_list = User.objects.filter(is_superuser=True)
+        return render_to_response('dpq_superusers_list.html', RequestContext(request, {'superusers_list': superusers_list}))
+    except User.DoesNotExist:
+        return HttpResponse("<center>List is empty.</center>")

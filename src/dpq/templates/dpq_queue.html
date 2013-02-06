@@ -18,12 +18,12 @@
        class="btn btn-small btn-success"
        data-toggle="modal"
        onclick="fetchLastQueueData()">Add Record</a>
-	<a href="#dpq-superusers"
+  {% endif %}
+    <a href="#dpq-superusers"
        role="button"
        class="btn btn-small"
        data-toggle="modal"
        onclick="fetchSuperusersList()">People On-Duty</a>
-  {% endif %}
 </div>
 
 <div id="queue-table">

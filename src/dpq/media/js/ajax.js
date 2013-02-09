@@ -22,7 +22,7 @@ $(document).ready(function () {
 function createQueueObject()
 {
     $.ajax({
-        url: "/update/create/",
+        url: "/ajax/create/",
         headers: {
             "Content-type" : "application/x-www-form-urlencoded",
             "X-CSRFToken" : $.cookie('csrftoken')
@@ -45,7 +45,7 @@ function modifyQueueObject()
 {
 
     $.ajax({
-        url: "/update/modify/",
+        url: "/ajax/modify/",
         headers: {
             "Content-type" : "application/x-www-form-urlencoded",
             "X-CSRFToken" : $.cookie('csrftoken')
@@ -73,7 +73,7 @@ function refreshQueue()
     if($('div#queue-table').length != 0) {
       $.ajax({
           type: "GET",
-          url: "/update/refresh/" + $("div.dpq-queue-tabs > ul > li.active").attr("id") + "/"
+          url: "/ajax/refresh/" + $("div.dpq-queue-tabs > ul > li.active").attr("id") + "/"
       }).done(function(data) {
           $('div#queue-table').html(data);
           $('div#dpq-refresh-alert').hide("slow");
@@ -86,7 +86,7 @@ function refreshQueue()
 function fetchQueueObject(queue_id)
 {
     $.ajax({
-        url: "/update/fetch/",
+        url: "/ajax/request/fetch/",
         headers: {
             "Content-type" : "application/x-www-form-urlencoded",
             "X-CSRFToken" : $.cookie('csrftoken')
@@ -103,12 +103,12 @@ function fetchQueueObject(queue_id)
 function fetchLastQueueData()
 {
     $.ajax({
-        url: "/update/fetch/",
+        url: "/ajax/request/fetch/",
         headers: {
             "Content-type" : "application/x-www-form-urlencoded",
             "X-CSRFToken" : $.cookie('csrftoken')
         },
-        data: JSON.stringify({
+        data: JSON.stringify( {
             "mode" : "last"
         })
     }).done(function(data) {
@@ -121,13 +121,23 @@ function clearModal() {
 }
 
 function timedRefresh() {
-    setInterval(function(){refreshQueue()},30000);
+    setInterval(function() {
+    	$.ajax({
+    		type: "GET",
+    		url: "/ajax/request/key/"
+    	}).done(function(data) {
+    		if($.cookie('key') != data) {
+    			$.cookie('key', data);
+    			refreshQueue();
+    		}
+    	});
+	},60000);
 }
 
 function fetchSuperusersList() {
 	$.ajax({
         type: "GET",
-        url: "/update/superusers/"
+        url: "/ajax/request/superusers/"
       }).done(function(data) {
           $('div#dpq-superusers-list').html(data);
       }).fail(function() {

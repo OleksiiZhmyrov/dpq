@@ -13,7 +13,30 @@ middleware here, or combine a Django application with an application of another
 framework.
 
 """
+
+ALLDIRS = ['usr/local/pythonenv/DPQ/lib/python2.7/site-packages',
+           'var/apache2/dpq/src']
+
 import os
+import site
+import sys
+
+site.addsitedir('/usr/local/pythonenv/DPQ/lib/python2.7/site-packages')
+
+# Remember original sys.path.
+prev_sys_path = list(sys.path) 
+
+# Add each new site-packages directory.
+for directory in ALLDIRS:
+  site.addsitedir(directory)
+
+# Reorder sys.path so new directories at the front.
+new_sys_path = [] 
+for item in list(sys.path): 
+    if item not in prev_sys_path: 
+        new_sys_path.append(item) 
+        sys.path.remove(item) 
+sys.path[:0] = new_sys_path 
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "dpq.settings")
 

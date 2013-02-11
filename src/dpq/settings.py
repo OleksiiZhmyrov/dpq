@@ -13,7 +13,7 @@ MANAGERS = ADMINS
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',  # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'.
-        'NAME': 'src/dpq.db',  # Or path to database file if using sqlite3.
+        'NAME': 'tmp/dpq.db',  # Or path to database file if using sqlite3.
         'USER': '',  # Not used with sqlite3.
         'PASSWORD': '',  # Not used with sqlite3.
         'HOST': '',  # Set to empty string for localhost. Not used with sqlite3.
@@ -167,9 +167,13 @@ LOGGING = {
     }
 }
 
+SESSION_ENGINE = 'django.contrib.sessions.backends.signed_cookies'
+
 CACHES = {
     'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/var/tmp/django_cache',
+#        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
         'TIMEOUT': 60 * 30,
     }
 }

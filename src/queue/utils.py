@@ -27,7 +27,7 @@ def get_items_list():
         
         return queue_list
     else:
-        logger.debug('Getting queue data from cache')
+        log_info('Getting queue data from cache')
         return get_cached_data('queue_list')
 
 

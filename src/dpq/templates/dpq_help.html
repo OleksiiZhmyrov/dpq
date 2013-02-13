@@ -2,43 +2,86 @@
 {% block title %}Push Queue Help{% endblock %}
 {% block main %}
 
-<h4>Main functionality and permissions</h4>
-
-<p>Push Queue is an application designed to support and track push activities. It supports user authentication, multiple branches, push history and basic statistics. Push Queue is based on Django opensource web application framework and thus is extremely scalable and extendable.</p>
-<p>The key idea of Push Queue application is to limit permissions for unauthorized users and to collect basic statistics about push activities.</p>
-<p>There are four user categories implemented in the application:
-   <ul>
-     <li><b>Unauthorized user</b>. Can view push queue, history and statistics.</li>
-     <li><b>Authorized user</b>. In addition to unauthorized user's permissions is allowed to add pushes to the queue and to modify own records.</li>
-     <li><b>Tester on duty</b>. In addition to authorized user's permissions is allowed to modify all push records.</li>
-     <li><b>Coordinator</b>. Has all listed above permissions and also is allowed to perform administrative tasks such as creating branches etc.</li>
-   </ul> 
-<p>This division allows to gain control and stability of push queue.</p>
-<br />
-
-<h4>Register new account</h4>
-
-<p>In order to be able to create push records in queue developer or tester shoud register an account. Click [Get account] link on the right side of the menu bar and provide desired username and password (see image below). Please do NOT use credentials from your corporate accounts!</p>
-<center><img src="/media/img/help/register.png" /></center>
-<p>After registering account user is able to login to the application. Click [Sign in] link on the right side of the menu bar and provide credentials.</p>
-<br />
-
-<h4>Place push to queue</h4>
-
-<p>Registered users are allowed to place a record to the push queue. To do that, click on [Add] button and fill in all fields on pop-up window (see image below).</p>
-<center><img src="/media/img/help/add.png" /></center>
-<p>Next time you click [Add] button all fields except Description will be automatically populated from your previous push record. If desired branch is not listed in dropdown list, ask your coordinator to create it.</p> 
-<br />
-
-<h4>Modify existing push</h4>
-<p>Registered users are allowed to modify own records in the push queue. To modify record click on wrench icon in status column (see image below).</p>
-<center><img src="/media/img/help/modifyA.png" /></center>
-<p>In pop-up window modify desired fields and click [Apply] button (see image below). Quick tip: if you want to move item in the queue, it is better to do that on All tab.</p>
-<center><img src="/media/img/help/modifyB.png" /></center>
-<p>Note that users are allowed to modify only own records. Tester on duty is able to modify all records with statuses <i>waiting</i> and <i>in progress</i>. If you have changed record status to <i>done</i> or <i>reverted</i> by mistake, please ask coordinator or tester on duty to change the status to previous value.</p> 
-<br />
-
-<h4>Administrative tasks</h4>
-<p>Coordinators and tester on duty have access to administration page (see image below). It allows to manage registered users, branches, push records and also statistics records.</p>
-<center><img src="/media/img/help/admin.png" /></center>
+<div class="accordion" id="accordion2">
+<div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse_main">
+        Main functionality and permissions
+      </a>
+    </div>
+    <div id="collapse_main" class="accordion-body collapse in">
+      <div class="accordion-inner">
+		<p>Push Queue is an application designed to support and track push activities. It supports user authentication, multiple branches, push history and basic statistics. Push Queue is based on Django opensource web application framework and thus is extremely scalable and extendable.</p>
+		<p>The key idea of Push Queue application is to limit permissions for unauthorized users and to collect basic statistics about push activities.</p>
+		<p>There are four user categories implemented in the application:
+		   <ul>
+		     <li><b>Unauthorized user</b>. Can view push queue, history and statistics.</li>
+		     <li><b>Authorized user</b>. In addition to unauthorized user's permissions is allowed to add pushes to the queue and to modify own records.</li>
+		     <li><b>Tester on duty</b>. In addition to authorized user's permissions is allowed to modify all push records.</li>
+		     <li><b>Coordinator</b>. Has all listed above permissions and also is allowed to perform administrative tasks such as creating branches etc.</li>
+		   </ul> 
+		<p>This division allows to gain control and stability of push queue.</p>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#register">
+        Register new account
+      </a>
+    </div>
+    <div id="register" class="accordion-body collapse">
+      <div class="accordion-inner">
+		<p>In order to be able to create push records in queue developer or tester shoud register an account. Click [Get account] link on the right side of the menu bar and provide desired username and password (see image below). Please do NOT use credentials from your corporate accounts!</p>
+		<center><img src="/media/img/help/register.png" /></center>
+		<p>After registering account user is able to login to the application. Click [Sign in] link on the right side of the menu bar and provide credentials.</p>
+      </div>
+    </div>
+  </div>
+  <div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#place_push">
+        Place push to queue
+      </a>
+    </div>
+    <div id="place_push" class="accordion-body collapse">
+      <div class="accordion-inner">
+		<p>Registered users are allowed to place a record to the push queue. To do that, click on [Add] button and fill in all fields on pop-up window (see image below).</p>
+		<center><img src="/media/img/help/add.png" /></center>
+		<p>Next time you click [Add] button all fields except Description will be automatically populated from your previous push record. If desired branch is not listed in dropdown list, ask your coordinator to create it.</p> 
+      </div>
+    </div>
+  </div>
+  <div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#modify">
+        Modify existing push
+      </a>
+    </div>
+    <div id="modify" class="accordion-body collapse">
+      <div class="accordion-inner">
+		<p>Registered users are allowed to modify own records in the push queue. To modify record click on wrench icon in status column (see image below).</p>
+		<center><img src="/media/img/help/modifyA.png" /></center>
+		<p>In pop-up window modify desired fields and click [Apply] button (see image below). Quick tip: if you want to move item in the queue, it is better to do that on All tab.</p>
+		<center><img src="/media/img/help/modifyB.png" /></center>
+		<p>Note that users are allowed to modify only own records. Tester on duty is able to modify all records with statuses <i>waiting</i> and <i>in progress</i>. If you have changed record status to <i>done</i> or <i>reverted</i> by mistake, please ask coordinator or tester on duty to change the status to previous value.</p> 
+      </div>
+    </div>
+  </div>
+  <div class="accordion-group">
+    <div class="accordion-heading">
+      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#admin">
+        Administrative tasks
+      </a>
+    </div>
+    <div id="admin" class="accordion-body collapse">
+      <div class="accordion-inner">
+		<p>Coordinators have access to administration page (see image below). It allows to manage registered users, branches, push records and also statistics records.</p>
+		<center><img src="/media/img/help/admin.png" /></center>
+		<p>Coordinators are allowed to assign "tester-on-duty" role to registered user.</p>
+		<p>To assign "tester-on-duty" role to user open user's record on Django Administration page and mark "Superuser status" checkbox. The list of superusers can be found by clicking [People-on-duty] button on Queue page.</p>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}

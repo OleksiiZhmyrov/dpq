@@ -198,34 +198,43 @@ def logout_page(request):
     return redirect('/', RequestContext(request, {}))
 
 
+def visualisation_average(request):
+    days = Statistics.objects.all().order_by('date')
+    if(days.count() > 14):
+        days = days[days.count() - 14:]
+        
+    response = [['Date', 'Duration']]
+    
+    for day in days:
+        average = day.total_push_duration / day.number_of_pushes
+        response.append([day.date.isoformat(), average])
+    
+    return HttpResponse(dumps(response))
+
+
+def visualisation_branch_duration(request, branch, mode):
+    branch = Branch.objects.get(name = branch)
+    last_pushes = Queue.objects.filter(status__in=[Queue.DONE, Queue.REVERTED]).filter(branch = branch).order_by('index')
+    if(last_pushes.count() > 5):
+        last_pushes = last_pushes[last_pushes.count() - 5:]
+    
+    response = [['PS', 'Duration']]
+    for push in last_pushes:
+        if(push.push_date != None and push.done_date != None):
+            if(mode == 'duration'):
+                duration_obj = push.done_date - push.push_date
+            if(mode == 'pending'):
+                duration_obj = push.push_date - push.creation_date
+            duration = int(duration_obj.total_seconds()/60.0)
+        else:
+            duration = 0 
+        response.append([push.ps, duration])
+    
+    return HttpResponse(dumps(response))
+
+
 def charts(request):
-    try:
-        hero = Counter(Queue.objects.filter(status=Queue.DONE).
-            values_list('ps', flat=True)).most_common(1)[0]
-    except:
-        hero = (u'none', u'none')
-
-    try:
-        villain = Counter(Queue.objects.filter(status=Queue.REVERTED).
-            values_list('ps', flat=True)).most_common(1)[0]
-    except:
-        villain = (u'none', u'none')
-
-    weekly = Statistics.objects.all().order_by('date')
-    if(weekly.count() > 7):
-        weekly = weekly[weekly.count() - 7:]
-
-    last_pushes = Queue.objects.filter(status__in=[Queue.DONE, Queue.REVERTED]).order_by('index')
-    if(last_pushes.count() > 8):
-        last_pushes = last_pushes[last_pushes.count() - 8:]
-
-    return render_to_response('dpq_charts.html', \
-        RequestContext(request, {\
-            "hero" : hero, \
-            "villain" : villain, \
-            "weekly" : weekly, \
-            "last_pushes" : last_pushes \
-            }))
+    return render_to_response('dpq_charts.html', RequestContext(request, {'active_branches' : get_active_branches()}))
 
 
 def register_page(request):

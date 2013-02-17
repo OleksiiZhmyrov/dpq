@@ -21,7 +21,7 @@
           
         <td>{{ item.index }}</td>
         <td>{{ item.ps }}</td>
-        <td>{{ item.developerA }}, {{ item.developerB }}</td>
+        <td>{{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
         <td>{{ item.tester }}</td>
         <td>{{ item.description }}</td>
         <td>{{ item.done_date.date.isoformat }}</td>

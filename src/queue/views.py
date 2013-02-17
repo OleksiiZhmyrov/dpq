@@ -218,7 +218,7 @@ def visualisation_branch_duration(request, branch, mode):
     if(last_pushes.count() > 5):
         last_pushes = last_pushes[last_pushes.count() - 5:]
     
-    response = [['PS', 'Duration']]
+    response = [['PS', 'Time']]
     for push in last_pushes:
         if(push.push_date != None and push.done_date != None):
             if(mode == 'duration'):

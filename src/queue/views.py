@@ -1,4 +1,5 @@
 from datetime import datetime, date
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
@@ -63,15 +64,15 @@ def create_queue_item(request):
             index = 1
 
         queue = Queue(
-            ps=data["ps"],
-            developerA=data["devA"],
-            developerB=data["devB"],
-            tester=data["tester"],
-            description=data["description"],
-            branch=Branch.objects.get(name__iexact=data["branch"]),
-            owner=User.objects.get(username=request.user.username),
-            queue_id=uuid1().hex,
-            index=index
+            ps = data['ps'],
+            developerA = data['devA'],
+            developerB = data['devB'],
+            tester = data['tester'],
+            description = data['description'],
+            branch = Branch.objects.get(name__iexact = data['branch']),
+            owner = request.user,
+            queue_id = uuid1().hex,
+            index = index
         )
         queue.save()
         cache.set('queue_list', None)
@@ -85,17 +86,17 @@ def create_queue_item(request):
 def modify_queue_item(request):
     try:
         data = loads(request.body)
-        item = Queue.objects.get(queue_id=data["id"])
+        item = Queue.objects.get(queue_id = data["id"])
 
-        item.ps = data["ps"]
-        item.developerA = data["devA"]
-        item.developerB = data["devB"]
-        item.tester = data["tester"]
+        item.ps = data['ps']
+        item.developerA = data['devA']
+        item.developerB = data['devB']
+        item.tester = data['tester']
 
-        item.branch = Branch.objects.get(name__iexact=data["branch"])
+        item.branch = Branch.objects.get(name__iexact=data['branch'])
 
-        item.description = data["description"]
-        item.status = data["status"]
+        item.description = data['description']
+        item.status = data['status']
 
         item.modified_date = datetime.now()
 
@@ -121,7 +122,7 @@ def modify_queue_item(request):
             item.push_date = datetime.now()
 
         old_index = int(item.index)
-        new_index = int(data["index"])
+        new_index = int(data['index'])
 
         # Get index of the latest push in queue
         max_index = Queue.objects.order_by('-index')[0].index
@@ -150,7 +151,7 @@ def modify_queue_item(request):
             if(new_index > old_index):
                 for i in range(old_index + 1, new_index + 1):
                     try:
-                        moving = Queue.objects.get(index__iexact=i)
+                        moving = Queue.objects.get(index__iexact = i)
                     except:
                         continue
 
@@ -160,7 +161,7 @@ def modify_queue_item(request):
             if(new_index < old_index):
                 for i in range(old_index - 1, new_index - 1, -1):
                     try:
-                        moving = Queue.objects.get(index__iexact=i)
+                        moving = Queue.objects.get(index__iexact = i)
                     except:
                         continue
                     moving.index = i + 1
@@ -171,14 +172,14 @@ def modify_queue_item(request):
         cache.set('queue_list', None)
         update_key()
 
-        return HttpResponse("OK")
+        return HttpResponse('OK')
 
     except KeyError:
         raise Http404(u'Illegal or missing parameters in modify request.')
 
 
 def history(request):
-    queue = Queue.objects.filter(status__in=[Queue.DONE, Queue.REVERTED]).order_by('-index')
+    queue = Queue.objects.filter(status__in = [Queue.DONE, Queue.REVERTED]).order_by('-index')
     paginator = Paginator(queue, 20)
 
     page = request.GET.get('page')
@@ -190,7 +191,7 @@ def history(request):
     except EmptyPage:
         queue = paginator.page(paginator.num_pages)
 
-    return render_to_response('dpq_history.html', RequestContext(request, {"queue" : queue}))
+    return render_to_response('dpq_history.html', RequestContext(request, {'queue' : queue}))
 
 
 def logout_page(request):
@@ -214,7 +215,7 @@ def visualisation_average(request):
 
 def visualisation_branch_duration(request, branch, mode):
     branch = Branch.objects.get(name = branch)
-    last_pushes = Queue.objects.filter(status__in=[Queue.DONE, Queue.REVERTED]).filter(branch = branch).order_by('index')
+    last_pushes = Queue.objects.filter(status__in = [Queue.DONE, Queue.REVERTED]).filter(branch = branch).order_by('index')
     if(last_pushes.count() > 5):
         last_pushes = last_pushes[last_pushes.count() - 5:]
     
@@ -225,7 +226,7 @@ def visualisation_branch_duration(request, branch, mode):
                 duration_obj = push.done_date - push.push_date
             if(mode == 'pending'):
                 duration_obj = push.push_date - push.creation_date
-            duration = int(duration_obj.total_seconds()/60.0)
+            duration = int(duration_obj.total_seconds() / 60.0)
         else:
             duration = 0 
         response.append([push.ps, duration])
@@ -235,6 +236,12 @@ def visualisation_branch_duration(request, branch, mode):
 
 def charts(request):
     return render_to_response('dpq_charts.html', RequestContext(request, {'active_branches' : get_active_branches()}))
+
+
+@staff_member_required
+def invalidate_application_cache(request):
+    invalidate_cache()
+    return HttpResponse('Caches were invalidated.')
 
 
 def register_page(request):
@@ -255,4 +262,4 @@ def fetch_superusers_list(request):
         superusers_list = User.objects.filter(is_superuser=True)
         return render_to_response('dpq_superusers_list.html', RequestContext(request, {'superusers_list': superusers_list}))
     except User.DoesNotExist:
-        return HttpResponse("<center>List is empty.</center>")
+        return HttpResponse('<center>List is empty.</center>')

@@ -90,14 +90,11 @@ function fetchPushDetails(queue_id)
 {
 	$('div#dpq-detailed-info').html('<center><img src="/media/img/ajax-loader.gif" /></center>');
     $.ajax({
-        url: "/ajax/request/info/",
+    	type: "GET",
+        url: "/ajax/request/info/" + queue_id + "/",
         headers: {
             "Content-type" : "application/x-www-form-urlencoded",
-            "X-CSRFToken" : $.cookie('csrftoken')
-        },
-        data: JSON.stringify({
-            "id" : queue_id
-        })
+        }
     }).done(function(data) {
         $('div#dpq-detailed-info').html(data);
     });

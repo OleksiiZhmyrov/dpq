@@ -44,7 +44,11 @@
               <td>{{ item.ps }}</td>
               <td>{{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
               <td>{{ item.tester }}</td>
-              <td>{{ item.description }}</td>
+              <td><a href="#dpq-push-details"
+                     style="text-decoration: none;"
+                     data-toggle="modal"
+                     onclick="fetchPushDetails('{{ item.queue_id }}')">{{ item.description }}</a>
+              </td>
               <td>{{ item.done_date.date.isoformat }}</td>
               <!-- <td>{{ item.branch.name }}</td> -->
               <td>
@@ -95,7 +99,11 @@
               <td>{{ item.ps }}</td>
               <td>{{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
               <td>{{ item.tester }}</td>
-              <td>{{ item.description }}</td>
+              <td><a href="#dpq-push-details"
+                     style="text-decoration: none;"
+                     data-toggle="modal"
+                     onclick="fetchPushDetails('{{ item.queue_id }}')">{{ item.description }}</a>
+              </td>
               <td>{{ item.done_date.date.isoformat }}</td>
               <td>{{ item.branch.name }}</td>
               <td>

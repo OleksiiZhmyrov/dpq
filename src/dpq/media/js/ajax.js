@@ -10,6 +10,10 @@ $(document).ready(function () {
             modifyQueueObject();
         }
     });
+    
+    $('div#dpq-refresh-alert button.close').click(function () {
+    	$('div#dpq-refresh-alert').hide("slow");
+    });
 
     $.ajaxSetup(
         {
@@ -76,12 +80,29 @@ function refreshQueue()
           url: "/ajax/refresh/" + $("div.dpq-queue-tabs > ul > li.active").attr("id") + "/"
       }).done(function(data) {
           $('div#queue-table').html(data);
-          $('div#dpq-refresh-alert').hide("slow");
       }).fail(function() {
           $('div#dpq-refresh-alert').show("slow");
       });
     }
 }
+
+function fetchPushDetails(queue_id)
+{
+	$('div#dpq-detailed-info').html('<center><img src="/media/img/ajax-loader.gif" /></center>');
+    $.ajax({
+        url: "/ajax/request/info/",
+        headers: {
+            "Content-type" : "application/x-www-form-urlencoded",
+            "X-CSRFToken" : $.cookie('csrftoken')
+        },
+        data: JSON.stringify({
+            "id" : queue_id
+        })
+    }).done(function(data) {
+        $('div#dpq-detailed-info').html(data);
+    });
+}
+
 
 function fetchQueueObject(queue_id)
 {
@@ -130,7 +151,10 @@ function timedRefresh() {
     			$.cookie('key', data);
     			refreshQueue();
     		}
-    	});
+    		$('div#dpq-refresh-alert').hide("slow");
+    	}).fail(function() {
+            $('div#dpq-refresh-alert').show("slow");
+        });
 	},60000);
 }
 

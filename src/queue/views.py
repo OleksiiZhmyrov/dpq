@@ -31,6 +31,17 @@ def request_key(request):
     return HttpResponse(get_cached_data('key'))
 
 
+def fetch_push_details(request):
+    try:
+        data = loads(request.body)
+        
+        return render_to_response('details_popup.html', 
+                RequestContext(request, {'item' : get_item_by_id(data['id'])}))
+        
+    except KeyError:
+        raise Http404(u'No parameters found in request.')
+
+
 def fetch_queue_item(request):
     try:
         data = loads(request.body)

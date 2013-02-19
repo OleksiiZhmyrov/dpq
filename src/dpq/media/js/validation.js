@@ -38,16 +38,16 @@ $(document).ready(function () {
                 messages: {
                     username: {
                         required: "Field username is required",
-                        minlength: "Username must contain not less than 3 characters",
+                        minlength: "Username must contain at least 3 characters",
                         regexp: "Username can only contain alphanumeric characters and the underscores"
                     },
                     password1: {
                         required: "Field passsword is required",
-                        regexp: "Password must contain a number and an alphabet and should be more than 6 characters long"
+                        regexp: "Password must contain alphanumeric characters and should be at least 6 characters long"
                     },
                     password2: {
                         required: "Password confirmation is required",
-                        equalTo: "Confirmation password does not match the password"
+                        equalTo: "Password confirmation does not match the password"
                     }
                 }
             });
@@ -99,7 +99,7 @@ function isValidCreateForm() {
                 description: {
                     required: "Description field is mandatory",
                     maxlength: "Max length is 128 characters",
-                    minlength: "Description is too short!"
+                    minlength: "Description is too short"
                 },
                 devA: {
                     required: "There must be at least one developer",

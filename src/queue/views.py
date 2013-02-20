@@ -55,7 +55,7 @@ def fetch_queue_item(request):
                     RequestContext(request, {'item' : Queue.objects.filter(owner = request.user).order_by('-index')[0], 
                                              'active_branches' : get_active_branches()}))
 
-            except (Queue.DoesNotExist, IndexError):
+            except IndexError:
                 return render_to_response('add_modal_form.html', 
                     RequestContext(request, {'active_branches' : get_active_branches()}))
 
@@ -266,9 +266,10 @@ def register_page(request):
         form = RegistrationForm()
     return render_to_response('registration/register.html', RequestContext(request, {'form': form}))
 
+
 def fetch_superusers_list(request):
-    try:
-        superusers_list = User.objects.filter(is_superuser=True)
+    superusers_list = User.objects.filter(is_superuser=True)
+    if superusers_list.exists():
         return render_to_response('dpq_superusers_list.html', RequestContext(request, {'superusers_list': superusers_list}))
-    except User.DoesNotExist:
-        return HttpResponse('<center>List is empty.</center>')
+    else:
+        return HttpResponse("<center>List is empty.</center>")

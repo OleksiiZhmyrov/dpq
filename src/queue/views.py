@@ -1,6 +1,7 @@
 from datetime import datetime, date
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -62,7 +63,7 @@ def fetch_queue_item(request):
     except KeyError:
        raise Http404(u'No parameters found in request.')
 
-
+@login_required
 def create_queue_item(request):
     try:
         data = loads(request.body)
@@ -91,7 +92,7 @@ def create_queue_item(request):
     except KeyError:
         raise Http404(u'Illegal or missing parameters in create request.')
 
-
+@login_required
 def modify_queue_item(request):
     try:
         data = loads(request.body)

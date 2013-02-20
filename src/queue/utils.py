@@ -1,5 +1,6 @@
 from datetime import datetime
 from django.core.cache import cache
+from django.http import Http404
 from hashlib import sha1
 from queue.models import *
 import logging
@@ -61,4 +62,5 @@ def get_item_by_id(id):
         item = Queue.objects.get(queue_id=id)
         return item
     except Queue.DoesNotExist:
-        raise DoesNotExist
+        raise Http404(u'Queue item with selected id does not exist.')
+

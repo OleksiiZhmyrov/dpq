@@ -42,3 +42,14 @@ Quit the server with CONTROL-C.
   * Default administrator credentials: admin/admin.
   * Repository contains Bootstrap and jQuery files.
 
+## Running tests
+Test application:
+```bash
+manage.py test queue
+```
+Calculate coverage
+```bash
+coverage run  --source='.' manage.py test queue
+coverage html
+```
+Note. Coverage is a separate python application and needs to be installed in virtualenv.

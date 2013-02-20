@@ -151,6 +151,7 @@ class QueueItemsFunctionality(unittest.TestCase):
         """
         Status P, new index > max
         """
+        self.c.login(username='push_user', password='push_user')
         json_data = {
                                 "ps": "PS_05",
                                 "description": "Some description",
@@ -249,6 +250,7 @@ class QueueItemsFunctionality(unittest.TestCase):
         """
         Status P, new index > max
         """
+        self.c.login(username='push_user', password='push_user')
         json_data = {
                                 "ps": "PS_05",
                                 "description": "Some description",

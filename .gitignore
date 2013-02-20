@@ -8,3 +8,4 @@ deploy
 *~
 .project
 .pydevproject
+src/htmlcov

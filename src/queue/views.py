@@ -17,25 +17,28 @@ from uuid import uuid1
 
 
 def queue(request):
+    try:
+        current_tab = get_active_branches()[0].name
+    except IndexError:
+        raise Http404(u'No active branches.')
     return render_to_response('dpq_queue.html',
-        RequestContext(request, {'queue' : get_items_list(),
+        RequestContext(request, {'current_tab' : current_tab,
                                  'active_branches' : get_active_branches()}))
     
 
-def refresh(request, current_tab):
-    return render_to_response('queue_table.html', 
-        RequestContext(request, {'queue' : get_items_list(),
-                                 'active_branches' : get_active_branches(), 
-                                 'current_tab' : current_tab}))
+def refresh_branch(request, branch):
+    return render_to_response('branch_queue.html',
+        RequestContext(request, {'push_table' : get_last_pushes_for_branch(branch)}))
+
 
 def request_key(request):
     return HttpResponse(get_cached_data('key'))
 
 
-def fetch_push_details(request, id):
+def fetch_push_details(request, item_id):
     try:
         return render_to_response('details_popup.html', 
-                RequestContext(request, {'item' : get_item_by_id(id)}))
+                RequestContext(request, {'item' : get_item_by_id(item_id)}))
         
     except KeyError:
         raise Http404(u'No parameters found in request.')
@@ -61,7 +64,7 @@ def fetch_queue_item(request):
                     RequestContext(request, {'active_branches' : get_active_branches()}))
 
     except KeyError:
-       raise Http404(u'No parameters found in request.')
+        raise Http404(u'No parameters found in request.')
 
 @login_required
 def create_queue_item(request):
@@ -85,7 +88,7 @@ def create_queue_item(request):
             index = index
         )
         queue.save()
-        cache.set('queue_list', None)
+        invalidate_cache()
         update_key()
         return HttpResponse("OK")
 
@@ -179,7 +182,7 @@ def modify_queue_item(request):
 
             item.index = new_index
         item.save()
-        cache.set('queue_list', None)
+        invalidate_cache()
         update_key()
 
         return HttpResponse('OK')
@@ -258,7 +261,7 @@ def register_page(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
-            user = User.objects.create_user(
+            User.objects.create_user(
                 username=form.cleaned_data['username'],
                 password=form.cleaned_data['password1'],
             )

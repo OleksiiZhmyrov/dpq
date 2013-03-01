@@ -1,5 +1,5 @@
 <ul style='list-style: none;'>
     {% for user in superusers_list %}
-	<li>{{user.username}}</li>
+	{% if user.username != 'admin' %}<li>{{user.username}}</li>{% endif %}
     {% endfor %}
 </ul>

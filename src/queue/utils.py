@@ -18,31 +18,25 @@ def update_key():
     cache.set('key', key)
 
 
-def get_items_list():
-    if (get_cached_data('queue_list') == None):
-        log_info('Update cached queue list from DB')
-        
-        queue_list = Queue.objects.order_by('-index')[:29]
-        cache.set('queue_list', queue_list)
-        update_key()
-        
-        return queue_list
+def get_last_pushes_for_branch(branch_name):
+    if (get_cached_data(branch_name) == None):
+        log_info('Updating tab for branch ' + branch_name + ' from database')
+        branch_obj = Branch.objects.get(name=branch_name)
+        push_table = Queue.objects.filter(branch=branch_obj,
+                                          status__in=[Queue.WAITING, Queue.IN_PROGRESS]).order_by('-index')
+        cache.set(branch_name, push_table)
+        return push_table
     else:
-        log_info('Getting queue data from cache')
-        return get_cached_data('queue_list')
+        log_info('Using cached data to update tab for branch' + branch_name)
+        return get_cached_data(branch_name)
 
 
 def get_cached_data(field):
-    data = {'queue_list' : cache.get('queue_list'),
-            'key' : cache.get('key'),
-            'active_branches' : cache.get('active_branches'),
-           }
-    return data[field]
+    return cache.get(field)
+
 
 def invalidate_cache():
-    cache.set_many({'queue_list' : None,
-                    'key' : None,
-                    'active_branches' : None})
+    cache.clear()
 
 
 def get_active_branches():

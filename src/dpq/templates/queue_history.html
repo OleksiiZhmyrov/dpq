@@ -1,7 +1,7 @@
  <table class="table table-condensed">
     <thead>
       <tr>
-        <th style="width: 30px;">#</th>
+        <th style="width: 40px;">#</th>
         <th style="width: 50px;">PS</th>
         <th>Developers</th>
         <th>Tester</th>
@@ -30,17 +30,7 @@
 		</td>
         <td>{{ item.done_date.date.isoformat }}</td>
         <td>{{ item.branch.name }}</td>
-        <td>
-          {% if item.owner == user or user.is_staff %}
-          {% if item.status != item.DONE and item.status != item.REVERTED %}
-          <a href="#dpq-modify-queue"
-             data-toggle="modal"
-             onclick="fetchQueueObject('{{ item.queue_id }}')">
-             <i class="icon-wrench"></i>
-          </a>
-          {% endif %}
-          {% endif %}
-        </td>
+		<td></td>
         <td>{{ item.get_status_display }}</td>
       </tr>
       {% endfor %}

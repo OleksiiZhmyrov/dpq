@@ -40,14 +40,13 @@ function createQueueObject()
             "tester" : $('input#dpq-add-queue-tester').val()
         })
     }).done(function() {
-        refreshQueue();
+    	update_branch_tab($("div.dpq-queue-tabs > ul > li.active").attr("id"));
         $('div#dpq-add-queue button.close').click();
     });
 }
 
 function modifyQueueObject()
 {
-
     $.ajax({
         url: "/ajax/modify/",
         headers: {
@@ -67,23 +66,21 @@ function modifyQueueObject()
             "id" : $('input#dpq-modify-queue-id').val()
         })
     }).done(function() {
-        refreshQueue();
+    	update_branch_tab($("div.dpq-queue-tabs > ul > li.active").attr("id"));
         $('div#dpq-modify-queue button.close').click();
     });
 }
 
-function refreshQueue()
+function update_branch_tab(branch)
 {
-    if($('div#queue-table').length != 0) {
-      $.ajax({
-          type: "GET",
-          url: "/ajax/refresh/" + $("div.dpq-queue-tabs > ul > li.active").attr("id") + "/"
-      }).done(function(data) {
-          $('div#queue-table').html(data);
-      }).fail(function() {
-          $('div#dpq-refresh-alert').show("slow");
-      });
-    }
+	$.ajax({
+		type: "GET",
+		url: "/ajax/refresh-branch/" + branch + "/"
+	}).done(function(data) {
+		$('div#' + branch + '_tab').html(data);
+	}).fail(function() {
+		$('div#dpq-refresh-alert').show("slow");
+	})
 }
 
 function fetchPushDetails(queue_id)
@@ -146,7 +143,7 @@ function timedRefresh() {
     	}).done(function(data) {
     		if($.cookie('key') != data) {
     			$.cookie('key', data);
-    			refreshQueue();
+    			update_branch_tab($("div.dpq-queue-tabs > ul > li.active").attr("id"));
     		}
     		$('div#dpq-refresh-alert').hide("slow");
     	}).fail(function() {

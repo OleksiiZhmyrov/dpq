@@ -22,7 +22,7 @@ $(document).ready(function () {
                     },
                     password1: {
                         required: true,
-                        regexp: '(?!^[0-9]*$)(?!^[a-zA-Z!@#$%^&*()_+=<>?]*$)^([a-zA-Z!@#$%^&*()_+=<>?0-9]{6,15})$'
+                        regexp: '(?!^[0-9]*$)(?!^[a-zA-Z!@#$%^&*()_+=<>?]*$)^([a-zA-Z!@#$%^&*()_+=<>?0-9]{6,25})$'
                     },
                     password2: {
                         required: true,
@@ -42,8 +42,8 @@ $(document).ready(function () {
                         regexp: "Username can only contain alphanumeric characters and the underscores"
                     },
                     password1: {
-                        required: "Field passsword is required",
-                        regexp: "Password must contain alphanumeric characters and should be at least 6 characters long"
+                        required: "Field password is required",
+                        regexp: "Password must contain alphanumeric characters and should be at least 6 characters long. Max length is 25 symbols"
                     },
                     password2: {
                         required: "Password confirmation is required",

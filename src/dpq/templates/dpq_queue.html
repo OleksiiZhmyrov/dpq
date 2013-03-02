@@ -1,9 +1,6 @@
 {% extends "dpq_base.html" %}
 {% block title %}Push Queue{% endblock %}
-{% block navbar_menu %}
-<li><a href="/history/">History</a></li>
-<li><a href="/charts/">Charts</a></li>
-{% endblock %}
+{% block body_properties %}onload="timedRefresh();"{% endblock %}
 {% block main %}
 
 <script src="/media/js/queues.js"></script>

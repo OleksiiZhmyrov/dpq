@@ -37,7 +37,7 @@ def request_key(request):
 
 def fetch_push_details(request, item_id):
     try:
-        return render_to_response('details_popup.html', 
+        return render_to_response('details_popup.html',
                 RequestContext(request, {'item' : get_item_by_id(item_id)}))
         
     except KeyError:
@@ -49,18 +49,18 @@ def fetch_queue_item(request):
         data = loads(request.body)
 
         if(data['mode'] == 'fetch'):
-            return render_to_response('modify_modal_form.html', 
+            return render_to_response('modify_modal_form.html',
                 RequestContext(request, {'item' : get_item_by_id(data['id']),
                                          'active_branches' : get_active_branches()}))
 
         elif(data['mode'] == 'last'):
             try:
-                return render_to_response('add_modal_form.html', 
-                    RequestContext(request, {'item' : Queue.objects.filter(owner = request.user).order_by('-index')[0], 
+                return render_to_response('add_modal_form.html',
+                    RequestContext(request, {'item' : Queue.objects.filter(owner=request.user).order_by('-index')[0],
                                              'active_branches' : get_active_branches()}))
 
             except IndexError:
-                return render_to_response('add_modal_form.html', 
+                return render_to_response('add_modal_form.html',
                     RequestContext(request, {'active_branches' : get_active_branches()}))
 
     except KeyError:
@@ -77,15 +77,15 @@ def create_queue_item(request):
             index = 1
 
         queue = Queue(
-            ps = data['ps'],
-            developerA = data['devA'],
-            developerB = data['devB'],
-            tester = data['tester'],
-            description = data['description'],
-            branch = Branch.objects.get(name__iexact = data['branch']),
-            owner = request.user,
-            queue_id = uuid1().hex,
-            index = index
+            ps=data['ps'],
+            developerA=data['devA'],
+            developerB=data['devB'],
+            tester=data['tester'],
+            description=data['description'],
+            branch=Branch.objects.get(name__iexact=data['branch']),
+            owner=request.user,
+            queue_id=uuid1().hex,
+            index=index
         )
         queue.save()
         invalidate_cache()
@@ -99,7 +99,7 @@ def create_queue_item(request):
 def modify_queue_item(request):
     try:
         data = loads(request.body)
-        item = Queue.objects.get(queue_id = data["id"])
+        item = Queue.objects.get(queue_id=data["id"])
 
         item.ps = data['ps']
         item.developerA = data['devA']
@@ -164,7 +164,7 @@ def modify_queue_item(request):
             if(new_index > old_index):
                 for i in range(old_index + 1, new_index + 1):
                     try:
-                        moving = Queue.objects.get(index__iexact = i)
+                        moving = Queue.objects.get(index__iexact=i)
                     except:
                         continue
 
@@ -174,7 +174,7 @@ def modify_queue_item(request):
             if(new_index < old_index):
                 for i in range(old_index - 1, new_index - 1, -1):
                     try:
-                        moving = Queue.objects.get(index__iexact = i)
+                        moving = Queue.objects.get(index__iexact=i)
                     except:
                         continue
                     moving.index = i + 1
@@ -191,8 +191,9 @@ def modify_queue_item(request):
         raise Http404(u'Illegal or missing parameters in modify request.')
 
 
-def history(request):
-    queue = Queue.objects.filter(status__in = [Queue.DONE, Queue.REVERTED]).order_by('-index')
+def history(request, branch):
+    branch_obj = Branch.objects.get(name=branch)
+    queue = Queue.objects.filter(branch=branch_obj, status__in=[Queue.DONE, Queue.REVERTED]).order_by('-index')
     paginator = Paginator(queue, 20)
 
     page = request.GET.get('page')
@@ -204,7 +205,13 @@ def history(request):
     except EmptyPage:
         queue = paginator.page(paginator.num_pages)
 
-    return render_to_response('dpq_history.html', RequestContext(request, {'queue' : queue}))
+    return render_to_response('dpq_history.html', RequestContext(request, {'queue' : queue,
+                                                                           'branch' : branch_obj,
+                                                                           'active_branches' : get_active_branches()}))
+
+
+def help_page(request):
+    return render_to_response('dpq_help.html', RequestContext(request, {'active_branches' : get_active_branches()}))
 
 
 def logout_page(request):
@@ -227,8 +234,8 @@ def visualisation_average(request):
 
 
 def visualisation_branch_duration(request, branch, mode):
-    branch = Branch.objects.get(name = branch)
-    last_pushes = Queue.objects.filter(status__in = [Queue.DONE, Queue.REVERTED]).filter(branch = branch).order_by('index')
+    branch = Branch.objects.get(name=branch)
+    last_pushes = Queue.objects.filter(status__in=[Queue.DONE, Queue.REVERTED]).filter(branch=branch).order_by('index')
     if(last_pushes.count() > 5):
         last_pushes = last_pushes[last_pushes.count() - 5:]
     

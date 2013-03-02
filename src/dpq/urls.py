@@ -2,16 +2,15 @@ from django.conf.urls import patterns, include, url
 from queue.views import *
 from django.contrib.auth.views import login
 from django.conf import settings
-
-# Uncomment the next two lines to enable the admin:
 from django.contrib import admin
+
 admin.autodiscover()
 
 urlpatterns = patterns('',
     (r'^$', queue),
-    (r'^history/$', history),
+    (r'^history/(?P<branch>\w{0,32})/$', history),
     (r'^charts/$', charts),
-    (r'^help/$', 'django.views.generic.simple.direct_to_template', {'template' : 'dpq_help.html'}),
+    (r'^help/$', help_page),
     (r'^ajax/request/key/$', request_key),
     (r'^ajax/create/$', create_queue_item),
     (r'^ajax/request/fetch/$', fetch_queue_item),

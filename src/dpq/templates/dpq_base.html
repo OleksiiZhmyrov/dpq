@@ -18,33 +18,38 @@
     <div class="container" style="width: 90%;">
       <div class="navbar">
         <div class="navbar-inner">
-          <a class="brand" href="">{% block title %}{% endblock %}</a>
+          <a class="brand" href="/">{% block title %}{% endblock %}</a>
           <ul class="nav pull-right">
               <li class="divider-vertical"></li>
-              <li><a href="/">Queue</a></li>
+              <li><a href="/"><i class="icon-list-alt"></i> Queue</a></li>
               
               {# History dropdown menu #}
               <li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">History<b class="caret"></b></a>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+				    <i class="icon-calendar"></i> History<b class="caret"></b></a>
 				<ul class="dropdown-menu">
 				    <li class="nav-header">Active branches</li>
 					<li><li>
 				  {% for branch in active_branches %}
-					<li><a href="/history/{{ branch.name }}/">{{ branch.name }}</a></li>
+					<li><a href="/history/{{ branch.name }}/"><i class="icon-tag"></i> {{ branch.name }}</a></li>
 					<li><li>
 				  {% endfor %}
+		     	    <li class="nav-header">Statistics</li>
+					<li><li>
+					<li><a href="/charts/"><i class="icon-align-left"></i> Charts</a></li>
+					<li><li>
 				</ul>
 			  </li>
 			  
-              <li><a href="/charts/">Charts</a></li>
-              <li><a href="/help/">Help</a></li>
+              
+              <li><a href="/help/"><i class="icon-question-sign"></i> Help</a></li>
             {% if user.is_authenticated %}
               <li class="divider-vertical"></li>
-              <li><a href="/logout/">Sign Out</a></li>
+              <li><a href="/logout/"><i class="icon-road"></i> Sign Out</a></li>
             {% else %}
               <li class="divider-vertical"></li>
-              <li><a href="/register/">Get account</a></li>
-              <li><a href="/login/">Sign In</a></li>
+              <li><a href="/register/"><i class="icon-plus-sign"></i> Get account</a></li>
+              <li><a href="/login/"><i class="icon-user"></i> Sign In</a></li>
             {% endif %}
           </ul>
           {% if user.is_authenticated %}

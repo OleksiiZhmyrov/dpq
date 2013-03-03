@@ -1,6 +1,9 @@
 {% extends "dpq_base.html" %}
-{% block title %}History for {{ branch.name }}{% endblock %}
+{% block title %}History{% endblock %}
 {% block main %}
+
+<center><h4>History for branch {{ branch.name }}</h4></center>
+<hr />
 
 <div id="history-table">
   {% include "queue_history.html" %}

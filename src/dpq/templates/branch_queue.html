@@ -6,31 +6,30 @@
 			<th>Developers</th>
 			<th>Tester</th>
 			<th>Description</th>
-			<th style="width: 80px;">Date</th>
-			<!-- <th style="width: 60px;">Branch</th> -->
-			<th style="width: 10px;"></th>
+			<th style="width: 100px;">Created</th>
+			<th style="width: 8px;"></th>
+			<th style="width: 8px;"></th>
 			<th style="width: 80px;">Status</th>
 		</tr>
 	</thead>
 	<tbody>
 		{% for item in push_table %}
-		<tr {% if item.status == item.IN_PROGRESS %} class="warning" 
-		    {% elif item.status == item.REVERTED %} class="error" 
-		    {% elif item.status == item.DONE %} class="success"{% endif %}>
+		<tr {% if item.status == item.IN_PROGRESS %} class="warning"{% endif %}>
 			<td>{{ item.index }}</td>
 			<td>{{ item.ps }}</td>
 			<td>{{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
 			<td>{{ item.tester }}</td>
-			<td><a href="#dpq-push-details" style="text-decoration: none;"
-				data-toggle="modal"
-				onclick="fetchPushDetails('{{ item.queue_id }}')">{{ item.description }}</a></td>
-			<td>{{ item.done_date.date.isoformat }}</td>
-			<!-- <td>{{ item.branch.name }}</td> -->
+			<td>{{ item.description }}</td>
+			<td>{{ item.creation_date|date:"M j, H:i" }}</td>
 			<td>{% if item.owner == user or user.is_superuser %}
 			    {% if item.status != item.DONE and item.status != item.REVERTED %} 
 			    <a href="#dpq-modify-queue" data-toggle="modal"
 				   onclick="fetchQueueObject('{{ item.queue_id }}')"> <i class="icon-wrench"></i>
 			</a> {% endif %} {% endif %}
+			</td>
+			<td><a href="#dpq-push-details" style="text-decoration: none;"
+				data-toggle="modal"
+				onclick="fetchPushDetails('{{ item.queue_id }}')"><i class="icon-info-sign"></i></a>
 			</td>
 			<td>{{ item.get_status_display }}</td>
 		</tr>

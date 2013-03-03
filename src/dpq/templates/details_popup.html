@@ -22,28 +22,32 @@ tr td {
 <table class="table-hover">
   <tbody>
 	<tr>
-		<td>Creation date</td>
-		<td>{{ item.creation_date }}</td>
+		<td>Created</td>
+		<td>{{ item.creation_date|date:"H:i:s" }}</td>
+		<td>{{ item.creation_date|date:"d.m.Y" }}</td>
 	</tr>
 	
 	{% if item.modified_date != None %}
 	<tr>
-		<td>Modification date</td>
-		<td>{{ item.modified_date }}</td>
+		<td>Modified</td>
+		<td>{{ item.modified_date|date:"H:i:s" }}</td>
+		<td>{{ item.modified_date|date:"d.m.Y" }}</td>
 	</tr>
 	{% endif %}
 	
 	{% if item.push_date != None %}
 	<tr>
-		<td>Push date</td>
-		<td>{{ item.push_date }}</td>
+		<td>Pushed</td>
+		<td>{{ item.push_date|date:"H:i:s" }}</td>
+		<td>{{ item.push_date|date:"d.m.Y" }}</td>
 	</tr>
 	{% endif %}
 	
 	{% if item.done_date != None %}
 	<tr>
-		<td>Done date</td>
-		<td>{{ item.done_date }}</td>
+		<td>Done</td>
+		<td>{{ item.done_date|date:"H:i:s" }}</td>
+		<td>{{ item.done_date|date:"d.m.Y" }}</td>
 	</tr>
 	{% endif %}
   </tbody>

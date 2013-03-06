@@ -36,7 +36,7 @@ class Queue(models.Model):
     ps = models.CharField("ps", max_length = 10)
     owner = models.ForeignKey(User)
     developerA = models.CharField("developerA", max_length = 64)
-    developerB = models.CharField("developerB", max_length = 64)
+    developerB = models.CharField("developerB", max_length = 64, null = True)
     tester = models.CharField("tester", max_length = 64)
     queue_id = models.CharField("id", max_length = 32, unique = True)
     index = models.PositiveIntegerField(unique = True)
@@ -50,11 +50,13 @@ class Queue(models.Model):
     IN_PROGRESS = "P"
     REVERTED = "R"
     DONE = "D"
+    SKIPPED = "S"
     STATUS_CHOICES = (
         (WAITING, 'waiting'),
         (IN_PROGRESS, 'in progress'),
         (REVERTED, 'reverted'),
         (DONE, 'done'),
+        (SKIPPED, 'skipped'),
     )
     status = models.CharField("status", max_length = 1, choices = STATUS_CHOICES, default = WAITING)
 

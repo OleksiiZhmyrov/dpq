@@ -12,7 +12,13 @@
             {% if item.status == item.IN_PROGRESS %} selected="selected" {% endif %}
             value={{ item.IN_PROGRESS }}>in progress</option>
 
-          {% if item.status == item.IN_PROGRESS or item.status == item.DONE or item.status == item.REVERTED %}
+          {% if item.status == item.WAITING %}
+          <option
+            {% if item.status == item.SKIPPED %} selected="selected" {% endif %}
+            value={{ item.SKIPPED }}>skipped</option>
+          {% endif %}
+
+          {% if item.status == item.IN_PROGRESS %}
           <option
             {% if item.status == item.DONE %} selected="selected" {% endif %}
             value={{ item.DONE }}>done</option>

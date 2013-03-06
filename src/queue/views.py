@@ -114,7 +114,7 @@ def modify_queue_item(request):
         item.modified_date = datetime.now()
 
         # When push process completed with DONE or REVERTED status
-        if(data['status'] == Queue.DONE or data['status'] == Queue.REVERTED):
+        if(data['status'] == Queue.DONE or data['status'] == Queue.REVERTED or data['status'] == Queue.SKIPPED):
 
             # Save date to respective field
             item.done_date = datetime.now()
@@ -193,7 +193,7 @@ def modify_queue_item(request):
 
 def history(request, branch):
     branch_obj = Branch.objects.get(name=branch)
-    queue = Queue.objects.filter(branch=branch_obj, status__in=[Queue.DONE, Queue.REVERTED]).order_by('-index')
+    queue = Queue.objects.filter(branch=branch_obj, status__in=[Queue.DONE, Queue.REVERTED, Queue.SKIPPED]).order_by('-done_date')
     paginator = Paginator(queue, 20)
 
     page = request.GET.get('page')
@@ -228,7 +228,7 @@ def visualisation_average(request):
     
     for day in days:
         average = day.total_push_duration / day.number_of_pushes
-        response.append([day.date.isoformat(), average])
+        response.append([day.date.strftime('%d.%m'), average])
     
     return HttpResponse(dumps(response))
 

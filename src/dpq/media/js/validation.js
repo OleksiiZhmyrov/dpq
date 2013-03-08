@@ -66,8 +66,13 @@ function isValidCreateForm() {
                 },
                 description: {
                     required: true,
-                    maxlength: 128,
+                    maxlength: 256,
                     minlength: 2
+                },
+                codereview_url: {
+                	required: true,
+                	maxlength: 256,
+                	regexp: 'https://github\.com/.*/[0-9a-f]{40}'
                 },
                 devA: {
                     required: true,
@@ -98,8 +103,13 @@ function isValidCreateForm() {
                 },
                 description: {
                     required: "Description field is mandatory",
-                    maxlength: "Max length is 128 characters",
+                    maxlength: "Max length is 256 characters",
                     minlength: "Description is too short"
+                },
+                codereview_url: {
+                	required: "GitHub URL is required",
+                	maxlength: "Max length is 256 characters",
+                	regexp: "Please check your URL"
                 },
                 devA: {
                     required: "There must be at least one developer",
@@ -131,8 +141,13 @@ function isValidModifyForm() {
                 },
                 description: {
                     required: true,
-                    maxlength: 128,
+                    maxlength: 256,
                     minlength: 2
+                },
+                codereview_url: {
+                	required: true,
+                	maxlength: 256,
+                	regexp: 'https://github\.com/.*/[0-9a-f]{40}'
                 },
                 devA: {
                     required: true,
@@ -167,8 +182,13 @@ function isValidModifyForm() {
                 },
                 description: {
                     required: "Description field is mandatory",
-                    maxlength: "Max length is 128 characters",
+                    maxlength: "Max length is 256 characters",
                     minlength: "Description is too short!"
+                },
+                codereview_url: {
+                	required: "GitHub URL is required",
+                	maxlength: "Max length is 256 characters",
+                	regexp: "Please check your URL"
                 },
                 devA: {
                     required: "There must be at least one developer",

@@ -19,7 +19,7 @@
 			<td>{{ item.ps }}</td>
 			<td>{{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
 			<td>{{ item.tester }}</td>
-			<td>{{ item.description }}</td>
+			<td>{{ item.description|truncatechars:70 }}</td>
 			<td>{{ item.creation_date|date:"M j, H:i" }}</td>
 			<td>{% if item.owner == user or user.is_superuser %}
 			    {% if item.status != item.DONE and item.status != item.REVERTED %} 

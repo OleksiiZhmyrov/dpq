@@ -4,6 +4,8 @@ from django.http import Http404
 from hashlib import sha1
 from queue.models import *
 import logging
+from django.core.exceptions import ObjectDoesNotExist
+from datetime import datetime, date
 
 logger = logging.getLogger('django.db.backends')
 
@@ -27,7 +29,7 @@ def get_last_pushes_for_branch(branch_name):
         cache.set(branch_name, push_table)
         return push_table
     else:
-        log_info('Using cached data to update tab for branch' + branch_name)
+        log_info('Using cached data to update tab for branch ' + branch_name)
         return get_cached_data(branch_name)
 
 
@@ -58,3 +60,14 @@ def get_item_by_id(id):
     except Queue.DoesNotExist:
         raise Http404(u'Queue item with selected id does not exist.')
 
+
+def update_daily_statistics(push_duration):
+    try:
+        statistics_day = Statistics.objects.get(date=date.today())
+    except ObjectDoesNotExist:
+        statistics_day = Statistics(date=date.today())
+
+    statistics_day.number_of_pushes += 1
+    statistics_day.total_push_duration += int(push_duration)
+
+    statistics_day.save()

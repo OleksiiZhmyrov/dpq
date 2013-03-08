@@ -18,7 +18,7 @@
         <td>{{ item.ps }}</td>
         <td>{{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
         <td>{{ item.tester }}</td>
-		<td>{{ item.description }}</td>
+		<td>{{ item.description|truncatechars:80 }}</td>
         <td>{{ item.done_date|date:"d.m.Y" }}</td>
 		<td><a href="#dpq-push-details"
 			   style="text-decoration: none;"
@@ -26,7 +26,7 @@
 			   onclick="fetchPushDetails('{{ item.queue_id }}')"><i class="icon-info-sign"></i></a></td>
         <td><span
              {% if item.status == item.DONE %} class="label label-success"
-             {% elif item.status == item.SKIPPED %} class="label label"
+             {% elif item.status == item.SKIPPED %} class="label"
              {% elif item.status == item.REVERTED %} class="label label-important" {% endif %}>
              {{ item.get_status_display }}</span></td>
       </tr>

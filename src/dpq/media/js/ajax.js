@@ -34,6 +34,7 @@ function createQueueObject()
         data: JSON.stringify({
             "ps" : $('input#dpq-add-queue-ps').val(),
             "description" : $('input#dpq-add-queue-description').val(),
+            "codereview_url" : $('input#dpq-add-queue-codereview').val(),
             "branch" : $('select#dpq-add-queue-branch').val(),
             "devA" : $('input#dpq-add-queue-devA').val(),
             "devB" : $('input#dpq-add-queue-devB').val(),
@@ -56,6 +57,7 @@ function modifyQueueObject()
         data: JSON.stringify({
             "ps" : $('input#dpq-modify-queue-ps').val(),
             "description" : $('input#dpq-modify-queue-description').val(),
+            "codereview_url" : $('input#dpq-modify-queue-codereview').val(),
             "branch" : $('select#dpq-modify-queue-branch').val(),
             "devA" : $('input#dpq-modify-queue-devA').val(),
             "devB" : $('input#dpq-modify-queue-devB').val(),

@@ -26,12 +26,12 @@
 </div>
 
 <div id="queue-table">
-  {% include "queue_table.html" %}
+  {% include "queue/dpq_queue_table.html" %}
 </div>
 
 {% if user.is_authenticated %}
-  {% include "add_modal.html" %}
-  {% include "modify_modal.html" %}
+  {% include "add/dpq_add_popup.html" %}
+  {% include "modify/dpq_modify_popup.html" %}
 {% endif %}
 
 <div class="modal hide fade" id="dpq-superusers" style="width: 470px;">
@@ -49,6 +49,6 @@
   </div>
 </div>
 
-{% include "dpq_push_details.html" %}
+{% include "info/dpq_info_popup.html" %}
 
 {%endblock %}

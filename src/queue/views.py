@@ -21,13 +21,13 @@ def queue(request):
         current_tab = get_active_branches()[0].name
     except IndexError:
         raise Http404(u'No active branches.')
-    return render_to_response('dpq_queue.html',
+    return render_to_response('queue/dpq_queue.html',
         RequestContext(request, {'current_tab' : current_tab,
                                  'active_branches' : get_active_branches()}))
     
 
 def refresh_branch(request, branch):
-    return render_to_response('branch_queue.html',
+    return render_to_response('queue/dpq_queue_table_branch_tab.html',
         RequestContext(request, {'push_table' : get_last_pushes_for_branch(branch)}))
 
 
@@ -37,7 +37,7 @@ def request_key(request):
 
 def fetch_push_details(request, item_id):
     try:
-        return render_to_response('details_popup.html',
+        return render_to_response('info/dpq_info_popup_contents.html',
                 RequestContext(request, {'item' : get_item_by_id(item_id)}))
         
     except KeyError:
@@ -49,18 +49,18 @@ def fetch_queue_item(request):
         data = loads(request.body)
 
         if(data['mode'] == 'fetch'):
-            return render_to_response('modify_modal_form.html',
+            return render_to_response('modify/dpq_modify_popup_contents.html',
                 RequestContext(request, {'item' : get_item_by_id(data['id']),
                                          'active_branches' : get_active_branches()}))
 
         elif(data['mode'] == 'last'):
             try:
-                return render_to_response('add_modal_form.html',
+                return render_to_response('add/dpq_add_popup_contents.html',
                     RequestContext(request, {'item' : Queue.objects.filter(owner=request.user).order_by('-index')[0],
                                              'active_branches' : get_active_branches()}))
 
             except IndexError:
-                return render_to_response('add_modal_form.html',
+                return render_to_response('add/dpq_add_popup_contents.html',
                     RequestContext(request, {'active_branches' : get_active_branches()}))
 
     except KeyError:
@@ -82,6 +82,7 @@ def create_queue_item(request):
             developerB=data['devB'],
             tester=data['tester'],
             description=data['description'],
+            codereview_url=data['codereview_url'],
             branch=Branch.objects.get(name__iexact=data['branch']),
             owner=request.user,
             queue_id=uuid1().hex,
@@ -109,28 +110,18 @@ def modify_queue_item(request):
         item.branch = Branch.objects.get(name__iexact=data['branch'])
 
         item.description = data['description']
+        item.codereview_url = data['codereview_url']
         item.status = data['status']
 
         item.modified_date = datetime.now()
 
-        # When push process completed with DONE or REVERTED status
-        if(data['status'] == Queue.DONE or data['status'] == Queue.REVERTED or data['status'] == Queue.SKIPPED):
+        if(data['status'] == Queue.DONE or data['status'] == Queue.REVERTED):
+            item.done_date = datetime.now()
+            update_daily_statistics(item.push_duration())
 
-            # Save date to respective field
+        if(data['status'] == Queue.SKIPPED):
             item.done_date = datetime.now()
 
-            # Save statistics for push duration
-            try:
-                statistics_day = Statistics.objects.get(date=date.today())
-            except ObjectDoesNotExist:
-                statistics_day = Statistics(date=date.today())
-
-            statistics_day.number_of_pushes += 1
-            statistics_day.total_push_duration += item.push_duration()
-
-            statistics_day.save()
-
-        # When push status is changed to IN_PROGRESS
         if(data['status'] == Queue.IN_PROGRESS):
             item.push_date = datetime.now()
 
@@ -205,7 +196,7 @@ def history(request, branch):
     except EmptyPage:
         queue = paginator.page(paginator.num_pages)
 
-    return render_to_response('dpq_history.html', RequestContext(request, {'queue' : queue,
+    return render_to_response('history/dpq_history.html', RequestContext(request, {'queue' : queue,
                                                                            'branch' : branch_obj,
                                                                            'active_branches' : get_active_branches()}))
 

@@ -1,17 +1,27 @@
 <form id="add-to-queue-form" class="form-horizontal">
   <div class="well well-small">
+    
     <div class="control-group">
       <label class="control-label" for="dpq-add-queue-ps">Pair station:</label>
       <div class="controls">
         <input type="text" name="ps" id="dpq-add-queue-ps" value="{{ item.ps }}">
       </div>
     </div>
+    
     <div class="control-group">
       <label class="control-label" for="dpq-add-queue-description">Description:</label>
       <div class="controls">
         <input type="text" name="description" id="dpq-add-queue-description">
       </div>
     </div>
+    
+    <div class="control-group">
+      <label class="control-label" for="dpq-add-queue-codereview">URL for codereview:</label>
+      <div class="controls">
+        <input type="text" name="codereview_url" id="dpq-add-queue-codereview">
+      </div>
+    </div>
+    
     <div class="control-group">
       <label class="control-label" for="dpq-add-queue-branch">Branch:</label>
       <div class="controls">

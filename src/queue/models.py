@@ -33,14 +33,15 @@ class Branch(models.Model):
 
 
 class Queue(models.Model):
-    ps = models.CharField("ps", max_length = 10)
+    ps = models.CharField("PS", max_length = 10)
     owner = models.ForeignKey(User)
-    developerA = models.CharField("developerA", max_length = 64)
-    developerB = models.CharField("developerB", max_length = 64, null = True)
-    tester = models.CharField("tester", max_length = 64)
-    queue_id = models.CharField("id", max_length = 32, unique = True)
+    developerA = models.CharField("Developer A", max_length = 64)
+    developerB = models.CharField("Developer B", max_length = 64, null = True)
+    tester = models.CharField("Tester", max_length = 64, null = True)
+    queue_id = models.CharField("ID", max_length = 32, unique = True)
     index = models.PositiveIntegerField(unique = True)
-    description = models.CharField("description", max_length = 128)
+    description = models.CharField("Description", max_length = 256)
+    codereview_url = models.URLField("Code Review URL", max_length = 256, null = True, blank = True, default = '')
     branch = models.ForeignKey(Branch)
     creation_date = models.DateTimeField('Creation date', auto_now_add = True)
     modified_date = models.DateTimeField('Modification Date', auto_now = True)

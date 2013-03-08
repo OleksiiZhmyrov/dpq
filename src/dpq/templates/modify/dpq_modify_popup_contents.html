@@ -1,5 +1,6 @@
 <form  id="modify-queue-form" class="form-horizontal">
   <div class="well well-small">
+  
     <div class="control-group">
       <label class="control-label" for="dpq-modify-queue-devA">Status:</label>
       <div class="controls">
@@ -30,6 +31,7 @@
         </select> 
       </div>
     </div>
+    
     <div class="control-group">
       <label class="control-label" for="dpq-modify-queue-index">Place in queue:</label>
       <div class="controls">
@@ -37,6 +39,7 @@
       </div>
     </div>
   </div>
+  
   <div class="well well-small">
     <div class="control-group">
       <label class="control-label" for="dpq-modify-queue-ps">Pair station:</label>
@@ -44,12 +47,21 @@
         <input type="text" name="ps" id="dpq-modify-queue-ps" value="{{ item.ps }}">
       </div>
     </div>
+    
     <div class="control-group">
       <label class="control-label" for="dpq-modify-queue-description">Description:</label>
       <div class="controls">
         <input type="text" name="description" id="dpq-modify-queue-description" value="{{ item.description }}">
       </div>
     </div>
+    
+    <div class="control-group">
+      <label class="control-label" for="dpq-modify-queue-codereview">URL for codereview:</label>
+      <div class="controls">
+        <input type="text" name="codereview_url" id="dpq-modify-queue-codereview" value="{{ item.codereview_url }}">
+      </div>
+    </div>
+    
     <div class="control-group">
       <label class="control-label" for="dpq-modify-queue-branch">Branch:</label>
       <div class="controls">
@@ -63,6 +75,7 @@
       </div>
     </div>
   </div>
+  
   <div class="well well-small">
     <div class="control-group">
       <label class="control-label" for="dpq-modify-queue-devA">Developer A:</label>
@@ -70,12 +83,14 @@
         <input type="text" name="devA" id="dpq-modify-queue-devA" value="{{ item.developerA }}">
       </div>
     </div>
+    
     <div class="control-group">
       <label class="control-label" for="dpq-modify-queue-devB">Developer B:</label>
       <div class="controls">
         <input type="text" name="devB" id="dpq-modify-queue-devB" value="{{ item.developerB }}">
       </div>
     </div>
+    
     <div class="control-group">
       <label class="control-label" for="dpq-modify-queue-tester">Tester:</label>
       <div class="controls">

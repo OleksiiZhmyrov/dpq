@@ -1,15 +1,32 @@
 <style type="text/css">
 div.dpq-info {
-	margin-top: 15px;
+	margin-top: 10px;
 }
 tr td {
 	padding-left: 10px;
 }
 </style>
 
-<div style="font-size: 16px; font-weight: bold; text-align: center;">
-	{{ item.description }}
+<div class="row">
+	<div class="span1" style="text-align: center;">
+		<span
+            {% if item.status == item.DONE %}          class="label label-success"
+            {% elif item.status == item.SKIPPED %}     class="label"
+            {% elif item.status == item.REVERTED %}    class="label label-important"
+            {% elif item.status == item.IN_PROGRESS %} class="label label-warning"
+            {% elif item.status == item.WAITING %}     class="label label-info"
+            {% endif %}
+            {{ item.get_status_display }}
+		    class="label" style="padding: 10px; font-size: 18px;">{{ item.index }}
+		</span>
+	</div>
+	<div class="span5" 
+		 style="font-size: 16px; 
+		 		font-weight: bold; 
+		 		text-align: left;">
+		 {{ item.description }}</div>
 </div>
+
 <hr />
 <div class="dpq-info">
 	<ul style="list-style-type: none;">
@@ -57,16 +74,16 @@ tr td {
 <table class="table-hover">
   <tbody>
     <tr>
+    	<td>Code Review URL:</td>
+    	<td><a href="{{ item.codereview_url }}" target="_blank"><i class="icon-share-alt"></i> follow</a></td>
+    </tr>
+    <tr>
     	<td>Created by:</td>
     	<td>{{ item.owner }}</td>
     </tr>
     <tr>
     	<td>Branch:</td>
     	<td>{{ item.branch }}</td>
-    </tr>
-    <tr>
-    	<td>Place in queue:</td>
-    	<td>{{ item.index }}</td>
     </tr>
     <tr>
     	<td>Status code:</td>

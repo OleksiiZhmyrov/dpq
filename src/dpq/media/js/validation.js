@@ -145,7 +145,7 @@ function isValidModifyForm() {
                     minlength: 2
                 },
                 codereview_url: {
-                	required: true,
+                	required: false,
                 	maxlength: 256,
                 	regexp: 'https://github\.com/.*/[0-9a-f]{40}'
                 },

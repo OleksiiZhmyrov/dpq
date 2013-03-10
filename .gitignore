@@ -1,6 +1,7 @@
 *.py[cod]
 .directory
 venv
+src/dpq.db
 .coverage
 deploy
 .idea

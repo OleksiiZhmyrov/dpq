@@ -1,0 +1,21 @@
+{% spaceless %}
+
+<center>
+<div class="pagination">
+	<ul>
+    {% for num in page.page_range %}
+        {% if not num %}
+        <li><a>...</a></li>
+        {% else %}
+        	{% if page.number == num %}
+        		<li class="active"><a>{{ num }}</a></li>
+        	{% else %}
+        		<li><a href="?page={{ num }}">{{ num }}</a></li>
+        	{% endif %}
+        {% endif %}
+    {% endfor %}
+	</ul>
+</div>
+</center>
+
+{% endspaceless %}

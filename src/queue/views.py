@@ -9,9 +9,11 @@ from django.http import Http404, HttpResponse
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 from django.utils.datastructures import MultiValueDictKeyError
+from exceptions import TypeError
 from json import loads, dumps
 from queue.forms import *
 from queue.models import *
+from queue.paginators import DiggPaginator
 from queue.utils import *
 from uuid import uuid1
 
@@ -184,21 +186,22 @@ def modify_queue_item(request):
 
 def history(request, branch):
     branch_obj = Branch.objects.get(name=branch)
-    queue = Queue.objects.filter(branch=branch_obj, status__in=[Queue.DONE, Queue.REVERTED, Queue.SKIPPED]).order_by('-done_date')
-    paginator = Paginator(queue, 20)
+    list = Queue.objects.filter(branch=branch_obj, status__in=[Queue.DONE, Queue.REVERTED, Queue.SKIPPED]).order_by('-done_date')
+    paginator = DiggPaginator(list, 15, body=5, padding=1, margin=2)
 
-    page = request.GET.get('page')
+    current_page = request.GET.get('page')
 
     try:
-        queue = paginator.page(page)
-    except PageNotAnInteger:
-        queue = paginator.page(1)
+        page = paginator.page(current_page)
+    except (TypeError, PageNotAnInteger):
+        page = paginator.page(1)
     except EmptyPage:
-        queue = paginator.page(paginator.num_pages)
+        page = paginator.page(paginator.num_pages)
 
-    return render_to_response('history/dpq_history.html', RequestContext(request, {'queue' : queue,
-                                                                           'branch' : branch_obj,
-                                                                           'active_branches' : get_active_branches()}))
+    return render_to_response('history/dpq_history.html', 
+                RequestContext(request, {'page' : page,
+                                         'branch' : branch_obj,
+                                         'active_branches' : get_active_branches()}))
 
 
 def help_page(request):

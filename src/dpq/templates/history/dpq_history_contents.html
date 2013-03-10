@@ -1,3 +1,4 @@
+ <div id="history-table">
  <table class="table table-condensed">
     <thead>
       <tr>
@@ -11,8 +12,8 @@
         <th style="width: 80px;">Status</th>
       </tr>
     </thead>
-    <tbody>
-      {% for item in queue %}
+    <tbody> {% spaceless %}
+      {% for item in page %}
       <tr {% if item.status == item.SKIPPED %} style="color: #E0E0E0;" {% endif %}>
         <td>{{ item.index }}</td>
         <td>{{ item.ps }}</td>
@@ -30,6 +31,7 @@
              {% elif item.status == item.REVERTED %} class="label label-important" {% endif %}>
              {{ item.get_status_display }}</span></td>
       </tr>
-      {% endfor %}
+      {% endfor %} {% endspaceless %}
     </tbody>
   </table>
+  </div>

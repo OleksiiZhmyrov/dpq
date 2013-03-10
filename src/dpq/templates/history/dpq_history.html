@@ -5,26 +5,9 @@
 <center><h4>History for branch {{ branch.name }}</h4></center>
 <hr />
 
-<div id="history-table">
-  {% include "history/dpq_history_contents.html" %}
-</div>
-<center>
-  <div class="pagination">
-    <span class="step-links">
-          {% if queue.has_previous %}
-              [<a href="?page={{ queue.previous_page_number }}">previous</a>]
-          {% endif %}
+{% include "history/dpq_history_contents.html" %}
 
-          <span class="current">
-              [page {{ queue.number }} of {{ queue.paginator.num_pages }}]
-          </span>
-
-          {% if queue.has_next %}
-              [<a href="?page={{ queue.next_page_number }}">next</a>]
-          {% endif %}
-      </span>
-  </div>
-</center>
+{% include "misc/paginator.html" %}
 
 {% include "info/dpq_info_popup.html" %}
 

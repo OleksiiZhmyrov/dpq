@@ -7,8 +7,9 @@
 			<th>Tester</th>
 			<th>Description</th>
 			<th style="width: 100px;">Created</th>
-			<th style="width: 8px;"></th>
-			<th style="width: 8px;"></th>
+			<th style="width: 6px;"></th>
+			<th style="width: 6px;"></th>
+            <th style="width: 6px;"></th>
 			<th style="width: 80px;">Status</th>
 		</tr>
 	</thead>
@@ -23,14 +24,19 @@
 			<td>{{ item.creation_date|date:"M j, H:i" }}</td>
 			<td>{% if item.owner == user or user.is_superuser %}
 			    {% if item.status != item.DONE and item.status != item.REVERTED %} 
-			    <a href="#dpq-modify-queue" data-toggle="modal"
+			    <a href="#dpq-modify-queue" data-toggle="modal" title="Modify record"
 				   onclick="fetchQueueObject('{{ item.queue_id }}')"> <i class="icon-wrench"></i>
 			</a> {% endif %} {% endif %}
 			</td>
 			<td><a href="#dpq-push-details" style="text-decoration: none;"
-				data-toggle="modal"
+				data-toggle="modal" title="View detailed info"
 				onclick="fetchPushDetails('{{ item.queue_id }}')"><i class="icon-info-sign"></i></a>
 			</td>
+            <td>{% if item.codereview_url != "" %}
+                <a href="{{ item.codereview_url }}" target="_blank" title="View commit on GitHub">
+                    <i class="icon-comment"></i></a>
+                {% endif %}
+            </td>
 			<td>{{ item.get_status_display }}</td>
 		</tr>
 		{% endfor %}

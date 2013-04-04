@@ -151,7 +151,7 @@ function timedRefresh() {
     	}).fail(function() {
             $('div#dpq-refresh-alert').show("slow");
         });
-	},60000);
+	},10000);
 }
 
 function fetchSuperusersList() {

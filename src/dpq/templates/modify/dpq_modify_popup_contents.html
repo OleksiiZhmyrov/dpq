@@ -1,103 +1,110 @@
-<form  id="modify-queue-form" class="form-horizontal">
-  <div class="well well-small">
-  
-    <div class="control-group">
-      <label class="control-label" for="dpq-modify-queue-devA">Status:</label>
-      <div class="controls">
-        <select name="status" id="dpq-modify-queue-status">
-          <option
-            {% if item.status == item.WAITING %} selected="selected" {% endif %}
-            value={{ item.WAITING }}>waiting</option>
+<form id="modify-queue-form" class="form-horizontal">
+    <div class="well well-small">
 
-          <option
-            {% if item.status == item.IN_PROGRESS %} selected="selected" {% endif %}
-            value={{ item.IN_PROGRESS }}>in progress</option>
+        <div class="control-group">
+            <label class="control-label" for="dpq-modify-queue-devA">Status:</label>
 
-          {% if item.status == item.WAITING %}
-          <option
-            {% if item.status == item.SKIPPED %} selected="selected" {% endif %}
-            value={{ item.SKIPPED }}>skipped</option>
-          {% endif %}
+            <div class="controls">
+                <select name="status" id="dpq-modify-queue-status">
+                    <option
+                            {% if item.status == item.WAITING %} selected="selected" {% endif %}
+                                                                 value={{ item.WAITING }}>waiting
+                    </option>
 
-          {% if item.status == item.IN_PROGRESS %}
-          <option
-            {% if item.status == item.DONE %} selected="selected" {% endif %}
-            value={{ item.DONE }}>done</option>
+                    <option
+                            {% if item.status == item.IN_PROGRESS %} selected="selected" {% endif %}
+                                                                     value={{ item.IN_PROGRESS }}>in progress
+                    </option>
 
-          <option
-            {% if item.status == item.REVERTED %} selected="selected" {% endif %}
-            value={{ item.REVERTED }}>reverted</option>
-          {% endif %}
-        </select> 
-      </div>
+                    {% if item.status == item.WAITING %}
+                        <option
+                                {% if item.status == item.SKIPPED %} selected="selected" {% endif %}
+                                                                     value={{ item.SKIPPED }}>skipped
+                        </option>
+                    {% endif %}
+
+                    {% if item.status == item.IN_PROGRESS %}
+                        <option
+                                {% if item.status == item.DONE %} selected="selected" {% endif %}
+                                                                  value={{ item.DONE }}>done
+                        </option>
+
+                        <option
+                                {% if item.status == item.REVERTED %} selected="selected" {% endif %}
+                                                                      value={{ item.REVERTED }}>reverted
+                        </option>
+                    {% endif %}
+                </select>
+            </div>
+        </div>
     </div>
-    
-    <div class="control-group">
-      <label class="control-label" for="dpq-modify-queue-index">Place in queue:</label>
-      <div class="controls">
-        <input type="text" name="place" id="dpq-modify-queue-index" value="{{ item.index }}">
-      </div>
+
+    <div class="well well-small">
+        <div class="control-group">
+            <label class="control-label" for="dpq-modify-queue-ps">Pair station:</label>
+
+            <div class="controls">
+                <input type="text" name="ps" id="dpq-modify-queue-ps" value="{{ item.ps }}">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="dpq-modify-queue-description">Description:</label>
+
+            <div class="controls">
+                <input type="text" name="description" id="dpq-modify-queue-description" value="{{ item.description }}">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="dpq-modify-queue-codereview">URL for codereview:</label>
+
+            <div class="controls">
+                <input type="text" name="codereview_url" id="dpq-modify-queue-codereview"
+                       value="{{ item.codereview_url }}">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="dpq-modify-queue-branch">Branch:</label>
+
+            <div class="controls">
+                <select name="branch" id="dpq-modify-queue-branch">
+                    {% for branch in active_branches %}
+                        <option
+                                {% if item.branch.name == branch.name %} selected="selected" {% endif %}
+                                                                         value={{ branch.name }}>{{ branch.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
     </div>
-  </div>
-  
-  <div class="well well-small">
-    <div class="control-group">
-      <label class="control-label" for="dpq-modify-queue-ps">Pair station:</label>
-      <div class="controls">
-        <input type="text" name="ps" id="dpq-modify-queue-ps" value="{{ item.ps }}">
-      </div>
+
+    <div class="well well-small">
+        <div class="control-group">
+            <label class="control-label" for="dpq-modify-queue-devA">Developer A:</label>
+
+            <div class="controls">
+                <input type="text" name="devA" id="dpq-modify-queue-devA" value="{{ item.developerA }}">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="dpq-modify-queue-devB">Developer B:</label>
+
+            <div class="controls">
+                <input type="text" name="devB" id="dpq-modify-queue-devB" value="{{ item.developerB }}">
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label class="control-label" for="dpq-modify-queue-tester">Tester:</label>
+
+            <div class="controls">
+                <input type="text" name="tester" id="dpq-modify-queue-tester" value="{{ item.tester }}">
+            </div>
+        </div>
     </div>
-    
-    <div class="control-group">
-      <label class="control-label" for="dpq-modify-queue-description">Description:</label>
-      <div class="controls">
-        <input type="text" name="description" id="dpq-modify-queue-description" value="{{ item.description }}">
-      </div>
-    </div>
-    
-    <div class="control-group">
-      <label class="control-label" for="dpq-modify-queue-codereview">URL for codereview:</label>
-      <div class="controls">
-        <input type="text" name="codereview_url" id="dpq-modify-queue-codereview" value="{{ item.codereview_url }}">
-      </div>
-    </div>
-    
-    <div class="control-group">
-      <label class="control-label" for="dpq-modify-queue-branch">Branch:</label>
-      <div class="controls">
-        <select name="branch" id="dpq-modify-queue-branch">
-		  {% for branch in active_branches %}
-		      <option
-                  {% if item.branch.name == branch.name %} selected="selected" {% endif %}
-                  value={{ branch.name }}>{{ branch.name }}</option>
-		  {% endfor %}
-        </select> 
-      </div>
-    </div>
-  </div>
-  
-  <div class="well well-small">
-    <div class="control-group">
-      <label class="control-label" for="dpq-modify-queue-devA">Developer A:</label>
-      <div class="controls">
-        <input type="text" name="devA" id="dpq-modify-queue-devA" value="{{ item.developerA }}">
-      </div>
-    </div>
-    
-    <div class="control-group">
-      <label class="control-label" for="dpq-modify-queue-devB">Developer B:</label>
-      <div class="controls">
-        <input type="text" name="devB" id="dpq-modify-queue-devB" value="{{ item.developerB }}">
-      </div>
-    </div>
-    
-    <div class="control-group">
-      <label class="control-label" for="dpq-modify-queue-tester">Tester:</label>
-      <div class="controls">
-        <input type="text" name="tester" id="dpq-modify-queue-tester" value="{{ item.tester }}">
-      </div>
-    </div>
-  </div>
-  <input type="hidden" id="dpq-modify-queue-owner" value="{{ user.username }}" />
-  <input type="hidden" id="dpq-modify-queue-id" value="{{ item.queue_id }}" />
+    <input type="hidden" id="dpq-modify-queue-owner" value="{{ user.username }}"/>
+    <input type="hidden" id="dpq-modify-queue-id" value="{{ item.queue_id }}"/>
 </form>

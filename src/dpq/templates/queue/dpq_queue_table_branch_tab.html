@@ -1,44 +1,70 @@
-<table class="table">
-	<thead>
-		<tr>
-			<th style="width: 40px;">#</th>
-			<th style="width: 50px;">PS</th>
-			<th>Developers</th>
-			<th>Tester</th>
-			<th>Description</th>
-			<th style="width: 100px;">Created</th>
-			<th style="width: 6px;"></th>
-			<th style="width: 6px;"></th>
-            <th style="width: 6px;"></th>
-			<th style="width: 80px;">Status</th>
-		</tr>
-	</thead>
-	<tbody>
-		{% for item in push_table %}
-		<tr {% if item.status == item.IN_PROGRESS %} class="warning"{% endif %}>
-			<td>{{ item.index }}</td>
-			<td>{{ item.ps }}</td>
-			<td>{{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
-			<td>{{ item.tester }}</td>
-			<td>{{ item.description|truncatechars:70 }}</td>
-			<td>{{ item.creation_date|date:"M j, H:i" }}</td>
-			<td>{% if item.owner == user or user.is_superuser %}
-			    {% if item.status != item.DONE and item.status != item.REVERTED %} 
-			    <a href="#dpq-modify-queue" data-toggle="modal" title="Modify record"
-				   onclick="fetchQueueObject('{{ item.queue_id }}')"> <i class="icon-wrench"></i>
-			</a> {% endif %} {% endif %}
-			</td>
-			<td><a href="#dpq-push-details" style="text-decoration: none;"
-				data-toggle="modal" title="View detailed info"
-				onclick="fetchPushDetails('{{ item.queue_id }}')"><i class="icon-info-sign"></i></a>
-			</td>
+<script>
+    $('a.prevent-default').click(function (event) {
+        event.preventDefault();
+    });
+</script>
+
+<table class="table table-condensed">
+    <thead>
+    <tr>
+        <th id="arrow-up"></th>
+        <th style="text-align: center;">#</th>
+        <th id="arrow-down"></th>
+        <th style="width: 50px;">PS</th>
+        <th>Developers</th>
+        <th>Tester</th>
+        <th>Description</th>
+        <th style="width: 100px;">Created</th>
+        <th style="width: 6px;"></th>
+        <th style="width: 6px;"></th>
+        <th style="width: 6px;"></th>
+        <th style="width: 80px;">Status</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for item in data.push_table %}
+        <tr {% if item.status == item.IN_PROGRESS %} class="warning"{% endif %}>
+            <td>
+                {% if user.is_superuser or item.owner == user %}
+                    {% if item.index != data.last_item %}
+                        <a class="prevent-default" href="#"
+                           onclick="moveRecord('{{ item.queue_id }}', 'up')" title="Move up"><b>↑</b></a>
+                    {% endif %}
+                {% endif %}
+            </td>
+            <td style="text-align: center;">
+                {{ item.index }}
+            </td>
+            <td>
+                {% if user.is_superuser %}
+                    {% if item.index != data.first_item %}
+                        <a class="prevent-default" href="#"
+                           onclick="moveRecord('{{ item.queue_id }}', 'down')" title="Move down"><b>↓</b></a>
+                    {% endif %}
+                {% endif %}
+            </td>
+            <td style="border-left: 1px;">{{ item.ps }}</td>
+            <td>{{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
+            <td>{{ item.tester }}</td>
+            <td>{{ item.description|truncatechars:70 }}</td>
+            <td>{{ item.creation_date|date:"M j, H:i" }}</td>
+            <td>{% if item.owner == user or user.is_superuser %}
+                {% if item.status != item.DONE and item.status != item.REVERTED %}
+                    <a href="#dpq-modify-queue" data-toggle="modal" title="Modify record"
+                       onclick="fetchQueueObject('{{ item.queue_id }}')"> <i class="icon-wrench"></i>
+                    </a> {% endif %} {% endif %}
+            </td>
+            <td><a href="#dpq-push-details" style="text-decoration: none;"
+                   data-toggle="modal" title="View detailed info"
+                   onclick="fetchPushDetails('{{ item.queue_id }}')"><i class="icon-info-sign"></i></a>
+            </td>
             <td>{% if item.codereview_url != "" %}
                 <a href="{{ item.codereview_url }}" target="_blank" title="View commit on GitHub">
                     <i class="icon-comment"></i></a>
-                {% endif %}
+            {% endif %}
             </td>
-			<td>{{ item.get_status_display }}</td>
-		</tr>
-		{% endfor %}
-	</tbody>
+            <td>{{ item.get_status_display }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
 </table>

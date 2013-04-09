@@ -7,20 +7,20 @@
 
         {% for user in superusers_list %}
             {% if user.username != 'admin' %}
-        <tr>
-            <td>{{ user.username }}</td>
-            <td>
-                {% if user.is_staff %}
-                    <span class="label">
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>
+                        {% if user.is_staff %}
+                            <span class="label">
                         coordinator
                     </span>
-                {% else %}
-                    <span class="label label-success">
+                        {% else %}
+                            <span class="label label-success">
                         tester on-duty
                     </span>
-                {% endif %}
-            </td>
-        </tr>
+                        {% endif %}
+                    </td>
+                </tr>
             {% endif %}
         {% endfor %}
 

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>Register Page</title>
     <link href="/media/bootstrap/css/bootstrap.css" rel="stylesheet">
@@ -8,37 +8,41 @@
     <script src="/media/js/jquery-latest.js"></script>
     <script src="/media/js/jquery.validate.js"></script>
     <script src="/media/js/validation.js"></script>
-  </head>
-  <body>
-    <div class="container">
-      <div class="content">
+</head>
+<body>
+<div class="container">
+    <div class="content">
         <div class="row">
-          <div class="login-form">
-            <h2>Register</h2>
-            <form id="register-form" class="form-vertical" method="post" action="."> {% csrf_token %}
-              {{ form.non_field_errors }}
-              <fieldset>
-                <div class="control-group">
-                  <label class="control-label" for="{{ form.username.auto_id }}">Username:</label>
-                  <div class="controls"> {{ form.username }} </div>
-                  {{ form.username.errors }}
-                </div>
-                <div class="control-group">
-                  <label class="control-label" for="{{ form.password1.auto_id }}">Password:</label>
-                  <div class="controls"> {{ form.password1 }} </div>
-                  {{ form.password1.errors }}
-                </div>
-                <div class="control-group clearfix">
-                  <label class="control-label" for="{{ form.password2.auto_id }}">Repeat password:</label>
-                  <div class="controls"> {{ form.password2 }} </div>
-                  {{ form.password2.errors }}
-                </div>
-                <input type="submit" class="btn primary" value="Register" />
-              </fieldset>
-            </form>
-          </div>
+            <div class="login-form">
+                <h2>Register</h2>
+
+                <form id="register-form" class="form-vertical" method="post" action="."> {% csrf_token %}
+                    {{ form.non_field_errors }}
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="{{ form.username.auto_id }}">Username:</label>
+
+                            <div class="controls"> {{ form.username }} </div>
+                            {{ form.username.errors }}
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="{{ form.password1.auto_id }}">Password:</label>
+
+                            <div class="controls"> {{ form.password1 }} </div>
+                            {{ form.password1.errors }}
+                        </div>
+                        <div class="control-group clearfix">
+                            <label class="control-label" for="{{ form.password2.auto_id }}">Repeat password:</label>
+
+                            <div class="controls"> {{ form.password2 }} </div>
+                            {{ form.password2.errors }}
+                        </div>
+                        <input type="submit" class="btn primary" value="Register"/>
+                    </fieldset>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
-  </body>
+</div>
+</body>
 </html>

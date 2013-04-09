@@ -1,100 +1,105 @@
 <style type="text/css">
-div.dpq-info {
-	margin-top: 10px;
-}
-tr td {
-	padding-left: 10px;
-}
+    div.dpq-info {
+        margin-top: 10px;
+    }
+
+    tr td {
+        padding-left: 10px;
+    }
 </style>
 
 <div class="row">
-	<div class="span1" style="text-align: center;">
+    <div class="span1" style="text-align: center;">
 		<span
-            {% if item.status == item.DONE %}          class="label label-success"
-            {% elif item.status == item.SKIPPED %}     class="label"
-            {% elif item.status == item.REVERTED %}    class="label label-important"
-            {% elif item.status == item.IN_PROGRESS %} class="label label-warning"
-            {% elif item.status == item.WAITING %}     class="label label-info"
-            {% endif %}
-            {{ item.get_status_display }}
-		    class="label" style="padding: 10px; font-size: 18px;">{{ item.index }}
+                {% if item.status == item.DONE %}          class="label label-success"
+                {% elif item.status == item.SKIPPED %}     class="label"
+                {% elif item.status == item.REVERTED %}    class="label label-important"
+                {% elif item.status == item.IN_PROGRESS %} class="label label-warning"
+                {% elif item.status == item.WAITING %}     class="label label-info"
+                {% endif %}
+                {{ item.get_status_display }}
+                                                           class="label"
+                                                           style="padding: 10px; font-size: 18px;">{{ item.index }}
 		</span>
-	</div>
-	<div class="span5" 
-		 style="font-size: 16px; 
+    </div>
+    <div class="span5"
+         style="font-size: 16px;
 		 		font-weight: bold; 
 		 		text-align: left;">
-		 {{ item.description }}</div>
+        {{ item.description }}</div>
 </div>
 
-<hr />
+<hr/>
 <div class="dpq-info">
-	<ul style="list-style-type: none;">
-		<li>Developers: {{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %} ({{ item.ps }})</li>
-		{% if item.tester != "" %}<li>Tester: {{ item.tester }}</li>{% endif %}
-	</ul>
+    <ul style="list-style-type: none;">
+        <li>Developers:
+            {{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %} ({{ item.ps }})
+        </li>
+        {% if item.tester != "" %}
+            <li>Tester: {{ item.tester }}</li>{% endif %}
+    </ul>
 </div>
 
 <div class="well dpq-info" style="margin-top: 10px;">
-<table class="table-hover">
-  <tbody>
-	<tr>
-		<td>Created</td>
-		<td>{{ item.creation_date|date:"H:i:s" }}</td>
-		<td>{{ item.creation_date|date:"d.m.Y" }}</td>
-	</tr>
-	
-	{% if item.modified_date != None %}
-	<tr>
-		<td>Modified</td>
-		<td>{{ item.modified_date|date:"H:i:s" }}</td>
-		<td>{{ item.modified_date|date:"d.m.Y" }}</td>
-	</tr>
-	{% endif %}
-	
-	{% if item.push_date != None %}
-	<tr>
-		<td>Pushed</td>
-		<td>{{ item.push_date|date:"H:i:s" }}</td>
-		<td>{{ item.push_date|date:"d.m.Y" }}</td>
-	</tr>
-	{% endif %}
-	
-	{% if item.done_date != None %}
-	<tr>
-		<td>Closed</td>
-		<td>{{ item.done_date|date:"H:i:s" }}</td>
-		<td>{{ item.done_date|date:"d.m.Y" }}</td>
-	</tr>
-	{% endif %}
-  </tbody>
-</table>
+    <table class="table-hover">
+        <tbody>
+        <tr>
+            <td>Created</td>
+            <td>{{ item.creation_date|date:"H:i:s" }}</td>
+            <td>{{ item.creation_date|date:"d.m.Y" }}</td>
+        </tr>
+
+        {% if item.modified_date != None %}
+            <tr>
+                <td>Modified</td>
+                <td>{{ item.modified_date|date:"H:i:s" }}</td>
+                <td>{{ item.modified_date|date:"d.m.Y" }}</td>
+            </tr>
+        {% endif %}
+
+        {% if item.push_date != None %}
+            <tr>
+                <td>Pushed</td>
+                <td>{{ item.push_date|date:"H:i:s" }}</td>
+                <td>{{ item.push_date|date:"d.m.Y" }}</td>
+            </tr>
+        {% endif %}
+
+        {% if item.done_date != None %}
+            <tr>
+                <td>Closed</td>
+                <td>{{ item.done_date|date:"H:i:s" }}</td>
+                <td>{{ item.done_date|date:"d.m.Y" }}</td>
+            </tr>
+        {% endif %}
+        </tbody>
+    </table>
 </div>
 <div class="dpq-info" style="margin-left: 15px;">
-<table class="table-hover">
-  <tbody>
-  	{% if item.codereview_url != "" %}
-    <tr>
-    	<td>Code Review URL:</td>
-    	<td><a href="{{ item.codereview_url }}" target="_blank"><i class="icon-share-alt"></i> follow</a></td>
-    </tr>
-    {% endif %}
-    <tr>
-    	<td>Created by:</td>
-    	<td>{{ item.owner }}</td>
-    </tr>
-    <tr>
-    	<td>Branch:</td>
-    	<td>{{ item.branch }}</td>
-    </tr>
-    <tr>
-    	<td>Status code:</td>
-    	<td>{{ item.status }}</td>
-    </tr>    
-    <tr>
-    	<td>Unique ID:</td>
-    	<td>{{ item.queue_id }}</td>
-    </tr>    
-  </tbody>
-</table>
+    <table class="table-hover">
+        <tbody>
+        {% if item.codereview_url != "" %}
+            <tr>
+                <td>Code Review URL:</td>
+                <td><a href="{{ item.codereview_url }}" target="_blank"><i class="icon-share-alt"></i> follow</a></td>
+            </tr>
+        {% endif %}
+        <tr>
+            <td>Created by:</td>
+            <td>{{ item.owner }}</td>
+        </tr>
+        <tr>
+            <td>Branch:</td>
+            <td>{{ item.branch }}</td>
+        </tr>
+        <tr>
+            <td>Status code:</td>
+            <td>{{ item.status }}</td>
+        </tr>
+        <tr>
+            <td>Unique ID:</td>
+            <td>{{ item.queue_id }}</td>
+        </tr>
+        </tbody>
+    </table>
 </div>

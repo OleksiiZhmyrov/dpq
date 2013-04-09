@@ -1,20 +1,20 @@
 <div class="dpq-queue-tabs">
-  <ul id="dpq-queue-branches" class="nav nav-tabs">
-  {% for branch in active_branches %}
-      <li id="{{ branch.name }}" {% if current_tab == branch.name %} class="active" {% endif %}>
-        <a href="#{{ branch.name }}_tab" 
-           data-toggle="tab" 
-           onclick="update_branch_tab('{{ branch.name }}')">{{ branch.name }}</a>
-      </li>
-  {% endfor %}
-  </ul>
+    <ul id="dpq-queue-branches" class="nav nav-tabs">
+        {% for branch in active_branches %}
+            <li id="{{ branch.name }}" {% if current_tab == branch.name %} class="active" {% endif %}>
+                <a class="prevent-default" href="#{{ branch.name }}_tab"
+                   data-toggle="tab"
+                   onclick="update_branch_tab('{{ branch.name }}')">{{ branch.name }}</a>
+            </li>
+        {% endfor %}
+    </ul>
 
-  <div id="myTabContent" class="tab-content">
-    {% for branch in active_branches %}
-      <div id="{{ branch.name }}_tab" 
-           class="tab-pane fade in {% if branch.name == current_tab %}active{% endif %}" >
-        <center><img src="/media/img/ajax-loader.gif" /></center>  
-      </div>
-    {% endfor %}
-  </div>
+    <div id="myTabContent" class="tab-content">
+        {% for branch in active_branches %}
+            <div id="{{ branch.name }}_tab"
+                 class="tab-pane fade in {% if branch.name == current_tab %}active{% endif %}">
+                <center><img src="/media/img/ajax-loader.gif"/></center>
+            </div>
+        {% endfor %}
+    </div>
 </div>

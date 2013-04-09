@@ -2,13 +2,13 @@
 {% block title %}History{% endblock %}
 {% block main %}
 
-<center><h4>History for branch {{ branch.name }}</h4></center>
-<hr />
+    <center><h4>History for branch {{ branch.name }}</h4></center>
+    <hr/>
 
-{% include "history/dpq_history_contents.html" %}
+    {% include "history/dpq_history_contents.html" %}
 
-{% include "misc/paginator.html" %}
+    {% include "misc/paginator.html" %}
 
-{% include "info/dpq_info_popup.html" %}
+    {% include "info/dpq_info_popup.html" %}
 
 {% endblock %}

@@ -1,16 +1,16 @@
 $(document).ready(function () {
     $.ajaxSetup(
         {
-			type: "GET",
+            type: "GET",
             dataType: "html",
             cache: false
         });
-	
-	$('#admin-invalidate-cache').click(function () {
+
+    $('#admin-invalidate-cache').click(function () {
         $.ajax({
-			url: "/ajax/admin/invalidate-cache/"
-		}).done(function() {
-          alert("Cache is invalidated");
-		});
+            url: "/ajax/admin/invalidate-cache/"
+        }).done(function () {
+                alert("Cache is invalidated");
+            });
     });
 });

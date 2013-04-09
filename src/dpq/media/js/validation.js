@@ -70,9 +70,9 @@ function isValidCreateForm() {
                     minlength: 2
                 },
                 codereview_url: {
-                	required: false,
-                	maxlength: 256,
-                	regexp: 'https://github\.com/.*/[0-9a-f]{40}'
+                    required: false,
+                    maxlength: 256,
+                    regexp: 'https://github\.com/.*/[0-9a-f]{40}'
                 },
                 devA: {
                     required: true,
@@ -107,9 +107,9 @@ function isValidCreateForm() {
                     minlength: "Description is too short"
                 },
                 codereview_url: {
-                	required: "GitHub URL is required",
-                	maxlength: "Max length is 256 characters",
-                	regexp: "Please check your URL"
+                    required: "GitHub URL is required",
+                    maxlength: "Max length is 256 characters",
+                    regexp: "Please check your URL"
                 },
                 devA: {
                     required: "There must be at least one developer",
@@ -145,9 +145,9 @@ function isValidModifyForm() {
                     minlength: 2
                 },
                 codereview_url: {
-                	required: false,
-                	maxlength: 256,
-                	regexp: 'https://github\.com/.*/[0-9a-f]{40}'
+                    required: false,
+                    maxlength: 256,
+                    regexp: 'https://github\.com/.*/[0-9a-f]{40}'
                 },
                 devA: {
                     required: true,
@@ -186,9 +186,9 @@ function isValidModifyForm() {
                     minlength: "Description is too short!"
                 },
                 codereview_url: {
-                	required: "GitHub URL is required",
-                	maxlength: "Max length is 256 characters",
-                	regexp: "Please check your URL"
+                    required: "GitHub URL is required",
+                    maxlength: "Max length is 256 characters",
+                    regexp: "Please check your URL"
                 },
                 devA: {
                     required: "There must be at least one developer",

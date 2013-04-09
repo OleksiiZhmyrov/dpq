@@ -1,37 +1,37 @@
- <div id="history-table">
- <table class="table table-condensed">
-    <thead>
-      <tr>
-        <th style="width: 40px;">#</th>
-        <th style="width: 50px;">PS</th>
-        <th>Developers</th>
-        <th>Tester</th>
-        <th>Description</th>
-        <th style="width: 80px;">Date</th>
-        <th style="width: 8px;"></th>
-        <th style="width: 80px;">Status</th>
-      </tr>
-    </thead>
-    <tbody> {% spaceless %}
-      {% for item in page %}
-      <tr {% if item.status == item.SKIPPED %} style="color: #E0E0E0;" {% endif %}>
-        <td>{{ item.index }}</td>
-        <td>{{ item.ps }}</td>
-        <td>{{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
-        <td>{{ item.tester }}</td>
-		<td>{{ item.description|truncatechars:80 }}</td>
-        <td>{{ item.done_date|date:"d.m.Y" }}</td>
-		<td><a href="#dpq-push-details"
-			   style="text-decoration: none;"
-			   data-toggle="modal"
-			   onclick="fetchPushDetails('{{ item.queue_id }}')"><i class="icon-info-sign"></i></a></td>
-        <td><span
-             {% if item.status == item.DONE %} class="label label-success"
-             {% elif item.status == item.SKIPPED %} class="label"
-             {% elif item.status == item.REVERTED %} class="label label-important" {% endif %}>
+<div id="history-table">
+    <table class="table table-condensed">
+        <thead>
+        <tr>
+            <th style="width: 40px;">#</th>
+            <th style="width: 50px;">PS</th>
+            <th>Developers</th>
+            <th>Tester</th>
+            <th>Description</th>
+            <th style="width: 80px;">Date</th>
+            <th style="width: 8px;"></th>
+            <th style="width: 80px;">Status</th>
+        </tr>
+        </thead>
+        <tbody> {% spaceless %}
+            {% for item in page %}
+                <tr {% if item.status == item.SKIPPED %} style="color: #E0E0E0;" {% endif %}>
+                    <td>{{ item.index }}</td>
+                    <td>{{ item.ps }}</td>
+                    <td>{{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
+                    <td>{{ item.tester }}</td>
+                    <td>{{ item.description|truncatechars:80 }}</td>
+                    <td>{{ item.done_date|date:"d.m.Y" }}</td>
+                    <td><a href="#dpq-push-details"
+                           style="text-decoration: none;"
+                           data-toggle="modal"
+                           onclick="fetchPushDetails('{{ item.queue_id }}')"><i class="icon-info-sign"></i></a></td>
+                    <td><span
+                            {% if item.status == item.DONE %} class="label label-success"
+                            {% elif item.status == item.SKIPPED %} class="label"
+                            {% elif item.status == item.REVERTED %} class="label label-important" {% endif %}>
              {{ item.get_status_display }}</span></td>
-      </tr>
-      {% endfor %} {% endspaceless %}
-    </tbody>
-  </table>
-  </div>
+                </tr>
+            {% endfor %} {% endspaceless %}
+        </tbody>
+    </table>
+</div>

@@ -1,54 +1,62 @@
 {% extends "dpq_base.html" %}
 {% block title %}Push Queue{% endblock %}
-{% block body_properties %}onload="timedRefresh();"{% endblock %}
+
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            timedRefresh();
+        });
+    </script>
+{% endblock %}
+
 {% block main %}
 
-<script src="/media/js/queues.js"></script>
+    <script src="/media/js/queues.js"></script>
 
-<div class="alert" id="dpq-refresh-alert" style="display: none;">
-  <button type="button" class="close">&times;</button>
-  <strong>Warning!</strong> Last attempt to automatically update the list failed. Please refresh page manually.
-</div>
+    <div class="alert" id="dpq-refresh-alert" style="display: none;">
+        <button type="button" class="close">&times;</button>
+        <strong>Warning!</strong> Last attempt to automatically update the list failed. Please refresh page manually.
+    </div>
 
-<div class="btn-group" style="margin-bottom: 20px;">
-  {% if user.is_authenticated %}
-    <a href="#dpq-add-queue"
-       role="button"
-       class="btn btn-small btn-success"
-       data-toggle="modal"
-       onclick="fetchLastQueueData()"><i class="icon-plus"></i> Add Record</a>
-  {% endif %}
-    <a href="#dpq-superusers"
-       role="button"
-       class="btn btn-small"
-       data-toggle="modal"
-       onclick="fetchSuperusersList()"><i class="icon-flag"></i> People On-Duty</a>
-</div>
+    <div class="btn-group" style="margin-bottom: 20px;">
+        {% if user.is_authenticated %}
+            <a href="#dpq-add-queue"
+               role="button"
+               class="btn btn-small btn-success prevent-default"
+               data-toggle="modal"
+               onclick="fetchLastQueueData()"><i class="icon-plus"></i> Add Record</a>
+        {% endif %}
+        <a href="#dpq-superusers"
+           role="button"
+           class="btn btn-small prevent-default"
+           data-toggle="modal"
+           onclick="fetchSuperusersList()"><i class="icon-flag"></i> People On-Duty</a>
+    </div>
 
-<div id="queue-table">
-  {% include "queue/dpq_queue_table.html" %}
-</div>
+    <div id="queue-table">
+        {% include "queue/dpq_queue_table.html" %}
+    </div>
 
-{% if user.is_authenticated %}
-  {% include "add/dpq_add_popup.html" %}
-  {% include "modify/dpq_modify_popup.html" %}
-{% endif %}
+    {% if user.is_authenticated %}
+        {% include "add/dpq_add_popup.html" %}
+        {% include "modify/dpq_modify_popup.html" %}
+    {% endif %}
 
-<div class="modal hide fade" id="dpq-superusers" style="width: 470px;">
-  <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-    <h3>People On-Duty</h3>
-  </div>
-  <div class="modal-body" id="dpq-superusers-list">
-    <center>
-        <img src="/media/img/ajax-loader.gif" />
-    </center>
-  </div>
-  <div class="modal-footer">
-    <a href="#" class="btn" data-dismiss="modal" aria-hidden="true" id="closeDialog">Close</a>
-  </div>
-</div>
+    <div class="modal hide fade" id="dpq-superusers" style="width: 470px;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>People On-Duty</h3>
+        </div>
+        <div class="modal-body" id="dpq-superusers-list">
+            <center>
+                <img src="/media/img/ajax-loader.gif"/>
+            </center>
+        </div>
+        <div class="modal-footer">
+            <a href="#" class="btn" data-dismiss="modal" aria-hidden="true" id="closeDialog">Close</a>
+        </div>
+    </div>
 
-{% include "info/dpq_info_popup.html" %}
+    {% include "info/dpq_info_popup.html" %}
 
-{%endblock %}
+{% endblock %}

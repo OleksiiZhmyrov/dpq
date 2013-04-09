@@ -1,64 +1,71 @@
 <!DOCTYPE html>
 
 <html lang="en">
-  <head>
+<head>
     <title>Push Queue</title>
-	<meta http-equiv="refresh" content="43200" />
-	<link href="/media/css/validation.css" rel="stylesheet" />
-    <link href="/media/bootstrap/css/bootstrap.css" rel="stylesheet" />
-    <link href="/media/favicon.ico" rel="icon" type="image/x-icon" />
-  </head>
-  <body style="padding-top: 5px;" {% block body_properties %}{% endblock %}>
-    <script src="/media/js/jquery-latest.js"></script>
-    <script src="/media/bootstrap/js/bootstrap.js"></script>
-    <script src="/media/js/jquery.cookie.js"></script>
-    <script src="/media/js/jquery.validate.js"></script>
-    <script src="/media/js/validation.js?v=201303102245"></script>
-    <script src="/media/js/ajax.js?v=201304042118"></script>
+    <meta http-equiv="refresh" content="43200"/>
+    <link href="/media/css/validation.css" rel="stylesheet"/>
+    <link href="/media/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <link href="/media/favicon.ico" rel="icon" type="image/x-icon"/>
+</head>
+<body style="padding-top: 5px;">
+<script src="/media/js/jquery-latest.js"></script>
+<script src="/media/bootstrap/js/bootstrap.js"></script>
+<script src="/media/js/jquery.cookie.js"></script>
+<script src="/media/js/jquery.validate.js"></script>
+<script src="/media/js/validation.js?v=201303102245"></script>
+<script src="/media/js/ajax.js?v=201304042121"></script>
 
-    <div class="container" style="width: 90%;">
-      <div class="navbar">
+{% block javascript %}{% endblock %}
+
+<div class="container" style="width: 90%;">
+    <div class="navbar">
         <div class="navbar-inner">
-          <a class="brand" href="/">{% block title %}{% endblock %}</a>
-          <ul class="nav pull-right">
-              <li class="divider-vertical"></li>
-              <li><a href="/"><i class="icon-list-alt"></i> Queue</a></li>
-              
-              {# History dropdown menu #}
-              <li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-				    <i class="icon-calendar"></i> History<b class="caret"></b></a>
-				<ul class="dropdown-menu">
-				    <li class="nav-header">Active branches</li>
-					<li><li>
-				  {% for branch in active_branches %}
-					<li><a href="/history/{{ branch.name }}/"><i class="icon-tag"></i> {{ branch.name }}</a></li>
-					<li><li>
-				  {% endfor %}
-		     	    <li class="nav-header">Statistics</li>
-					<li><li>
-					<li><a href="/charts/"><i class="icon-align-left"></i> Charts</a></li>
-					<li><li>
-				</ul>
-			  </li>
-			  
-              
-              <li><a href="/help/"><i class="icon-question-sign"></i> Help</a></li>
+            <a class="brand" href="/">{% block title %}{% endblock %}</a>
+            <ul class="nav pull-right">
+                <li class="divider-vertical"></li>
+                <li><a href="/"><i class="icon-list-alt"></i> Queue</a></li>
+
+                {# History dropdown menu #}
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <i class="icon-calendar"></i> History<b class="caret"></b></a>
+                    <ul class="dropdown-menu">
+                        <li class="nav-header">Active branches</li>
+                        <li>
+                        <li>
+                            {% for branch in active_branches %}
+                                <li><a href="/history/{{ branch.name }}/"><i class="icon-tag"></i> {{ branch.name }}</a>
+                                </li>
+                                <li>
+                                <li>
+                            {% endfor %}
+                        <li class="nav-header">Statistics</li>
+                        <li>
+                        <li>
+                        <li><a href="/charts/"><i class="icon-align-left"></i> Charts</a></li>
+                        <li>
+                        <li>
+                    </ul>
+                </li>
+
+
+                <li><a href="/help/"><i class="icon-question-sign"></i> Help</a></li>
+                {% if user.is_authenticated %}
+                    <li class="divider-vertical"></li>
+                    <li><a href="/logout/"><i class="icon-road"></i> Sign Out</a></li>
+                {% else %}
+                    <li class="divider-vertical"></li>
+                    <li><a href="/register/"><i class="icon-plus-sign"></i> Get account</a></li>
+                    <li><a href="/login/"><i class="icon-user"></i> Sign In</a></li>
+                {% endif %}
+            </ul>
             {% if user.is_authenticated %}
-              <li class="divider-vertical"></li>
-              <li><a href="/logout/"><i class="icon-road"></i> Sign Out</a></li>
-            {% else %}
-              <li class="divider-vertical"></li>
-              <li><a href="/register/"><i class="icon-plus-sign"></i> Get account</a></li>
-              <li><a href="/login/"><i class="icon-user"></i> Sign In</a></li>
+                <p class="navbar-text pull-right" style="margin-right: 20px;">Welcome, {{ user.username }}!</p>
             {% endif %}
-          </ul>
-          {% if user.is_authenticated %}
-            <p class="navbar-text pull-right" style="margin-right: 20px;">Welcome, {{ user.username }}!</p>
-          {% endif %}
         </div>
-      </div>
-      {% block main %}{% endblock %}
     </div>
-  </body>
+    {% block main %}{% endblock %}
+</div>
+</body>
 </html>

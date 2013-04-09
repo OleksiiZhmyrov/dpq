@@ -1,35 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
+<head>
     <meta charset="utf-8">
     <title>Login Page</title>
     <link href="/media/bootstrap/css/bootstrap.css" rel="stylesheet">
     <link href="/media/css/registration.css" rel="stylesheet">
-  </head>
-  <body>
-    <div class="container">
-      <div class="content">
+</head>
+<body>
+<div class="container">
+    <div class="content">
         <div class="row">
-          <div class="login-form">
-            <h2>Login</h2>
-            <form method="post" action="."> {% csrf_token %}
-              <fieldset>
-                {% if form.errors %}
-                <p>Your username and password didn't match. Please try again.</p>
-                {% endif %}
-                <div class="clearfix">
-                  {{ form.username }}
-                </div>
-                <div class="clearfix">
-                  {{ form.password }}
-                </div>
-                <input type="hidden" name="next" value="/" />
-                <input type="submit" class="btn primary" value="Log In" />
-              </fieldset>
-            </form>
-          </div>
+            <div class="login-form">
+                <h2>Login</h2>
+
+                <form method="post" action="."> {% csrf_token %}
+                    <fieldset>
+                        {% if form.errors %}
+                            <p>Your username and password didn't match. Please try again.</p>
+                        {% endif %}
+                        <div class="clearfix">
+                            {{ form.username }}
+                        </div>
+                        <div class="clearfix">
+                            {{ form.password }}
+                        </div>
+                        <input type="hidden" name="next" value="/"/>
+                        <input type="submit" class="btn primary" value="Log In"/>
+                    </fieldset>
+                </form>
+            </div>
         </div>
-      </div>
     </div>
-  </body>
+</div>
+</body>
 </html>

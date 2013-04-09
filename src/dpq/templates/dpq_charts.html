@@ -2,44 +2,49 @@
 {% block title %}Push Statistics{% endblock %}
 {% block main %}
 
-<script type="text/javascript" src="http://www.google.com/jsapi"></script>
-<script src="/media/js/visualisation.js"></script>
+    <script type="text/javascript" src="http://www.google.com/jsapi"></script>
+    <script src="/media/js/visualisation.js"></script>
 
-<script type="text/javascript">
-	google.load("visualization", "1", {packages:["corechart"]});
-</script>
+    <script type="text/javascript">
+        google.load("visualization", "1", {packages: ["corechart"]});
+    </script>
 
-<div class="accordion" id="accordion2">
-<div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse_main_acc">
-        Average push duration for all branches
-      </a>
+    <div class="accordion" id="accordion2">
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse_main_acc">
+                    Average push duration for all branches
+                </a>
+            </div>
+            <div id="collapse_main_acc" class="accordion-body collapse in">
+                <div class="accordion-inner">
+                    <div id="vis_average" style="width: 1200px; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
+        {% for branch in active_branches %}
+            <div class="accordion-group">
+                <div class="accordion-heading">
+                    <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2"
+                       href="#collapse_{{ branch.name }}"
+                       onclick="drawVisualisation('{{ branch.name }}');">
+                        Statistics for branch <b>{{ branch.name }}</b>
+                    </a>
+                </div>
+                <div id="collapse_{{ branch.name }}" class="accordion-body collapse">
+                    <div class="accordion-inner">
+                        {{ branch.get_status }}
+
+                        <div class="span6">
+                            <div id="pending_branch_{{ branch.name }}" style="width: 500px; height: 400px;"></div>
+                        </div>
+                        <div class="span6">
+                            <div id="duration_branch_{{ branch.name }}" style="width: 500px; height: 400px;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
     </div>
-    <div id="collapse_main_acc" class="accordion-body collapse in">
-      <div class="accordion-inner">
-  		<div id="vis_average" style="width: 1200px; height: 400px;"></div>
-      </div>
-    </div>
-  </div>
-  {% for branch in active_branches %}
-  <div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse_{{ branch.name }}"
-      		onclick="drawVisualisation('{{ branch.name }}');">
-        Statistics for branch <b>{{ branch.name }}</b>
-      </a>
-    </div>
-    <div id="collapse_{{ branch.name }}" class="accordion-body collapse">
-      <div class="accordion-inner">
-        {{ branch.get_status }}
-		
-		<div class="span6"><div id="pending_branch_{{ branch.name }}" style="width: 500px; height: 400px;"></div></div>
-		<div class="span6"><div id="duration_branch_{{ branch.name }}" style="width: 500px; height: 400px;"></div></div>
-      </div>
-    </div>
-  </div>
-  {% endfor %}
-</div>
 
 {% endblock %}

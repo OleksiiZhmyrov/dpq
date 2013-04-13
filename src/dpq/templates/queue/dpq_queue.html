@@ -18,19 +18,24 @@
         <strong>Warning!</strong> Last attempt to automatically update the list failed. Please refresh page manually.
     </div>
 
-    <div class="btn-group" style="margin-bottom: 20px;">
-        {% if user.is_authenticated %}
-            <a href="#dpq-add-queue"
+    <div>
+        <div class="btn-group" style="margin-bottom: 20px;">
+            {% if user.is_authenticated %}
+                <a href="#dpq-add-queue"
+                   role="button"
+                   class="btn btn-small btn-success prevent-default"
+                   data-toggle="modal"
+                   onclick="fetchLastQueueData()"><i class="icon-plus"></i> Add Record</a>
+            {% endif %}
+            <a href="#dpq-superusers"
                role="button"
-               class="btn btn-small btn-success prevent-default"
+               class="btn btn-small prevent-default"
                data-toggle="modal"
-               onclick="fetchLastQueueData()"><i class="icon-plus"></i> Add Record</a>
-        {% endif %}
-        <a href="#dpq-superusers"
-           role="button"
-           class="btn btn-small prevent-default"
-           data-toggle="modal"
-           onclick="fetchSuperusersList()"><i class="icon-flag"></i> People On-Duty</a>
+               onclick="fetchSuperusersList()"><i class="icon-flag"></i> People On-Duty</a>
+        </div>
+        <div class="pull-right">
+            <div id="timer" style="padding-right: 10px; color: lightgrey">0:10</div>
+        </div>
     </div>
 
     <div id="queue-table">

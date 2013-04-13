@@ -131,21 +131,33 @@ function clearModal() {
 }
 
 function timedRefresh() {
-    setInterval(function () {
-        $.ajax({
-            type: "GET",
-            url: "/ajax/request/key/"
-        }).done(function (data) {
-                if ($.cookie('key') != data) {
-                    $.cookie('key', data);
-                    update_branch_tab($("div.dpq-queue-tabs > ul > li.active").attr("id"));
-                }
-                $('div#dpq-refresh-alert').hide("slow");
-            }).fail(function () {
-                $('div#dpq-refresh-alert').show("slow");
-            });
-    }, 10000);
+    var tick = 9;
+    setInterval(function() {
+        $('#timer').html("0:0" + tick);
+        if(tick == 0) {
+            $('#timer').html("updating");
+            updateTab();
+            tick = 10;
+        }
+        tick--;
+    }, 1000);
 }
+
+function updateTab() {
+    $.ajax({
+        type: "GET",
+        url: "/ajax/request/key/"
+    }).done(function (data) {
+            if ($.cookie('key') != data) {
+                $.cookie('key', data);
+                update_branch_tab($("div.dpq-queue-tabs > ul > li.active").attr("id"));
+            }
+            $('div#dpq-refresh-alert').hide("slow");
+        }).fail(function () {
+            $('div#dpq-refresh-alert').show("slow");
+        });
+}
+
 
 function fetchSuperusersList() {
     $.ajax({

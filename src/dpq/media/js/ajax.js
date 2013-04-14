@@ -133,9 +133,11 @@ function clearModal() {
 function timedRefresh() {
     var tick = 9;
     setInterval(function() {
+        $('#timer-ajax-loader').hide();
         $('#timer').html("0:0" + tick);
         if(tick == 0) {
-            $('#timer').html("updating");
+            $('#timer-ajax-loader').show();
+            $('#timer').html("&nbsp;updating...");
             updateTab();
             tick = 10;
         }

@@ -44,7 +44,13 @@
                 {% endif %}
             </td>
             <td style="border-left: 1px;">{{ item.ps }}</td>
-            <td>{{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
+            <td>{% if item.team == 'mercury' %} <i class="team-mercury" title="Mercury Team"></i>
+                {% elif item.team == 'venus' %} <i class="team-venus" title="Venus Team"></i>
+                {% elif item.team == 'earth' %} <i class="team-earth" title="Earth Team"></i>
+                {% elif item.team == 'mars' %} <i class="team-mars" title="Mars Team"></i>
+                {% elif item.team == 'jupiter' %} <i class="team-jupiter" title="Jupiter Team"></i>
+                {% endif %}
+                {{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
             <td>{{ item.tester }}</td>
             <td>{{ item.description|truncatechars:70 }}</td>
             <td>{{ item.creation_date|date:"M j, H:i" }}</td>

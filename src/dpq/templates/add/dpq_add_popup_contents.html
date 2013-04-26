@@ -47,6 +47,24 @@
     </div>
     <div class="well well-small">
         <div class="control-group">
+            <label class="control-label" for="dpq-add-queue-team">Team:</label>
+            <div class="controls">
+                <select name="team" id="dpq-add-queue-team">
+                    <option value="none">Not specified</option>
+                    <option {% if item.team == 'mercury' %} selected="selected" {% endif %}
+                            value="mercury">Mercury</option>
+                    <option {% if item.team == 'venus' %} selected="selected" {% endif %}
+                            value="venus">Venus</option>
+                    <option {% if item.team == 'earth' %} selected="selected" {% endif %}
+                            value="earth">Earth</option>
+                    <option {% if item.team == 'mars' %} selected="selected" {% endif %}
+                            value="mars">Mars</option>
+                    <option {% if item.team == 'jupiter' %} selected="selected" {% endif %}
+                            value="jupiter">Jupiter</option>
+                </select>
+            </div>
+        </div>
+        <div class="control-group">
             <label class="control-label" for="dpq-add-queue-devA">Developer A:</label>
 
             <div class="controls">

@@ -116,6 +116,7 @@ def create_queue_item(request):
             description=data['description'],
             codereview_url=data['codereview_url'],
             branch=Branch.objects.get(name__iexact=data['branch']),
+            team=data['team'],
             owner=request.user,
             queue_id=uuid1().hex,
             index=index
@@ -146,6 +147,7 @@ def modify_queue_item(request):
         item.tester = data['tester']
 
         item.branch = Branch.objects.get(name__iexact=data['branch'])
+        item.team = data['team']
 
         item.description = data['description']
         item.codereview_url = data['codereview_url']

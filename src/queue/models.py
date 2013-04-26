@@ -54,6 +54,7 @@ class Queue(models.Model):
     description = models.CharField("Description", max_length=256)
     codereview_url = models.URLField("Code Review URL", max_length=256, null=True, blank=True, default='')
     branch = models.ForeignKey(Branch)
+    team = models.CharField("Team", max_length=32, null=True)
     creation_date = models.DateTimeField('Creation date', auto_now_add=True)
     modified_date = models.DateTimeField('Modification Date', auto_now=True)
     push_date = models.DateTimeField('Push Date', blank=True, null=True)

@@ -79,16 +79,19 @@ def fetch_queue_item(request):
         if data['mode'] == 'fetch':
             return render_to_response('modify/dpq_modify_popup_contents.html',
                                       RequestContext(request, {'item': get_item_by_id(data['id']),
+                                                               'teams': get_teams(),
                                                                'active_branches': get_active_branches()}))
         elif data['mode'] == 'last':
             try:
                 return render_to_response('add/dpq_add_popup_contents.html',
                                           RequestContext(request, {
                                               'item': Queue.objects.filter(owner=request.user).order_by('-index')[0],
+                                              'teams': get_teams(),
                                               'active_branches': get_active_branches()}))
             except IndexError:
                 return render_to_response('add/dpq_add_popup_contents.html',
-                                          RequestContext(request, {'active_branches': get_active_branches()}))
+                                          RequestContext(request, {'teams': get_teams(),
+                                                                   'active_branches': get_active_branches()}))
     except KeyError:
         raise Http404(u'No parameters found in request.')
 
@@ -116,7 +119,7 @@ def create_queue_item(request):
             description=data['description'],
             codereview_url=data['codereview_url'],
             branch=Branch.objects.get(name__iexact=data['branch']),
-            team=data['team'],
+            team=Team.objects.get(name__iexact=data['team']),
             owner=request.user,
             queue_id=uuid1().hex,
             index=index
@@ -147,7 +150,11 @@ def modify_queue_item(request):
         item.tester = data['tester']
 
         item.branch = Branch.objects.get(name__iexact=data['branch'])
-        item.team = data['team']
+
+        if data['team'] == 'none':
+            item.team = None
+        else:
+            item.team = Team.objects.get(name__iexact=data['team'])
 
         item.description = data['description']
         item.codereview_url = data['codereview_url']
@@ -322,6 +329,7 @@ def fetch_superusers_list(request):
         return HttpResponse("<center>List is empty.</center>")
 
 
+@login_required
 def move_queue_item(request):
     """
 
@@ -338,7 +346,7 @@ def move_queue_item(request):
         if data['mode'] == 'up':
             target = Queue.objects.filter(index__gt=index, branch=branch,
                                           status__in=[Queue.WAITING, Queue.IN_PROGRESS]).order_by('index')[0]
-        elif data['mode'] == 'down':
+        elif data['mode'] == 'down' and request.user.is_superuser:
             target = Queue.objects.filter(index__lt=index, branch=branch,
                                           status__in=[Queue.WAITING, Queue.IN_PROGRESS]).order_by('-index')[0]
         else:

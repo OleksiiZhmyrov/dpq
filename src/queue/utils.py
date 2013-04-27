@@ -75,6 +75,14 @@ def invalidate_cache():
     cache.clear()
 
 
+def get_teams():
+    try:
+        teams = Team.objects.all()
+        return teams
+    except Team.DoesNotExist:
+        return None
+
+
 def get_active_branches():
     """
 

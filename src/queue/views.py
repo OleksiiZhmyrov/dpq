@@ -107,6 +107,11 @@ def create_queue_item(request):
         data = loads(request.body)
 
         try:
+            team = Team.objects.get(name__iexact=data['team'])
+        except Team.DoesNotExist:
+            team = None
+
+        try:
             index = Queue.objects.order_by('-index')[0].index + 1
         except IndexError:
             index = 1
@@ -119,7 +124,7 @@ def create_queue_item(request):
             description=data['description'],
             codereview_url=data['codereview_url'],
             branch=Branch.objects.get(name__iexact=data['branch']),
-            team=Team.objects.get(name__iexact=data['team']),
+            team=team,
             owner=request.user,
             queue_id=uuid1().hex,
             index=index

@@ -41,7 +41,8 @@ def refresh_branch(request, branch):
     :return:
     """
     return render_to_response('queue/dpq_queue_table_branch_tab.html',
-                              RequestContext(request, {'data': get_last_pushes_for_branch(branch)}))
+                              RequestContext(request, {'data': get_last_pushes_for_branch(branch),
+                                                       'branch': branch}))
 
 
 def request_key(request):

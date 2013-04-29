@@ -37,19 +37,14 @@ Development server is running at http://127.0.0.1:8000/
 Quit the server with CONTROL-C.
 ```
 
-## Notes
-  * Repository contains sample Sqlite database.
-  * Default administrator credentials: admin/admin.
-  * Repository contains Bootstrap and jQuery files.
+## Migrating database schema changes with South
 
-## Running tests
-Test application:
+Please refer to South documentation for detailed information.
+
 ```bash
-manage.py test queue
+$ python ./manage.py syncdb
+$ python ./manage.py schemamigration queue --add-field Queue.new_filed
+$ python ./manage.py migrate queue --fake
+$ python ./manage.py migrate queue 0001 --fake
+$ python ./manage.py migrate queue
 ```
-Calculate coverage
-```bash
-coverage run  --source='.' manage.py test queue
-coverage html
-```
-Note. Coverage is a separate python application and needs to be installed in virtualenv.

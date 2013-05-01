@@ -37,6 +37,8 @@
         </li>
         {% if item.tester != "" %}
             <li>Tester: {{ item.tester }}</li>{% endif %}
+        {% if item.team %}
+            <li>Team: {{ item.team.name }}&nbsp;<i class="{{ item.team.css_icon }}"></i></li>{% endif %}
     </ul>
 </div>
 

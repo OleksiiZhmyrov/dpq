@@ -2,33 +2,33 @@
 [class^="team-"],
 [class*=" team-"] {
   display: inline-block;
-  width: 14px;
-  height: 14px;
+  width: 15px;
+  height: 16px;
   margin-top: 1px;
   *margin-right: .3em;
   line-height: 14px;
   vertical-align: text-top;
   background-image: url('/media/img/planets.png');
-  background-position: 15px 14px;
+  background-position: 15px 16px;
   background-repeat: no-repeat;
 }
 
 .team-mercury {
-  background-position: 0 0;
+  background-position: -5px -1px;
 }
 
 .team-venus {
-  background-position: -15px 0;
+  background-position: -25px -1px;
 }
 
 .team-earth {
-  background-position: -30px 0;
+  background-position: -45px -1px;
 }
 
 .team-mars {
-  background-position: -44px 0;
+  background-position: -65px -1px;
 }
 
 .team-jupiter {
-  background-position: -60px 0;
+  background-position: -85px -1px;
 }

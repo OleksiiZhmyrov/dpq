@@ -1,0 +1,26 @@
+{% extends "dpq_base.html" %}
+{% block title %}Search{% endblock %}
+
+{% block javascript %}
+    <script src="/media/js/search.js"></script>
+{% endblock %}
+
+{% block main %}
+
+<div class="control-group">
+    <label class="control-label" for="dpq-modify-queue-ps">Search for:</label>
+        <div class="controls">
+            <input class="input-xlarge"
+                   type="text"
+                   name="ps"
+                   id="dpq-search-searchstring"
+                   placeholder="Start typing..."
+                   value="">
+        </div>
+</div>
+
+<div id="dpq-search-searchresults"></div>
+
+{% include "info/dpq_info_popup.html" %}
+
+{% endblock %}

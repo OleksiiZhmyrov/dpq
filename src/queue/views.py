@@ -14,6 +14,7 @@ from django.template import RequestContext
 
 from queue.forms import *
 from queue.models import *
+from django.db.models import Q
 from queue.paginators import DiggPaginator
 from queue.utils import *
 
@@ -363,3 +364,23 @@ def move_queue_item(request):
         return HttpResponse(item.index)
     except KeyError:
         raise Http404(u'Illegal or missing parameters in modify request.')
+
+
+def search_page(request):
+
+    return render_to_response('search/dpq_search.html',
+                                  RequestContext(request, {'active_branches': get_active_branches()}))
+
+
+def search_results(request):
+    data = loads(request.body)
+    search_string = data['search_string']
+
+    result = Queue.objects.filter(Q(description__icontains=search_string) |
+                                  Q(developerA__icontains=search_string) |
+                                  Q(developerB__icontains=search_string) |
+                                  Q(ps__icontains=search_string) |
+                                  Q(tester__icontains=search_string)).order_by('-index')
+
+    return render_to_response('search/dpq_search_results.html',
+                                  RequestContext(request, {'result': result}))

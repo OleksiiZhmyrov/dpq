@@ -8,7 +8,7 @@ $(document).ready(function () {
 
     $('input#dpq-search-searchstring').on('keyup', function(){
         var searchStringLengt = $('input#dpq-search-searchstring').val().length;
-        console.log("Search string length is " + searchStringLengt);
+
         if(searchStringLengt < 3) {
             $('div#dpq-search-searchresults').html('');
         }
@@ -17,6 +17,17 @@ $(document).ready(function () {
             requestSearchResults();
         }
     });
+
+    $.fn.highlight = function(what,spanClass) {
+    return this.each(function(){
+        var container = this,
+            content = container.innerHTML,
+            pattern = new RegExp('(>[^<.]*)(' + what + ')([^<.]*)','g'),
+            replaceWith = '$1<span ' + ( spanClass ? 'class="' + spanClass + '"' : '' ) + '">$2</span>$3',
+            highlighted = content.replace(pattern,replaceWith);
+        container.innerHTML = highlighted;
+    });
+}
 
 });
 
@@ -37,4 +48,7 @@ function requestSearchResults() {
 
 function updateSearchResults(data) {
     $('div#dpq-search-searchresults').html(data);
+
+    var searchString = $('input#dpq-search-searchstring').val();
+    $('div#dpq-search-searchresults').highlight(searchString, 'highlight')
 }

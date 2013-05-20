@@ -22,7 +22,7 @@
                     <td><i class="{{ item.team.css_icon }}" title="{{ item.team.name }} Team"></i>
                         {{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
                     <td>{{ item.tester }}</td>
-                    <td>{{ item.description|truncatechars:80 }}</td>
+                    <td>{{ item.description }}</td>
                     <td>{{ item.branch.name }}</td>
                     <td>{{ item.done_date|date:"d.m.Y" }}</td>
                     <td><a href="#dpq-push-details"

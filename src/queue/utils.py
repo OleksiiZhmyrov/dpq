@@ -155,3 +155,24 @@ def shift_indexes(first, second):
 
     invalidate_cache()
     update_key()
+
+
+def get_slowest_push_id(input):
+
+    array = []
+
+    for item in input.values_list('push_date', 'done_date', 'queue_id'):
+        array.append(item)
+
+    for index in range(len(array)):
+        moved = False
+
+        for bubble in reversed(range(index+1, len(array))):
+            if array[bubble-1][1]-array[bubble-1][0] > array[bubble][1]-array[bubble][0]:
+                array[bubble], array[bubble-1] = array[bubble-1], array[bubble]
+                moved = True
+
+        if not moved:
+            break
+
+    return array[-1][2]

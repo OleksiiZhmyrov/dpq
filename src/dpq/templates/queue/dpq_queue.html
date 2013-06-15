@@ -33,6 +33,13 @@
                data-toggle="modal"
                onclick="fetchSuperusersList()"><i class="icon-flag"></i> People On-Duty</a>
         </div>
+        <div class="btn-group" style="margin-bottom: 20px;">
+            <a href="#dpq-heroes"
+               role="button"
+               id="btn-hero"
+               class="btn btn-small prevent-default"
+               data-toggle="modal"><i class="icon-thumbs-up"></i> Heroes</a>
+        </div>
         <div class="pull-right">
             <div id="timer"
                  style="padding-right: 10px; color: lightgrey">0:10</div>
@@ -74,5 +81,6 @@
     </div>
 
     {% include "info/dpq_info_popup.html" %}
+    {% include "heroes/dpq_heroes_popup.html" %}
 
 {% endblock %}

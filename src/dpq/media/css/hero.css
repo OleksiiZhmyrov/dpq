@@ -1,0 +1,23 @@
+
+table.hero-table {
+    width: 100%;
+}
+
+tr.hero-table-header {
+    background-color: #5DBB5D;
+    color: #ffffff;
+}
+
+tr.hero-table-header td {
+    padding-left: 10px;
+}
+
+td.hero-img {
+    width: 74px;
+    padding: 5px;
+    margin: 0;
+}
+
+td.hero-line {
+    padding-top: 5px;
+}

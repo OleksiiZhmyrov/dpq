@@ -11,6 +11,11 @@ $(document).ready(function () {
         }
     });
 
+    $('a#btn-hero').click(function () {
+        $('div#dpq-heroes>div.modal-body').html("<center><img src='/media/img/ajax-loader.gif'/></center>");
+        fetchHeroesAndVillainsList();
+    });
+
     $('div#dpq-refresh-alert button.close').click(function () {
         $('div#dpq-refresh-alert').hide("slow");
     });
@@ -187,5 +192,17 @@ function moveRecord(queue_id, direction) {
         })
     }).done(function () {
             update_branch_tab($("div.dpq-queue-tabs > ul > li.active").attr("id"));
+        });
+}
+
+
+function fetchHeroesAndVillainsList() {
+    $.ajax({
+        type: "GET",
+        url: "/ajax/request/heroes/"
+    }).done(function (data) {
+            $('div#dpq-heroes>div.modal-body').html(data);
+        }).fail(function () {
+            $('div#dpq-heroes>div.modal-body').html('<center>Request failed.</center>');
         });
 }

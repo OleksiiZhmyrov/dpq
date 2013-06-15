@@ -14,7 +14,7 @@ from django.template import RequestContext
 
 from queue.forms import *
 from queue.models import *
-from django.db.models import Q
+from django.db.models import Q, Count
 from queue.paginators import DiggPaginator
 from queue.utils import *
 
@@ -384,3 +384,39 @@ def search_results(request):
 
     return render_to_response('search/dpq_search_results.html',
                                   RequestContext(request, {'result': result}))
+
+
+def heroes_and_villains(request):
+    """
+
+    :param request:
+    :return:
+    """
+    hero_query = Queue.objects.filter(
+        status__iexact=Queue.DONE).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[0]
+    hero = User.objects.get(id__iexact=hero_query['owner'])
+    hero_count = hero_query['item_count']
+
+    skipper_query = Queue.objects.filter(
+        status__iexact=Queue.SKIPPED).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[0]
+    skipper = User.objects.get(id__iexact=skipper_query['owner'])
+    skipper_count = skipper_query['item_count']
+
+    reverter_query = Queue.objects.filter(
+        status__iexact=Queue.REVERTED).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[0]
+    reverter = User.objects.get(id__iexact=reverter_query['owner'])
+    reverter_count = reverter_query['item_count']
+
+    unhurried = Queue.objects.get(queue_id=get_slowest_push_id(Queue.objects.filter(status__in=[Queue.DONE])))
+
+    if skipper:
+        return render_to_response('heroes/dpq_heroes_popup_content.html',
+                                  RequestContext(request, {'hero': hero,
+                                                           'hero_count': hero_count,
+                                                           'reverter': reverter,
+                                                           'reverter_count': reverter_count,
+                                                           'skipper': skipper,
+                                                           'skipper_count': skipper_count,
+                                                           'unhurried': unhurried}))
+    else:
+        return HttpResponse("<center>List is empty.</center>")

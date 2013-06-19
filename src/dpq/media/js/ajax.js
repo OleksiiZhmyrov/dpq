@@ -1,12 +1,16 @@
 $(document).ready(function () {
     $('#dpq-add-queue').find('#btn-save').click(function () {
         if (isValidCreateForm()) {
+            $("#dpq-add-queue #btn-save").removeClass('btn-primary').attr("disabled", true).html('Working ...');
+            $("div#dpq-add-queue>div.modal-body :input").attr("disabled", true);
             createQueueObject();
         }
     });
 
     $('#dpq-modify-queue').find('#btn-save').click(function () {
         if (isValidModifyForm()) {
+            $("#dpq-modify-queue #btn-save").removeClass('btn-primary').attr("disabled", true).html('Working ...');
+            $("div#dpq-modify-queue>div.modal-body :input").attr("disabled", true);
             modifyQueueObject();
         }
     });
@@ -48,6 +52,7 @@ function createQueueObject() {
     }).done(function () {
             update_branch_tab($("div.dpq-queue-tabs > ul > li.active").attr("id"));
             $('div#dpq-add-queue button.close').click();
+            $("#dpq-add-queue #btn-save").addClass('btn-primary').attr("disabled", false).html('Add');
         });
 }
 
@@ -75,6 +80,7 @@ function modifyQueueObject() {
     }).done(function () {
             update_branch_tab($("div.dpq-queue-tabs > ul > li.active").attr("id"));
             $('div#dpq-modify-queue button.close').click();
+            $("#dpq-modify-queue #btn-save").addClass('btn-primary').attr("disabled", false).html('Apply');
         });
 }
 
@@ -131,10 +137,6 @@ function fetchLastQueueData() {
     }).done(function (data) {
             $('div#dpq-add-queue > div.modal-body').html(data);
         });
-}
-
-function clearModal() {
-    $('div#dpq-modify-queue > div.modal-body > form').remove();
 }
 
 function timedRefresh() {

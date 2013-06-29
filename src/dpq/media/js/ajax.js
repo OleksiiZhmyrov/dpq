@@ -182,6 +182,7 @@ function fetchSuperusersList() {
 }
 
 function moveRecord(queue_id, direction) {
+    $('a.move-link').replaceWith('<span>&nbsp;&nbsp;</span>');
     $.ajax({
         url: "/ajax/move/",
         headers: {

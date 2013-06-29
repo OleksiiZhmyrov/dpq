@@ -28,7 +28,7 @@
                 <td>
                     {% if user.is_superuser or item.owner == user %}
                         {% if item.index != data.last_item %}
-                            <a class="prevent-default" href="#"
+                            <a class="prevent-default move-link" href="#"
                                onclick="moveRecord('{{ item.queue_id }}', 'up')" title="Move up"><b>↑</b></a>
                         {% endif %}
                     {% endif %}
@@ -39,7 +39,7 @@
                 <td>
                     {% if user.is_superuser %}
                         {% if item.index != data.first_item %}
-                            <a class="prevent-default" href="#"
+                            <a class="prevent-default move-link" href="#"
                                onclick="moveRecord('{{ item.queue_id }}', 'down')" title="Move down"><b>↓</b></a>
                         {% endif %}
                     {% endif %}
@@ -48,7 +48,7 @@
                 <td><i class="{{ item.team.css_icon }}" title="{{ item.team.name }} Team"></i>
                     {{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
                 <td>{{ item.tester }}</td>
-                <td>{{ item.description|truncatechars:70 }}</td>
+                <td title="{{ item.description }}">{{ item.description|truncatechars:70 }}</td>
                 <td>{{ item.creation_date|date:"M j, H:i" }}</td>
                 <td>{% if item.owner == user or user.is_superuser %}
                     {% if item.status != item.DONE and item.status != item.REVERTED %}
@@ -65,7 +65,10 @@
                         <i class="icon-comment"></i></a>
                 {% endif %}
                 </td>
-                <td>{{ item.get_status_display }}</td>
+                <td><span {% if item.status == item.IN_PROGRESS %} class="label label-warning"{% endif %}>
+                    {{ item.get_status_display }}
+                    </span>
+                </td>
             </tr>
         {% endfor %}
     {% else %}

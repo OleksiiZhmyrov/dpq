@@ -39,8 +39,8 @@ def get_last_pushes_for_branch(branch_name):
     if get_cached_data(branch_name) is None:
         log_info('Updating tab for branch ' + branch_name + ' from database')
         branch_obj = Branch.objects.get(name=branch_name)
-        push_table = Queue.objects.filter(branch=branch_obj,
-                                          status__in=[Queue.WAITING, Queue.IN_PROGRESS]).order_by('-index')
+        push_table = QueueRecord.objects.filter(branch=branch_obj,
+                                          status__in=[QueueRecord.WAITING, QueueRecord.IN_PROGRESS]).order_by('-index')
         cache.set(branch_name, push_table)
 
     else:
@@ -109,9 +109,9 @@ def get_item_by_id(item_id):
     :return: :raise:
     """
     try:
-        item = Queue.objects.get(queue_id=item_id)
+        item = QueueRecord.objects.get(queue_id=item_id)
         return item
-    except Queue.DoesNotExist:
+    except QueueRecord.DoesNotExist:
         raise Http404(u'Queue item with selected id does not exist.')
 
 

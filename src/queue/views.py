@@ -87,7 +87,7 @@ def fetch_queue_item(request):
             try:
                 return render_to_response('add/dpq_add_popup_contents.html',
                                           RequestContext(request, {
-                                              'item': Queue.objects.filter(owner=request.user).order_by('-index')[0],
+                                              'item': QueueRecord.objects.filter(owner=request.user).order_by('-index')[0],
                                               'teams': get_teams(),
                                               'active_branches': get_active_branches()}))
             except IndexError:
@@ -114,11 +114,11 @@ def create_queue_item(request):
             team = None
 
         try:
-            index = Queue.objects.order_by('-index')[0].index + 1
+            index = QueueRecord.objects.order_by('-index')[0].index + 1
         except IndexError:
             index = 1
 
-        queue = Queue(
+        queue = QueueRecord(
             ps=data['ps'],
             developerA=data['devA'],
             developerB=data['devB'],
@@ -149,7 +149,7 @@ def modify_queue_item(request):
     """
     try:
         data = loads(request.body)
-        item = Queue.objects.get(queue_id=data['id'])
+        item = QueueRecord.objects.get(queue_id=data['id'])
 
         item.ps = data['ps']
         item.developerA = data['devA']
@@ -169,14 +169,14 @@ def modify_queue_item(request):
 
         item.modified_date = datetime.now()
 
-        if data['status'] == Queue.DONE or data['status'] == Queue.REVERTED:
+        if data['status'] == QueueRecord.DONE or data['status'] == QueueRecord.REVERTED:
             item.done_date = datetime.now()
             update_daily_statistics(item.push_duration())
 
-        if data['status'] == Queue.SKIPPED:
+        if data['status'] == QueueRecord.SKIPPED:
             item.done_date = datetime.now()
 
-        if data['status'] == Queue.IN_PROGRESS:
+        if data['status'] == QueueRecord.IN_PROGRESS:
             item.push_date = datetime.now()
 
         item.save()
@@ -197,8 +197,8 @@ def history(request, branch):
     :return:
     """
     branch_obj = Branch.objects.get(name=branch)
-    items_list = Queue.objects.filter(branch=branch_obj,
-                                      status__in=[Queue.DONE, Queue.REVERTED, Queue.SKIPPED]).order_by(
+    items_list = QueueRecord.objects.filter(branch=branch_obj,
+                                      status__in=[QueueRecord.DONE, QueueRecord.REVERTED, QueueRecord.SKIPPED]).order_by(
         '-done_date')
     paginator = DiggPaginator(items_list, 15, body=5, padding=1, margin=2)
 
@@ -264,7 +264,7 @@ def visualisation_branch_duration(request, branch, mode):
     :return:
     """
     branch = Branch.objects.get(name=branch)
-    last_pushes = Queue.objects.filter(status__in=[Queue.DONE, Queue.REVERTED]).filter(branch=branch).order_by('index')
+    last_pushes = QueueRecord.objects.filter(status__in=[QueueRecord.DONE, QueueRecord.REVERTED]).filter(branch=branch).order_by('index')
     if last_pushes.count() > 5:
         last_pushes = last_pushes[last_pushes.count() - 5:]
 
@@ -312,11 +312,18 @@ def register_page(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
         if form.is_valid():
+            form_username = form.cleaned_data['username']
+            form_password = form.cleaned_data['password1']
             User.objects.create_user(
-                username=form.cleaned_data['username'],
-                password=form.cleaned_data['password1'],
+                username=form_username,
+                password=form_password,
             )
-            return redirect('/login/', RequestContext(request, {}))
+            CustomUserRecord.objects.create(
+                django_user=User.objects.get(username__iexact=form_username),
+                role=Role.objects.get(description__iexact='default'),
+            )
+            #return redirect('/login/', RequestContext(request, {}))
+            return redirect('/maintenance/', RequestContext(request, {}))
     else:
         form = RegistrationForm()
     return render_to_response('registration/register.html', RequestContext(request, {'form': form}))
@@ -345,17 +352,17 @@ def move_queue_item(request):
     """
     try:
         data = loads(request.body)
-        item = Queue.objects.get(queue_id=data['id'])
+        item = QueueRecord.objects.get(queue_id=data['id'])
         target = item
         index = item.index
         branch = item.branch
 
         if data['mode'] == 'up':
-            target = Queue.objects.filter(index__gt=index, branch=branch,
-                                          status__in=[Queue.WAITING, Queue.IN_PROGRESS]).order_by('index')[0]
+            target = QueueRecord.objects.filter(index__gt=index, branch=branch,
+                                          status__in=[QueueRecord.WAITING, QueueRecord.IN_PROGRESS]).order_by('index')[0]
         elif data['mode'] == 'down' and request.user.is_superuser:
-            target = Queue.objects.filter(index__lt=index, branch=branch,
-                                          status__in=[Queue.WAITING, Queue.IN_PROGRESS]).order_by('-index')[0]
+            target = QueueRecord.objects.filter(index__lt=index, branch=branch,
+                                          status__in=[QueueRecord.WAITING, QueueRecord.IN_PROGRESS]).order_by('-index')[0]
         else:
             HttpResponse('Unknown mode')
 
@@ -376,7 +383,7 @@ def search_results(request):
     data = loads(request.body)
     search_string = data['search_string']
 
-    result = Queue.objects.filter(Q(description__icontains=search_string) |
+    result = QueueRecord.objects.filter(Q(description__icontains=search_string) |
                                   Q(developerA__icontains=search_string) |
                                   Q(developerB__icontains=search_string) |
                                   Q(ps__icontains=search_string) |
@@ -392,22 +399,22 @@ def heroes_and_villains(request):
     :param request:
     :return:
     """
-    hero_query = Queue.objects.filter(
-        status__iexact=Queue.DONE).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[0]
+    hero_query = QueueRecord.objects.filter(
+        status__iexact=QueueRecord.DONE).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[0]
     hero = User.objects.get(id__iexact=hero_query['owner'])
     hero_count = hero_query['item_count']
 
-    skipper_query = Queue.objects.filter(
-        status__iexact=Queue.SKIPPED).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[0]
+    skipper_query = QueueRecord.objects.filter(
+        status__iexact=QueueRecord.SKIPPED).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[0]
     skipper = User.objects.get(id__iexact=skipper_query['owner'])
     skipper_count = skipper_query['item_count']
 
-    reverter_query = Queue.objects.filter(
-        status__iexact=Queue.REVERTED).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[0]
+    reverter_query = QueueRecord.objects.filter(
+        status__iexact=QueueRecord.REVERTED).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[0]
     reverter = User.objects.get(id__iexact=reverter_query['owner'])
     reverter_count = reverter_query['item_count']
 
-    unhurried = Queue.objects.get(queue_id=get_slowest_push_id(Queue.objects.filter(status__in=[Queue.DONE])))
+    unhurried = QueueRecord.objects.get(queue_id=get_slowest_push_id(QueueRecord.objects.filter(status__in=[QueueRecord.DONE])))
 
     if skipper:
         return render_to_response('heroes/dpq_heroes_popup_content.html',
@@ -420,3 +427,8 @@ def heroes_and_villains(request):
                                                            'unhurried': unhurried}))
     else:
         return HttpResponse("<center>List is empty.</center>")
+
+
+def maintenance_page(request):
+    return render_to_response('misc/maintenance.html',
+                                  RequestContext(request, {}))

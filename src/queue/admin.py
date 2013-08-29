@@ -10,7 +10,10 @@ from queue.models import *
 admin.site.unregister(Group)
 admin.site.unregister(Site)
 
-admin.site.register(Queue)
+admin.site.register(QueueRecord)
+admin.site.register(UserStory)
 admin.site.register(Statistics)
 admin.site.register(Branch)
 admin.site.register(Team)
+admin.site.register(Role)
+admin.site.register(CustomUserRecord)

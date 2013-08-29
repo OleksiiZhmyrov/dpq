@@ -51,16 +51,22 @@ class Team(models.Model):
         return self.name
 
 
-class Queue(models.Model):
-    ps = models.CharField("PS", max_length=10)
+class UserStory(models.Model):
+    key = models.CharField("Key", max_length=32, unique=True)
+    summary = models.CharField("Summary", max_length=256)
+    assignee = models.CharField("Assignee (developer)", max_length=256)
+    tester = models.CharField("Tester", max_length=256)
+    last_sync = models.DateTimeField('Sync with JIRA on', blank=True, null=True)
+
+    def __unicode__(self):
+        return '[{key}] {summary} ({assignee})'.format(key=self.key, summary=self.summary[:32], assignee=self.assignee)
+
+
+class QueueRecord(models.Model):
+    story = models.ForeignKey(UserStory)
     owner = models.ForeignKey(User)
-    developerA = models.CharField("Developer A", max_length=64)
-    developerB = models.CharField("Developer B", max_length=64, null=True)
-    tester = models.CharField("Tester", max_length=64, null=True)
     queue_id = models.CharField("ID", max_length=32, unique=True)
     index = models.PositiveIntegerField(unique=True)
-    description = models.CharField("Description", max_length=256)
-    codereview_url = models.URLField("Code Review URL", max_length=256, null=True, blank=True, default='')
     branch = models.ForeignKey(Branch)
     team = models.ForeignKey(Team, blank=True, null=True)
     creation_date = models.DateTimeField('Creation date', auto_now_add=True)
@@ -100,3 +106,19 @@ class Queue(models.Model):
         return [str(self.ps), int(self.push_duration())]
 
 
+class Role(models.Model):
+    description = models.CharField('Description', max_length=64)
+    can_create_records = models.BooleanField('Can create records', default=True)
+    can_modify_own_records = models.BooleanField('Can modify own records', default=True)
+    can_modify_all_records = models.BooleanField('Can modify all records', default=False)
+
+    def __unicode__(self):
+        return self.description
+
+
+class CustomUserRecord(models.Model):
+    django_user = models.ForeignKey(User)
+    role = models.ForeignKey(Role)
+
+    def __unicode__(self):
+        return '{username} ({role})'.format(username=self.django_user.username, role=self.role.description)

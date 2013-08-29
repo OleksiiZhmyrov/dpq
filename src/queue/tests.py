@@ -65,27 +65,27 @@ class QueueItemsFunctionality(unittest.TestCase):
         self.c = Client()
         self.user = User.objects.create_user(u'push_user', 'myemail@test.com', u'push_user')
         self.branch = Branch.objects.create(name = 'master')
-        self.push1 = Queue.objects.create(ps = "PS_01", description = "Push #1",
+        self.push1 = QueueRecord.objects.create(ps = "PS_01", description = "Push #1",
                                 branch = self.branch,
                                 developerA = "Ritchie Blackmore",
                                 developerB = "Jon Lord",
                                 tester = "David Coverdale", owner = self.user, queue_id = "123456",
                                 index = 1, creation_date = datetime.now(), modified_date = datetime.now(),
-                                push_date = datetime.now(), done_date = datetime.now(), status = Queue.REVERTED)
-        self.push2 = Queue.objects.create(ps = "PS_02", description = "Push #2",
+                                push_date = datetime.now(), done_date = datetime.now(), status = QueueRecord.REVERTED)
+        self.push2 = QueueRecord.objects.create(ps = "PS_02", description = "Push #2",
                                 branch = self.branch,
                                 developerA = "Ritchie Blackmore",
                                 developerB = "Jon Lord",
                                 tester = "David Coverdale", owner = self.user, queue_id = "qwerty",
                                 index = 2, creation_date = datetime.now(), modified_date = datetime.now(),
-                                push_date = datetime.now(), done_date = datetime.now(), status = Queue.DONE)
-        self.push3 = Queue.objects.create(ps = "PS_03", description = "Push #3",
+                                push_date = datetime.now(), done_date = datetime.now(), status = QueueRecord.DONE)
+        self.push3 = QueueRecord.objects.create(ps = "PS_03", description = "Push #3",
                                 branch = self.branch,
                                 developerA = "Ritchie Blackmore",
                                 developerB = "Jon Lord",
                                 tester = "David Coverdale", owner = self.user, queue_id = "asdfgh",
                                 index = 3, creation_date = datetime.now(), modified_date = datetime.now(),
-                                push_date = datetime.now(), done_date = datetime.now(), status = Queue.IN_PROGRESS)
+                                push_date = datetime.now(), done_date = datetime.now(), status = QueueRecord.IN_PROGRESS)
 
 
     def tearDown(self):
@@ -175,20 +175,20 @@ class QueueItemsFunctionality(unittest.TestCase):
         Status P, new index > max
         """
         self.c.login(username='push_user', password='push_user')
-        push4 = Queue.objects.create(ps = "PS_06", description = "Push #2",
+        push4 = QueueRecord.objects.create(ps = "PS_06", description = "Push #2",
                                 branch = self.branch,
                                 developerA = "Ritchie Blackmore",
                                 developerB = "Jon Lord",
                                 tester = "David Coverdale", owner = self.user, queue_id = "098765",
                                 index = 4, creation_date = datetime.now(), modified_date = datetime.now(),
-                                push_date = datetime.now(), done_date = datetime.now(), status = Queue.WAITING)
-        push5 = Queue.objects.create(ps = "PS_05", description = "Push #3",
+                                push_date = datetime.now(), done_date = datetime.now(), status = QueueRecord.WAITING)
+        push5 = QueueRecord.objects.create(ps = "PS_05", description = "Push #3",
                                 branch = self.branch,
                                 developerA = "Ritchie Blackmore",
                                 developerB = "Jon Lord",
                                 tester = "David Coverdale", owner = self.user, queue_id = "zxcvb",
                                 index = 5, creation_date = datetime.now(), modified_date = datetime.now(),
-                                push_date = datetime.now(), done_date = datetime.now(), status = Queue.WAITING)
+                                push_date = datetime.now(), done_date = datetime.now(), status = QueueRecord.WAITING)
         json_data = {
                                 "ps": "PS_05",
                                 "description": "Some description",
@@ -214,20 +214,20 @@ class QueueItemsFunctionality(unittest.TestCase):
         Status W, new index < min
         """
         self.c.login(username='push_user', password='push_user')    
-        push4 = Queue.objects.create(ps = "PS_06", description = "Push #2",
+        push4 = QueueRecord.objects.create(ps = "PS_06", description = "Push #2",
                                 branch = self.branch,
                                 developerA = "Ritchie Blackmore",
                                 developerB = "Jon Lord",
                                 tester = "David Coverdale", owner = self.user, queue_id = "098765",
                                 index = 4, creation_date = datetime.now(), modified_date = datetime.now(),
-                                push_date = datetime.now(), done_date = datetime.now(), status = Queue.WAITING)
-        push5 = Queue.objects.create(ps = "PS_05", description = "Push #3",
+                                push_date = datetime.now(), done_date = datetime.now(), status = QueueRecord.WAITING)
+        push5 = QueueRecord.objects.create(ps = "PS_05", description = "Push #3",
                                 branch = self.branch,
                                 developerA = "Ritchie Blackmore",
                                 developerB = "Jon Lord",
                                 tester = "David Coverdale", owner = self.user, queue_id = "zxcvb",
                                 index = 5, creation_date = datetime.now(), modified_date = datetime.now(),
-                                push_date = datetime.now(), done_date = datetime.now(), status = Queue.WAITING)
+                                push_date = datetime.now(), done_date = datetime.now(), status = QueueRecord.WAITING)
         json_data = {
                                 "ps": "PS_05",
                                 "description": "Some description",

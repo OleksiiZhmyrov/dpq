@@ -59,33 +59,25 @@ function isValidCreateForm() {
     $("#add-to-queue-form").validate(
         {
             rules: {
-                ps: {
+                key: {
                     required: true,
-                    maxlength: 10,
-                    regexp: '^[A-Za-z0-9_]+$'
+                    maxlength: 13,
+                    regexp: '^[A-Z]{2,10}\-[0-9]{1,4}$'
                 },
-                description: {
-                    required: true,
-                    maxlength: 256,
-                    minlength: 2
-                },
-                codereview_url: {
+                summary: {
                     required: false,
-                    maxlength: 256,
-                    regexp: 'https://github\.com/.*/[0-9a-f]{40}'
+                    maxlength: 256
                 },
-                devA: {
+                developer: {
                     required: true,
                     maxlength: 64,
                     minlength: 2,
                     regexp: '^[A-Za-z \']+$'
                 },
-                devB: {
-                    maxlength: 64,
-                    regexp: '^[A-Za-z \']+$'
-                },
                 tester: {
+                    required: true,
                     maxlength: 64,
+                    minlength: 2,
                     regexp: '^[A-Za-z \']+$'
                 }
             },
@@ -96,33 +88,24 @@ function isValidCreateForm() {
                 label.closest('.control-group').addClass('success').removeClass('error');
             },
             messages: {
-                ps: {
-                    required: "PS code is mandatory",
-                    maxlength: "Max length is 10 characters",
-                    regexp: "Allowed characters are latin letters, digits and undescore"
+                key: {
+                    required: "Story Key is mandatory",
+                    maxlength: "Max length is 16 characters",
+                    regexp: "Please enter value according to regexp: ^[A-Z]{2,12}\\-[0-9]{1,4}$"
                 },
-                description: {
-                    required: "Description field is mandatory",
-                    maxlength: "Max length is 256 characters",
-                    minlength: "Description is too short"
+                summary: {
+                    maxlength: "Max length is 256 characters"
                 },
-                codereview_url: {
-                    required: "GitHub URL is required",
-                    maxlength: "Max length is 256 characters",
-                    regexp: "Please check your URL"
-                },
-                devA: {
-                    required: "There must be at least one developer",
+                developer: {
+                    required: "Please enter name",
                     maxlength: "Max length is 64 characters",
                     minlength: "Even Chinese have names more than 2 letters long",
                     regexp: "Allowed characters are latin letters and space"
                 },
-                devB: {
-                    maxlength: "Max length is 64 characters",
-                    regexp: "Allowed characters are latin letters and space"
-                },
                 tester: {
+                    required: "Please enter name",
                     maxlength: "Max length is 64 characters",
+                    minlength: "Even Chinese have names more than 2 letters long",
                     regexp: "Allowed characters are latin letters and space"
                 }
             }
@@ -134,38 +117,26 @@ function isValidModifyForm() {
     $("#modify-queue-form").validate(
         {
             rules: {
-                ps: {
+                    key: {
                     required: true,
-                    maxlength: 10,
-                    regexp: '^[A-Za-z0-9_]+$'
+                    maxlength: 13,
+                    regexp: '^[A-Z]{2,10}\-[0-9]{1,4}$'
                 },
-                description: {
-                    required: true,
-                    maxlength: 256,
-                    minlength: 2
-                },
-                codereview_url: {
+                summary: {
                     required: false,
-                    maxlength: 256,
-                    regexp: 'https://github\.com/.*/[0-9a-f]{40}'
+                    maxlength: 256
                 },
-                devA: {
+                developer: {
                     required: true,
                     maxlength: 64,
                     minlength: 2,
                     regexp: '^[A-Za-z \']+$'
                 },
-                devB: {
-                    maxlength: 64,
-                    regexp: '^[A-Za-z \']+$'
-                },
                 tester: {
-                    maxlength: 64,
-                    regexp: '^[A-Za-z \']+$'
-                },
-                place: {
                     required: true,
-                    number: true
+                    maxlength: 64,
+                    minlength: 2,
+                    regexp: '^[A-Za-z \']+$'
                 }
             },
             highlight: function (label) {
@@ -175,38 +146,25 @@ function isValidModifyForm() {
                 label.closest('.control-group').addClass('success').removeClass('error');
             },
             messages: {
-                ps: {
-                    required: "PS code is mandatory",
-                    maxlength: "Max length is 10 characters",
-                    regexp: "Allowed characters are latin letters, digits and undescore"
+                key: {
+                    required: "Story Key is mandatory",
+                    maxlength: "Max length is 16 characters",
+                    regexp: "Please enter value according to regexp: ^[A-Z]{2,12}\\-[0-9]{1,4}$"
                 },
-                description: {
-                    required: "Description field is mandatory",
-                    maxlength: "Max length is 256 characters",
-                    minlength: "Description is too short!"
+                summary: {
+                    maxlength: "Max length is 256 characters"
                 },
-                codereview_url: {
-                    required: "GitHub URL is required",
-                    maxlength: "Max length is 256 characters",
-                    regexp: "Please check your URL"
-                },
-                devA: {
-                    required: "There must be at least one developer",
+                developer: {
+                    required: "Please enter name",
                     maxlength: "Max length is 64 characters",
                     minlength: "Even Chinese have names more than 2 letters long",
                     regexp: "Allowed characters are latin letters and space"
                 },
-                devB: {
-                    maxlength: "Max length is 64 characters",
-                    regexp: "Allowed characters are latin letters and space"
-                },
                 tester: {
+                    required: "Please enter name",
                     maxlength: "Max length is 64 characters",
+                    minlength: "Even Chinese have names more than 2 letters long",
                     regexp: "Allowed characters are latin letters and space"
-                },
-                place: {
-                    required: "Please enter desired place number",
-                    number: "Must be a number"
                 }
             }
         });

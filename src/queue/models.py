@@ -52,9 +52,9 @@ class Team(models.Model):
 
 
 class UserStory(models.Model):
-    key = models.CharField("Key", max_length=32, unique=True)
+    key = models.CharField("Key", max_length=16, unique=True)
     summary = models.CharField("Summary", max_length=256)
-    assignee = models.CharField("Assignee (developer)", max_length=256)
+    assignee = models.CharField("Assignee (developer)", max_length=64)
     tester = models.CharField("Tester", max_length=256)
     last_sync = models.DateTimeField('Sync with JIRA on', blank=True, null=True)
 
@@ -88,7 +88,9 @@ class QueueRecord(models.Model):
     status = models.CharField("status", max_length=1, choices=STATUS_CHOICES, default=WAITING)
 
     def __unicode__(self):
-        return self.ps + ": " + self.description
+        return '{index}. {key}: {summary} ({assignee})'.format(index=self.index, key=self.story.key,
+                                                               summary=self.story.summary[:32],
+                                                               assignee=self.story.assignee)
 
     def push_duration(self):
         """

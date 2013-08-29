@@ -42,27 +42,18 @@
     <div class="well well-small">
 
         <div class="control-group">
-            <label class="control-label" for="dpq-modify-queue-ps">Pair station:</label>
+            <label class="control-label" for="dpq-modify-queue-key">Story Key:</label>
 
             <div class="controls">
-                <input type="text" name="ps" id="dpq-modify-queue-ps" value="{{ item.ps }}">
+                <input type="text" name="key" id="dpq-modify-queue-key" value="{{ item.story.key }}">
             </div>
         </div>
 
         <div class="control-group">
-            <label class="control-label" for="dpq-modify-queue-description">Description:</label>
+            <label class="control-label" for="dpq-modify-queue-summary">Summary:</label>
 
             <div class="controls">
-                <input type="text" name="description" id="dpq-modify-queue-description" value="{{ item.description }}">
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label" for="dpq-modify-queue-codereview">URL for codereview:</label>
-
-            <div class="controls">
-                <input type="text" name="codereview_url" id="dpq-modify-queue-codereview"
-                       value="{{ item.codereview_url }}">
+                <input type="text" name="summary" id="dpq-modify-queue-summary" value="{{ item.story.summary }}">
             </div>
         </div>
 
@@ -72,16 +63,20 @@
             <div class="controls">
                 <select name="branch" id="dpq-modify-queue-branch">
                     {% for branch in active_branches %}
-                        <option
-                                {% if item.branch.name == branch.name %} selected="selected" {% endif %}
-                                                                         value={{ branch.name }}>{{ branch.name }}</option>
+                        {% if item %}
+                            <option
+                                    {% if item.branch == branch.name %} selected="selected" {% endif %}
+                                                                        value={{ branch.name }}>{{ branch.name }}</option>
+                        {% else %}
+                            <option
+                                    {% if branch.name == 'develop' %} selected="selected" {% endif %}
+                                                                     value={{ branch.name }}>{{ branch.name }}</option>
+                        {% endif %}
                     {% endfor %}
                 </select>
             </div>
         </div>
-    </div>
 
-    <div class="well well-small">
         <div class="control-group">
             <label class="control-label" for="dpq-modify-queue-team">Team:</label>
             <div class="controls">
@@ -96,18 +91,10 @@
         </div>
 
         <div class="control-group">
-            <label class="control-label" for="dpq-modify-queue-devA">Developer A:</label>
+            <label class="control-label" for="dpq-modify-queue-developer">Developer:</label>
 
             <div class="controls">
-                <input type="text" name="devA" id="dpq-modify-queue-devA" value="{{ item.developerA }}">
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label" for="dpq-modify-queue-devB">Developer B:</label>
-
-            <div class="controls">
-                <input type="text" name="devB" id="dpq-modify-queue-devB" value="{{ item.developerB }}">
+                <input type="text" name="developer" id="dpq-modify-queue-developer" value="{{ item.story.assignee }}">
             </div>
         </div>
 
@@ -115,10 +102,12 @@
             <label class="control-label" for="dpq-modify-queue-tester">Tester:</label>
 
             <div class="controls">
-                <input type="text" name="tester" id="dpq-modify-queue-tester" value="{{ item.tester }}">
+                <input type="text" name="tester" id="dpq-modify-queue-tester" value="{{ item.story.tester }}">
             </div>
         </div>
+
     </div>
+
     <input type="hidden" id="dpq-modify-queue-owner" value="{{ user.username }}"/>
     <input type="hidden" id="dpq-modify-queue-id" value="{{ item.queue_id }}"/>
 </form>

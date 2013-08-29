@@ -55,11 +55,6 @@
         {% include "queue/dpq_queue_table.html" %}
     </div>
 
-    <div id="icons-disclaimer" style="margin-top: 25px;">
-        <small style="color: grey;">For more information about astronomical symbols please refer to Wikipedia
-            <a target="_blank" href="http://en.wikipedia.org/wiki/Astronomical_symbols">article</a>.</small>
-    </div>
-
     {% if user.is_authenticated %}
         {% include "add/dpq_add_popup.html" %}
         {% include "modify/dpq_modify_popup.html" %}

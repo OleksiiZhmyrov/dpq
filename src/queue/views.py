@@ -118,18 +118,23 @@ def create_queue_item(request):
         except IndexError:
             index = 1
 
-        queue = QueueRecord(
-            ps=data['ps'],
-            developerA=data['devA'],
-            developerB=data['devB'],
+        story = UserStory(
+            key=data['key'],
+            summary=data['summary'],
+            assignee=data['developer'],
             tester=data['tester'],
-            description=data['description'],
-            codereview_url=data['codereview_url'],
-            branch=Branch.objects.get(name__iexact=data['branch']),
-            team=team,
+            last_sync=None
+        )
+
+        story.save()
+
+        queue = QueueRecord(
             owner=request.user,
             queue_id=uuid1().hex,
-            index=index
+            index=index,
+            branch=Branch.objects.get(name__iexact=data['branch']),
+            team=team,
+            story=story
         )
         queue.save()
         invalidate_cache()
@@ -150,11 +155,14 @@ def modify_queue_item(request):
     try:
         data = loads(request.body)
         item = QueueRecord.objects.get(queue_id=data['id'])
+        story = item.story
 
-        item.ps = data['ps']
-        item.developerA = data['devA']
-        item.developerB = data['devB']
-        item.tester = data['tester']
+        story.key = data['key']
+        story.summary = data['summary']
+        story.assignee = data['developer']
+        story.tester = data['tester']
+
+        story.save()
 
         item.branch = Branch.objects.get(name__iexact=data['branch'])
 
@@ -163,8 +171,6 @@ def modify_queue_item(request):
         else:
             item.team = Team.objects.get(name__iexact=data['team'])
 
-        item.description = data['description']
-        item.codereview_url = data['codereview_url']
         item.status = data['status']
 
         item.modified_date = datetime.now()
@@ -180,6 +186,7 @@ def modify_queue_item(request):
             item.push_date = datetime.now()
 
         item.save()
+
         invalidate_cache()
         update_key()
 

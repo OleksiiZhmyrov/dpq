@@ -1,27 +1,20 @@
 <form id="add-to-queue-form" class="form-horizontal">
+
     <div class="well well-small">
 
         <div class="control-group">
-            <label class="control-label" for="dpq-add-queue-ps">Pair station:</label>
+            <label class="control-label" for="dpq-add-queue-key">Story Key:</label>
 
             <div class="controls">
-                <input type="text" name="ps" id="dpq-add-queue-ps" value="{{ item.ps }}">
+                <input type="text" name="key" id="dpq-add-queue-key" placeholder="PROJECT-0000">
             </div>
         </div>
 
         <div class="control-group">
-            <label class="control-label" for="dpq-add-queue-description">Description:</label>
+            <label class="control-label" for="dpq-add-queue-summary">Summary:</label>
 
             <div class="controls">
-                <input type="text" name="description" id="dpq-add-queue-description">
-            </div>
-        </div>
-
-        <div class="control-group">
-            <label class="control-label" for="dpq-add-queue-codereview">URL for codereview:</label>
-
-            <div class="controls">
-                <input type="text" name="codereview_url" id="dpq-add-queue-codereview">
+                <input type="text" name="summary" id="dpq-add-queue-summary" placeholder="Enter story summary">
             </div>
         </div>
 
@@ -37,15 +30,14 @@
                                                                         value={{ branch.name }}>{{ branch.name }}</option>
                         {% else %}
                             <option
-                                    {% if branch.name == 'master' %} selected="selected" {% endif %}
+                                    {% if branch.name == 'develop' %} selected="selected" {% endif %}
                                                                      value={{ branch.name }}>{{ branch.name }}</option>
                         {% endif %}
                     {% endfor %}
                 </select>
             </div>
         </div>
-    </div>
-    <div class="well well-small">
+
         <div class="control-group">
             <label class="control-label" for="dpq-add-queue-team">Team:</label>
             <div class="controls">
@@ -58,27 +50,28 @@
                 </select>
             </div>
         </div>
+
+    </div>
+
+    <div class="well well-small">
+
         <div class="control-group">
-            <label class="control-label" for="dpq-add-queue-devA">Developer A:</label>
+            <label class="control-label" for="dpq-add-queue-developer">Developer:</label>
 
             <div class="controls">
-                <input type="text" name="devA" id="dpq-add-queue-devA" value="{{ item.developerA }}">
+                <input type="text" name="developer" id="dpq-add-queue-developer" value="{{ item.story.assignee }}">
             </div>
         </div>
-        <div class="control-group">
-            <label class="control-label" for="dpq-add-queue-devB">Developer B:</label>
 
-            <div class="controls">
-                <input type="text" name="devB" id="dpq-add-queue-devB" value="{{ item.developerB }}">
-            </div>
-        </div>
         <div class="control-group">
             <label class="control-label" for="dpq-add-queue-tester">Tester:</label>
 
             <div class="controls">
-                <input type="text" name="tester" id="dpq-add-queue-tester" value="{{ item.tester }}">
+                <input type="text" name="tester" id="dpq-add-queue-tester" value="{{ item.story.tester }}">
             </div>
         </div>
+
     </div>
+
     <input type="hidden" id="dpq-add-owner" value="{{ user.username }}"/>
 </form>

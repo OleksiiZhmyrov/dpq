@@ -10,12 +10,12 @@
         <th id="arrow-up"></th>
         <th style="text-align: center;">#</th>
         <th id="arrow-down"></th>
-        <th style="width: 50px;">PS</th>
-        <th>Developers</th>
+        <th>Team</th>
+        <th>Developer</th>
         <th>Tester</th>
-        <th>Description</th>
+        <th>Key</th>
+        <th>Summary</th>
         <th style="width: 100px;">Created</th>
-        <th style="width: 6px;"></th>
         <th style="width: 6px;"></th>
         <th style="width: 6px;"></th>
         <th style="width: 80px;">Status</th>
@@ -44,11 +44,11 @@
                         {% endif %}
                     {% endif %}
                 </td>
-                <td style="border-left: 1px;">{{ item.ps }}</td>
-                <td><i class="{{ item.team.css_icon }}" title="{{ item.team.name }} Team"></i>
-                    {{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
-                <td>{{ item.tester }}</td>
-                <td title="{{ item.description }}">{{ item.description|truncatechars:70 }}</td>
+                <td><i class="{{ item.team.css_icon }}" title="{{ item.team.name }} Team"></i></td>
+                <td>{{ item.story.assignee }}</td>
+                <td>{{ item.story.tester }}</td>
+                <td>{{ item.story.key }}</td>
+                <td title="{{ item.summary }}">{{ item.story.summary|truncatechars:70 }}</td>
                 <td>{{ item.creation_date|date:"M j, H:i" }}</td>
                 <td>{% if item.owner == user or user.is_superuser %}
                     {% if item.status != item.DONE and item.status != item.REVERTED %}
@@ -60,11 +60,7 @@
                        data-toggle="modal" title="View detailed info"
                        onclick="fetchPushDetails('{{ item.queue_id }}')"><i class="icon-info-sign"></i></a>
                 </td>
-                <td>{% if item.codereview_url != "" %}
-                    <a href="{{ item.codereview_url }}" target="_blank" title="View commit on GitHub">
-                        <i class="icon-comment"></i></a>
-                {% endif %}
-                </td>
+
                 <td><span {% if item.status == item.IN_PROGRESS %} class="label label-warning"{% endif %}>
                     {{ item.get_status_display }}
                     </span>

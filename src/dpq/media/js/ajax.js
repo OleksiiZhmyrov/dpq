@@ -40,13 +40,11 @@ function createQueueObject() {
             "X-CSRFToken": $.cookie('csrftoken')
         },
         data: JSON.stringify({
-            "ps": $('input#dpq-add-queue-ps').val(),
-            "description": $('input#dpq-add-queue-description').val(),
-            "codereview_url": $('input#dpq-add-queue-codereview').val(),
-            "team": $('select#dpq-add-queue-team').val(),
+            "key": $('input#dpq-add-queue-key').val(),
+            "summary": $('input#dpq-add-queue-summary').val(),
             "branch": $('select#dpq-add-queue-branch').val(),
-            "devA": $('input#dpq-add-queue-devA').val(),
-            "devB": $('input#dpq-add-queue-devB').val(),
+            "team": $('select#dpq-add-queue-team').val(),
+            "developer": $('input#dpq-add-queue-developer').val(),
             "tester": $('input#dpq-add-queue-tester').val()
         })
     }).done(function () {
@@ -64,17 +62,13 @@ function modifyQueueObject() {
             "X-CSRFToken": $.cookie('csrftoken')
         },
         data: JSON.stringify({
-            "ps": $('input#dpq-modify-queue-ps').val(),
-            "description": $('input#dpq-modify-queue-description').val(),
-            "codereview_url": $('input#dpq-modify-queue-codereview').val(),
+            "key": $('input#dpq-modify-queue-key').val(),
+            "summary": $('input#dpq-modify-queue-summary').val(),
             "branch": $('select#dpq-modify-queue-branch').val(),
             "team": $('select#dpq-modify-queue-team').val(),
-            "devA": $('input#dpq-modify-queue-devA').val(),
-            "devB": $('input#dpq-modify-queue-devB').val(),
+            "developer": $('input#dpq-modify-queue-developer').val(),
             "tester": $('input#dpq-modify-queue-tester').val(),
             "status": $('select#dpq-modify-queue-status').val(),
-            "index": $('input#dpq-modify-queue-index').val(),
-            "owner": $('input#dpq-modify-queue-owner').val(),
             "id": $('input#dpq-modify-queue-id').val()
         })
     }).done(function () {

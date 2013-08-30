@@ -44,7 +44,8 @@ class Branch(models.Model):
 
 
 class Team(models.Model):
-    name = models.CharField('Name', max_length=64)
+    name = models.CharField('Name', max_length=32)
+    label = models.CharField('Label', max_length=32)
     css_icon = models.CharField('CSS Icon', max_length=128, null=True, blank=True)
 
     def __unicode__(self):

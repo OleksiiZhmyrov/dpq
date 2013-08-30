@@ -17,7 +17,7 @@
             {% for item in page %}
                 <tr {% if item.status == item.SKIPPED %} style="color: #E0E0E0;" {% endif %}>
                     <td>{{ item.index }}</td>
-                    <td>{{ item.team }}</td>
+                    <td>{{ item.team.label|safe }}</td>
                     <td>{{ item.story.assignee }}</td>
                     <td>{{ item.story.tester }}</td>
                     <td>{{ item.story.key }}</td>

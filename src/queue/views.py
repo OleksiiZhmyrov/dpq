@@ -411,37 +411,50 @@ def heroes_and_villains(request):
     :param request:
     :return:
     """
-    hero_query = QueueRecord.objects.filter(
-        status__iexact=QueueRecord.DONE).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[0]
-    hero = User.objects.get(id__iexact=hero_query['owner'])
-    hero_count = hero_query['item_count']
+    try:
+        hero_query = QueueRecord.objects.filter(
+            status__iexact=QueueRecord.DONE).values('owner').annotate(item_count=Count('owner')).order_by(
+            '-item_count')[0]
+        hero = User.objects.get(id__iexact=hero_query['owner'])
+        hero_count = hero_query['item_count']
+    except IndexError:
+        hero = None
+        hero_count = 0
 
-    skipper_query = QueueRecord.objects.filter(
-        status__iexact=QueueRecord.SKIPPED).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[
-        0]
-    skipper = User.objects.get(id__iexact=skipper_query['owner'])
-    skipper_count = skipper_query['item_count']
+    try:
+        skipper_query = QueueRecord.objects.filter(
+            status__iexact=QueueRecord.SKIPPED).values('owner').annotate(item_count=Count('owner')).order_by(
+            '-item_count')[0]
+        skipper = User.objects.get(id__iexact=skipper_query['owner'])
+        skipper_count = skipper_query['item_count']
+    except IndexError:
+        skipper = None
+        skipper_count = 0
 
-    reverter_query = QueueRecord.objects.filter(
-        status__iexact=QueueRecord.REVERTED).values('owner').annotate(item_count=Count('owner')).order_by(
-        '-item_count')[0]
-    reverter = User.objects.get(id__iexact=reverter_query['owner'])
-    reverter_count = reverter_query['item_count']
+    try:
+        reverter_query = QueueRecord.objects.filter(
+            status__iexact=QueueRecord.REVERTED).values('owner').annotate(item_count=Count('owner')).order_by(
+            '-item_count')[0]
+        reverter = User.objects.get(id__iexact=reverter_query['owner'])
+        reverter_count = reverter_query['item_count']
+    except IndexError:
+        reverter = None
+        reverter_count = 0
 
-    unhurried = QueueRecord.objects.get(
-        queue_id=get_slowest_push_id(QueueRecord.objects.filter(status__in=[QueueRecord.DONE])))
+    try:
+        unhurried = QueueRecord.objects.get(
+            queue_id=get_slowest_push_id(QueueRecord.objects.filter(status__in=[QueueRecord.DONE])))
+    except IndexError:
+        unhurried = None
 
-    if skipper:
-        return render_to_response('heroes/dpq_heroes_popup_content.html',
-                                  RequestContext(request, {'hero': hero,
-                                                           'hero_count': hero_count,
-                                                           'reverter': reverter,
-                                                           'reverter_count': reverter_count,
-                                                           'skipper': skipper,
-                                                           'skipper_count': skipper_count,
-                                                           'unhurried': unhurried}))
-    else:
-        return HttpResponse("<center>List is empty.</center>")
+    return render_to_response('heroes/dpq_heroes_popup_content.html',
+                              RequestContext(request, {'hero': hero,
+                                                       'hero_count': hero_count,
+                                                       'reverter': reverter,
+                                                       'reverter_count': reverter_count,
+                                                       'skipper': skipper,
+                                                       'skipper_count': skipper_count,
+                                                       'unhurried': unhurried}))
 
 
 def maintenance_page(request):

@@ -5,7 +5,11 @@
     <tr>
         <td rowspan="2" class="hero-img"><img src="/media/img/hero-superman.png" /></td>
         <td class="hero-line">
-            <b>{{ hero.username }}</b> pushed to the repository <b>{{ hero_count }}</b> times.
+            {% if hero %}
+                <b>{{ hero.username }}</b> pushed to the repository <b>{{ hero_count }}</b> times.
+            {% else %}
+                Data not yet available.
+            {% endif %}
         </td>
     </tr>
     <tr>
@@ -22,7 +26,11 @@
     <tr>
         <td rowspan="2" class="hero-img"><img src="/media/img/hero-skip.png" /></td>
         <td class="hero-line">
-            <b>{{ skipper }}</b> skipped <b>{{ skipper_count }}</b> pushes.
+            {% if skipper %}
+                <b>{{ skipper }}</b> skipped <b>{{ skipper_count }}</b> pushes.
+            {% else %}
+                Data not yet available.
+            {% endif %}
         </td>
     </tr>
     <tr>
@@ -39,7 +47,11 @@
     <tr>
         <td rowspan="2" class="hero-img"><img src="/media/img/hero-revert.png" /></td>
         <td class="hero-line">
-            <b>{{ reverter }}</b> reverted <b>{{ reverter_count }}</b> times.
+            {% if reverter %}
+                <b>{{ reverter }}</b> reverted <b>{{ reverter_count }}</b> times.
+            {% else %}
+                Data not yet available.
+            {% endif %}
         </td>
     </tr>
     <tr>
@@ -56,7 +68,11 @@
     <tr>
         <td rowspan="2" class="hero-img"><img src="/media/img/hero-turtle.png" /></td>
         <td class="hero-line">
-            <b>{{ unhurried.owner }}</b>'s longest push lasted <b>{{ unhurried.push_duration }}</b> minutes.</td>
+            {% if unhurried %}
+                <b>{{ unhurried.owner }}</b>'s longest push lasted <b>{{ unhurried.push_duration }}</b> minutes.</td>
+            {% else %}
+                Data not yet available.
+            {% endif %}
         </td>
     </tr>
     <tr>

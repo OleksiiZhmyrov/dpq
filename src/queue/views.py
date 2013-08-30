@@ -87,7 +87,8 @@ def fetch_queue_item(request):
             try:
                 return render_to_response('add/dpq_add_popup_contents.html',
                                           RequestContext(request, {
-                                              'item': QueueRecord.objects.filter(owner=request.user).order_by('-index')[0],
+                                              'item': QueueRecord.objects.filter(owner=request.user).order_by('-index')[
+                                                  0],
                                               'teams': get_teams(),
                                               'active_branches': get_active_branches()}))
             except IndexError:
@@ -205,7 +206,8 @@ def history(request, branch):
     """
     branch_obj = Branch.objects.get(name=branch)
     items_list = QueueRecord.objects.filter(branch=branch_obj,
-                                      status__in=[QueueRecord.DONE, QueueRecord.REVERTED, QueueRecord.SKIPPED]).order_by(
+                                            status__in=[QueueRecord.DONE, QueueRecord.REVERTED,
+                                                        QueueRecord.SKIPPED]).order_by(
         '-done_date')
     paginator = DiggPaginator(items_list, 15, body=5, padding=1, margin=2)
 
@@ -271,7 +273,8 @@ def visualisation_branch_duration(request, branch, mode):
     :return:
     """
     branch = Branch.objects.get(name=branch)
-    last_pushes = QueueRecord.objects.filter(status__in=[QueueRecord.DONE, QueueRecord.REVERTED]).filter(branch=branch).order_by('index')
+    last_pushes = QueueRecord.objects.filter(status__in=[QueueRecord.DONE, QueueRecord.REVERTED]).filter(
+        branch=branch).order_by('index')
     if last_pushes.count() > 5:
         last_pushes = last_pushes[last_pushes.count() - 5:]
 
@@ -329,8 +332,8 @@ def register_page(request):
                 django_user=User.objects.get(username__iexact=form_username),
                 role=Role.objects.get(description__iexact='default'),
             )
-            #return redirect('/login/', RequestContext(request, {}))
-            return redirect('/maintenance/', RequestContext(request, {}))
+            return redirect('/login/', RequestContext(request, {}))
+            #return redirect('/maintenance/', RequestContext(request, {}))
     else:
         form = RegistrationForm()
     return render_to_response('registration/register.html', RequestContext(request, {'form': form}))
@@ -366,10 +369,12 @@ def move_queue_item(request):
 
         if data['mode'] == 'up':
             target = QueueRecord.objects.filter(index__gt=index, branch=branch,
-                                          status__in=[QueueRecord.WAITING, QueueRecord.IN_PROGRESS]).order_by('index')[0]
+                                                status__in=[QueueRecord.WAITING, QueueRecord.IN_PROGRESS]).order_by(
+                'index')[0]
         elif data['mode'] == 'down' and request.user.is_superuser:
             target = QueueRecord.objects.filter(index__lt=index, branch=branch,
-                                          status__in=[QueueRecord.WAITING, QueueRecord.IN_PROGRESS]).order_by('-index')[0]
+                                                status__in=[QueueRecord.WAITING, QueueRecord.IN_PROGRESS]).order_by(
+                '-index')[0]
         else:
             HttpResponse('Unknown mode')
 
@@ -381,23 +386,23 @@ def move_queue_item(request):
 
 
 def search_page(request):
-
     return render_to_response('search/dpq_search.html',
-                                  RequestContext(request, {'active_branches': get_active_branches()}))
+                              RequestContext(request, {'active_branches': get_active_branches()}))
 
 
 def search_results(request):
     data = loads(request.body)
     search_string = data['search_string']
 
-    result = QueueRecord.objects.filter(Q(description__icontains=search_string) |
-                                  Q(developerA__icontains=search_string) |
-                                  Q(developerB__icontains=search_string) |
-                                  Q(ps__icontains=search_string) |
-                                  Q(tester__icontains=search_string)).order_by('-index')
+    matching_stories = UserStory.objects.filter(Q(key__icontains=search_string) |
+                                                Q(summary__icontains=search_string) |
+                                                Q(assignee__icontains=search_string) |
+                                                Q(tester__icontains=search_string))
+
+    result = QueueRecord.objects.filter(story__in=matching_stories).order_by('-index')
 
     return render_to_response('search/dpq_search_results.html',
-                                  RequestContext(request, {'result': result}))
+                              RequestContext(request, {'result': result}))
 
 
 def heroes_and_villains(request):
@@ -412,16 +417,19 @@ def heroes_and_villains(request):
     hero_count = hero_query['item_count']
 
     skipper_query = QueueRecord.objects.filter(
-        status__iexact=QueueRecord.SKIPPED).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[0]
+        status__iexact=QueueRecord.SKIPPED).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[
+        0]
     skipper = User.objects.get(id__iexact=skipper_query['owner'])
     skipper_count = skipper_query['item_count']
 
     reverter_query = QueueRecord.objects.filter(
-        status__iexact=QueueRecord.REVERTED).values('owner').annotate(item_count=Count('owner')).order_by('-item_count')[0]
+        status__iexact=QueueRecord.REVERTED).values('owner').annotate(item_count=Count('owner')).order_by(
+        '-item_count')[0]
     reverter = User.objects.get(id__iexact=reverter_query['owner'])
     reverter_count = reverter_query['item_count']
 
-    unhurried = QueueRecord.objects.get(queue_id=get_slowest_push_id(QueueRecord.objects.filter(status__in=[QueueRecord.DONE])))
+    unhurried = QueueRecord.objects.get(
+        queue_id=get_slowest_push_id(QueueRecord.objects.filter(status__in=[QueueRecord.DONE])))
 
     if skipper:
         return render_to_response('heroes/dpq_heroes_popup_content.html',
@@ -438,4 +446,4 @@ def heroes_and_villains(request):
 
 def maintenance_page(request):
     return render_to_response('misc/maintenance.html',
-                                  RequestContext(request, {}))
+                              RequestContext(request, {}))

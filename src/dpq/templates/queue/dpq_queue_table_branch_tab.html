@@ -48,7 +48,7 @@
                 <td>{{ item.story.assignee }}</td>
                 <td>{{ item.story.tester }}</td>
                 <td>{{ item.story.key }}</td>
-                <td title="{{ item.summary }}">{{ item.story.summary|truncatechars:70 }}</td>
+                <td title="{{ item.summary }}">{{ item.story.summary|truncatechars:120 }}</td>
                 <td>{{ item.creation_date|date:"M j, H:i" }}</td>
                 <td>{% if item.owner == user or user.is_superuser %}
                     {% if item.status != item.DONE and item.status != item.REVERTED %}

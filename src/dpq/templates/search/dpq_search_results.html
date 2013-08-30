@@ -1,13 +1,13 @@
-
 {% if result %}
 <table class="table table-condensed">
         <thead>
         <tr>
             <th style="width: 40px;">#</th>
-            <th style="width: 50px;">PS</th>
-            <th>Developers</th>
+            <th style="width: 50px;">Team</th>
+            <th>Developer</th>
             <th>Tester</th>
-            <th>Description</th>
+            <th>Key</th>
+            <th>Summary</th>
             <th>Branch</th>
             <th style="width: 80px;">Date</th>
             <th style="width: 8px;"></th>
@@ -18,11 +18,11 @@
             {% for item in result %}
                 <tr {% if item.status == item.SKIPPED %} style="color: #E0E0E0;" {% endif %}>
                     <td>{{ item.index }}</td>
-                    <td>{{ item.ps }}</td>
-                    <td><i class="{{ item.team.css_icon }}" title="{{ item.team.name }} Team"></i>
-                        {{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %}</td>
-                    <td>{{ item.tester }}</td>
-                    <td>{{ item.description }}</td>
+                    <td><i class="{{ item.team.css_icon }}" title="{{ item.team.name }} Team"></i></td>
+                    <td>{{ item.story.assignee }}</td>
+                    <td>{{ item.story.tester }}</td>
+                    <td>{{ item.story.key }}</td>
+                    <td>{{ item.story.summary }}</td>
                     <td>{{ item.branch.name }}</td>
                     <td>{{ item.done_date|date:"d.m.Y" }}</td>
                     <td><a href="#dpq-push-details"

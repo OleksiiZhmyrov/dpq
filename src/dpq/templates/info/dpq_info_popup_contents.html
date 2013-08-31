@@ -26,17 +26,17 @@
          style="font-size: 16px;
 		 		font-weight: bold; 
 		 		text-align: left;">
-        {{ item.description }}</div>
+        {{ item.story.summary }}</div>
 </div>
 
 <hr/>
 <div class="dpq-info">
     <ul style="list-style-type: none;">
-        <li>Developers:
-            {{ item.developerA }}{% if item.developerB != "" %}, {{ item.developerB }}{% endif %} ({{ item.ps }})
+        <li>Developer:
+            {{ item.story.assignee }}
         </li>
-        {% if item.tester != "" %}
-            <li>Tester: {{ item.tester }}</li>{% endif %}
+        {% if item.story.tester != "" %}
+            <li>Tester: {{ item.story.tester }}</li>{% endif %}
         {% if item.team %}
             <li>Team: {{ item.team.name }}&nbsp;<i class="{{ item.team.css_icon }}"></i></li>{% endif %}
     </ul>
@@ -80,12 +80,6 @@
 <div class="dpq-info" style="margin-left: 15px;">
     <table class="table-hover">
         <tbody>
-        {% if item.codereview_url != "" %}
-            <tr>
-                <td>Code Review URL:</td>
-                <td><a href="{{ item.codereview_url }}" target="_blank"><i class="icon-share-alt"></i> follow</a></td>
-            </tr>
-        {% endif %}
         <tr>
             <td>Created by:</td>
             <td>{{ item.owner }}</td>

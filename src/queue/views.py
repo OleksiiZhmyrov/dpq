@@ -472,7 +472,7 @@ def get_story_data_from_JIRA(request):
 
     story = fetch_story(story_key)
 
-    if story is None:
+    if not story.success:
         raise Http404(u'Error occurred while communicating with JIRA')
 
     result = {

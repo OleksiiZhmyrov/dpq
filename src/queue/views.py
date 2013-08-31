@@ -281,7 +281,7 @@ def visualisation_branch_duration(request, branch, mode):
     if last_pushes.count() > 5:
         last_pushes = last_pushes[last_pushes.count() - 5:]
 
-    response = [['PS', 'Time']]
+    response = [['Developer', 'Time']]
     for push in last_pushes:
         if push.push_date != None and push.done_date != None:
             if mode == 'duration':
@@ -291,7 +291,7 @@ def visualisation_branch_duration(request, branch, mode):
             duration = int(duration_obj.total_seconds() / 60.0)
         else:
             duration = 0
-        response.append([push.ps, duration])
+        response.append([push.story.assignee, duration])
 
     return HttpResponse(dumps(response))
 

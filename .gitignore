@@ -10,3 +10,4 @@ deploy
 .project
 .pydevproject
 src/htmlcov
+src/dpq/local_settings.py

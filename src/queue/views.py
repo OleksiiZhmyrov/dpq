@@ -2,6 +2,7 @@ from datetime import datetime
 from exceptions import TypeError
 from json import loads, dumps
 from uuid import uuid1
+from jira import *
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
@@ -460,3 +461,24 @@ def heroes_and_villains(request):
 def maintenance_page(request):
     return render_to_response('misc/maintenance.html',
                               RequestContext(request, {}))
+
+
+def get_story_data_from_JIRA(request):
+    data = loads(request.body)
+    story_key = data['key']
+
+    story = fetch_story(story_key)
+
+    if story is None:
+        raise Http404(u'Error occurred while communicating with JIRA')
+
+    result = {
+        'key': story_key,
+        'summary': story.summary,
+        'assignee': story.assignee,
+        'tester': story.tester
+    }
+
+    json_response = dumps(result)
+
+    return HttpResponse(json_response, mimetype='application/json')

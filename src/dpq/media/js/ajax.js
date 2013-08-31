@@ -1,8 +1,7 @@
 $(document).ready(function () {
     $('#dpq-add-queue').find('#btn-save').click(function () {
         if (isValidCreateForm()) {
-            $("#dpq-add-queue #btn-save").removeClass('btn-primary').attr("disabled", true).html('Working ...');
-            $("div#dpq-add-queue>div.modal-body :input").attr("disabled", true);
+            disableAddForm();
             createQueueObject();
         }
     });
@@ -31,6 +30,21 @@ $(document).ready(function () {
             cache: false
         });
 });
+
+function disableAddForm() {
+    $("#dpq-add-queue #btn-save").removeClass('btn-primary').attr("disabled", true).html('Working ...');
+    $("div#dpq-add-queue>div.modal-body :input").attr("disabled", true);
+}
+
+function disableAddFormJIRAFetch() {
+    $("#dpq-add-queue #btn-save").removeClass('btn-primary').attr("disabled", true);
+    $("div#dpq-add-queue>div.modal-body :input").attr("disabled", true);
+}
+
+function enableAddFormJIRAFetch() {
+    $("#dpq-add-queue #btn-save").addClass('btn-primary').attr("disabled", false);
+    $("div#dpq-add-queue>div.modal-body :input").attr("disabled", false);
+}
 
 function createQueueObject() {
     $.ajax({
@@ -129,9 +143,40 @@ function fetchLastQueueData() {
             "mode": "last"
         })
     }).done(function (data) {
-            $('div#dpq-add-queue > div.modal-body').html(data);
+        $('div#dpq-add-queue > div.modal-body').html(data);
+        $('#dpq-add-queue').find('#dpq-add-queue-jira').click(function () {
+            fetchStoryDataFromJIRA();
         });
+    });
 }
+
+
+function fetchStoryDataFromJIRA() {
+    disableAddFormJIRAFetch();
+    $.ajax({
+        url: "/ajax/request/jirastory/",
+        headers: {
+            "Content-type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": $.cookie('csrftoken')
+        },
+        data: JSON.stringify({
+            "key": $('input#dpq-add-queue-key').val()
+        })
+    }).done(function(data) {
+        var response = JSON.parse(data);
+
+        $('input#dpq-add-queue-summary').val(response.summary);
+        $('input#dpq-add-queue-developer').val(response.assignee);
+        $('input#dpq-add-queue-tester').val(response.tester);
+
+        $('span#validation-msg').html('');
+
+    }).fail(function () {
+            $('span#validation-msg').html("Could not fetch data from JIRA");
+    });
+    enableAddFormJIRAFetch();
+}
+
 
 function timedRefresh() {
     var tick = 9;

@@ -108,6 +108,13 @@ function isValidCreateForm() {
                     minlength: "Even Chinese have names more than 2 letters long",
                     regexp: "Allowed characters are latin letters and space"
                 }
+            },
+            errorPlacement: function(error, element) {
+                if (element.attr("name") == "key") {
+                      error.insertAfter("#validation-msg");
+                } else {
+                      error.insertAfter(element);
+                }
             }
         });
     return $("#add-to-queue-form").valid();
@@ -169,4 +176,39 @@ function isValidModifyForm() {
             }
         });
     return $("#modify-queue-form").valid();
+}
+
+
+function isValidStoryKey() {
+    $("#add-to-queue-form").validate(
+        {
+            rules: {
+                key: {
+                    required: true,
+                    maxlength: 13,
+                    regexp: '^[A-Z]{2,10}\-[0-9]{1,4}$'
+                }
+            },
+            highlight: function (label) {
+                $(label).closest('.control-group').addClass('error').removeClass('success');
+            },
+            success: function (label) {
+                $(label).closest('.control-group').addClass('success').removeClass('error');
+            },
+            messages: {
+                key: {
+                    required: "Story Key is mandatory",
+                    maxlength: "Max length is 16 characters",
+                    regexp: "Please enter value according to regexp: ^[A-Z]{2,12}\\-[0-9]{1,4}$"
+                }
+            },
+            errorPlacement: function(error, element) {
+                if (element.attr("name") == "key") {
+                      error.insertAfter("#validation-msg");
+                } else {
+                      error.insertAfter(element);
+                }
+            }
+        });
+    return $("#add-to-queue-form").valid();
 }

@@ -44,7 +44,8 @@ def refresh_branch(request, branch):
     """
     return render_to_response('queue/dpq_queue_table_branch_tab.html',
                               RequestContext(request, {'data': get_last_pushes_for_branch(branch),
-                                                       'branch': branch}))
+                                                       'branch': branch,
+                                                       'jira_browse_url': JIRA_BROWSE_URL}))
 
 
 def request_key(request):
@@ -224,6 +225,7 @@ def history(request, branch):
     return render_to_response('history/dpq_history.html',
                               RequestContext(request, {'page': page,
                                                        'branch': branch_obj,
+                                                       'jira_browse_url': JIRA_BROWSE_URL,
                                                        'active_branches': get_active_branches()}))
 
 
@@ -403,7 +405,8 @@ def search_results(request):
     result = QueueRecord.objects.filter(story__in=matching_stories).order_by('-index')
 
     return render_to_response('search/dpq_search_results.html',
-                              RequestContext(request, {'result': result}))
+                              RequestContext(request, {'result': result,
+                                                       'jira_browse_url': JIRA_BROWSE_URL}))
 
 
 def heroes_and_villains(request):

@@ -42,7 +42,7 @@ function disableAddFormJIRAFetch() {
 }
 
 function enableAddFormJIRAFetch() {
-    $("#dpq-add-queue #btn-save").addClass('btn-primary').attr("disabled", false);
+    $("#dpq-add-queue #btn-save").addClass('btn-primary').attr("disabled", false).html('Add');
     $("div#dpq-add-queue>div.modal-body :input").attr("disabled", false);
 }
 

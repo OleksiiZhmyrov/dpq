@@ -53,7 +53,7 @@ class Team(models.Model):
 
 
 class UserStory(models.Model):
-    key = models.CharField("Key", max_length=16, unique=True)
+    key = models.CharField("Key", max_length=16)
     summary = models.CharField("Summary", max_length=256)
     assignee = models.CharField("Assignee (developer)", max_length=64)
     tester = models.CharField("Tester", max_length=256)

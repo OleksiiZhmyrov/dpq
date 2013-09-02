@@ -98,6 +98,7 @@ function update_branch_tab(branch) {
         url: "/ajax/refresh-branch/" + branch + "/"
     }).done(function (data) {
             $('div#' + branch + '_tab').html(data);
+            fetchAndUpdateBranchesStatuses();
         }).fail(function () {
             $('div#dpq-refresh-alert').show("slow");
         })
@@ -198,6 +199,7 @@ function updateTab() {
         type: "GET",
         url: "/ajax/request/key/"
     }).done(function (data) {
+            fetchAndUpdateBranchesStatuses();
             if ($.cookie('key') != data) {
                 $.cookie('key', data);
                 update_branch_tab($("div.dpq-queue-tabs > ul > li.active").attr("id"));
@@ -206,6 +208,25 @@ function updateTab() {
         }).fail(function () {
             $('div#dpq-refresh-alert').show("slow");
         });
+}
+
+function fetchAndUpdateBranchesStatuses() {
+    $.ajax({
+        type: "GET",
+        url: "/api/branch/status/"
+    }).done(function (data) {
+        var response = JSON.parse(data);
+        var length = response.length, element = null;
+        for (var i = 0; i < length; i++) {
+            element = response[i];
+            var image = $('li#'+element.branch+' a img');
+            if(element.status == true) {
+                image.attr('src', '/media/img/build/success.png');
+            } else {
+                image.attr('src', '/media/img/build/failure.png');
+            }
+        }
+    });
 }
 
 

@@ -4,7 +4,8 @@
             <li id="{{ branch.name }}" {% if current_tab == branch.name %} class="active" {% endif %}>
                 <a class="prevent-default" href="#{{ branch.name }}_tab"
                    data-toggle="tab"
-                   onclick="update_branch_tab('{{ branch.name }}')">{{ branch.name }}</a>
+                   onclick="update_branch_tab('{{ branch.name }}')">
+                        <img src="/media/img/build/unknown.png" /> {{ branch.name }}</a>
             </li>
         {% endfor %}
     </ul>

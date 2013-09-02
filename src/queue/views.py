@@ -2,6 +2,7 @@ from datetime import datetime
 from exceptions import TypeError
 from json import loads, dumps
 from uuid import uuid1
+from django.views.decorators.csrf import csrf_exempt
 from jira import *
 
 from django.contrib.admin.views.decorators import staff_member_required
@@ -485,3 +486,51 @@ def get_story_data_from_JIRA(request):
     json_response = dumps(result)
 
     return HttpResponse(json_response, mimetype='application/json')
+
+
+@csrf_exempt
+def api_update_branch_status(request):
+    data = loads(request.body)
+    try:
+        branch_name = data['branch']
+        status = data['status']
+    except KeyError:
+        response = {
+            'status': 'error',
+            'reason': 'missing parameter(s) in request'
+        }
+    if branch_name and status:
+        try:
+            branch = Branch.objects.get(name__iexact=branch_name)
+            if branch and status == "success":
+                branch.build_success = True
+                branch.save()
+                invalidate_cache()
+                response = {'status': 'OK'}
+            elif branch and status == "failure":
+                branch.build_success = False
+                branch.save()
+                invalidate_cache()
+                response = {'status': 'OK'}
+            else:
+                response = {
+                    'status': 'error',
+                    'reason': 'incorrect status value, must be one of [success, failure]'
+                }
+        except ObjectDoesNotExist:
+            response = {
+                'status': 'error',
+                'reason': 'branch does not exist'
+            }
+    return HttpResponse(dumps(response), mimetype='application/json')
+
+
+def api_get_branches_statuses(request):
+    response = []
+    for branch in get_active_branches():
+        response.append({
+            "branch": branch.name,
+            "status": branch.build_success
+        })
+
+    return HttpResponse(dumps(response), mimetype='application/json')

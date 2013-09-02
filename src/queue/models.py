@@ -27,6 +27,8 @@ class Branch(models.Model):
     finish_date = models.DateField('FinishDate', null=True, blank=True)
     name = models.CharField('Name', max_length=32, unique=True)
     is_active = models.BooleanField()
+    build_success = models.BooleanField()
+    last_build_date = models.DateTimeField('Last Build date and time', null=True, blank=True)
 
     def get_status(self):
         """

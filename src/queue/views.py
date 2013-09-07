@@ -480,7 +480,10 @@ def get_story_data_from_JIRA(request):
         'key': story_key,
         'summary': story.summary,
         'assignee': story.assignee,
-        'tester': story.tester
+        'tester': story.tester,
+        'epic': story.epic,
+        'reporter': story.reporter,
+        'sp': story.points
     }
 
     json_response = dumps(result)
@@ -534,3 +537,26 @@ def api_get_branches_statuses(request):
         })
 
     return HttpResponse(dumps(response), mimetype='application/json')
+
+
+def kanban_cards(request):
+    return render_to_response('dpq_kanban.html',
+                              RequestContext(request, {'active_branches': get_active_branches()}))
+
+
+def api_download_cards(request):
+    story_keys = request.POST.get('print-data')
+    if story_keys is None:
+        response = {
+                'status': 'error',
+                'reason': 'invalid request'
+            }
+        return HttpResponse(dumps(response), mimetype='application/json')
+
+    story_keys = story_keys.split(",")
+    keys = filter(None, story_keys)
+
+    cards = get_stories_from_list(keys)
+    filename = render_cards(cards)
+
+    return redirect('/media/cards/'+filename)

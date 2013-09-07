@@ -1,0 +1,62 @@
+{% extends "dpq_base.html" %}
+{% block title %}Create Kanban Cards{% endblock %}
+
+{% block javascript %}
+    <script src="/media/js/cards.js"></script>
+{% endblock %}
+
+{% block main %}
+
+<style>
+    span#validation-msg {
+        color: #800000;
+        font-style:italic;
+    }
+</style>
+
+
+<div class="container">
+        <div class="pull-left"><span id="validation-msg"></span></div>
+        <div class="pull-right">
+
+                <div class="input-append" id="dpq-cards-search">
+                    <input class="span2" type="text" id="dpq-cards-key" placeholder="MYPROJECT-0000">
+                    <button class="btn" type="button" id="search-btn"><i class="icon-globe"></i> Search</button>
+                </div>
+
+
+        </div>
+
+<table class="table table-condensed">
+    <thead>
+    <tr>
+        <th style="width: 130px;">Key</th>
+        <th style="width: 400px;">Summary</th>
+        <th>Developer</th>
+        <th>Tester</th>
+        <th>Reporter</th>
+        <th style="width: 30px;">Points</th>
+    </tr>
+    </thead>
+    <tbody id="results">
+
+    </tbody>
+</table>
+<hr />
+<div id="dpq-print-cards">
+    <div class="pull-left">
+            <button class="btn" id="clear-btn"><i class="icon-trash"></i> Reset</button>
+    </div>
+    <div class="pull-right">
+        <form action="/api/cards/download/" method="post">
+            {% csrf_token %}
+            <button class="btn disabled" type="submit" disabled="disabled" id="print-btn"><i class="icon-print"></i> Print</button>
+            <input type="hidden" id="print-data" name="print-data"/>
+        </form>
+    </div>
+</div>
+
+
+</div>
+
+{% endblock %}

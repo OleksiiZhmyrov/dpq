@@ -11,3 +11,4 @@ deploy
 .pydevproject
 src/htmlcov
 src/dpq/local_settings.py
+src/dpq/media/cards/

@@ -54,7 +54,7 @@ function drawBranchDuration(branch) {
         title: 'Push duration',
         legend: 'none',
         vAxis: {title: 'Time, mins'},
-        hAxis: {title: 'Pair Station'}
+        hAxis: {title: 'Developer'}
     };
 
     var chart = new google.visualization.ColumnChart(document.getElementById('duration_branch_' + branch));
@@ -74,7 +74,7 @@ function drawBranchPending(branch) {
         title: 'Pending time',
         legend: 'none',
         vAxis: {title: 'Time, mins'},
-        hAxis: {title: 'Pair Station'}
+        hAxis: {title: 'Developer'}
     };
 
     var chart = new google.visualization.ColumnChart(document.getElementById('pending_branch_' + branch));

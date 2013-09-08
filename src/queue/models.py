@@ -89,6 +89,7 @@ class QueueRecord(models.Model):
         (SKIPPED, 'skipped'),
     )
     status = models.CharField("status", max_length=1, choices=STATUS_CHOICES, default=WAITING)
+    hidden = models.BooleanField(default=False)
 
     def __unicode__(self):
         return '{index}. {key}: {summary} ({assignee})'.format(index=self.index, key=self.story.key,
@@ -106,9 +107,6 @@ class QueueRecord(models.Model):
             return int(duration.total_seconds() / 60.0)
         else:
             return 0
-
-    def get_record(self):
-        return [str(self.ps), int(self.push_duration())]
 
 
 class Role(models.Model):

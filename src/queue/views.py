@@ -208,7 +208,7 @@ def history(request, branch):
     :return:
     """
     branch_obj = Branch.objects.get(name=branch)
-    items_list = QueueRecord.objects.filter(branch=branch_obj,
+    items_list = QueueRecord.objects.filter(branch=branch_obj, hidden__iexact=False,
                                             status__in=[QueueRecord.DONE, QueueRecord.REVERTED,
                                                         QueueRecord.SKIPPED]).order_by(
         '-done_date')

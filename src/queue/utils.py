@@ -73,6 +73,7 @@ def invalidate_cache():
 
     """
     cache.clear()
+    update_key()
 
 
 def get_teams():

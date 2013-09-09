@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from exceptions import TypeError
 from json import loads, dumps
 from uuid import uuid1
@@ -449,8 +449,10 @@ def heroes_and_villains(request):
     try:
         unhurried = QueueRecord.objects.get(
             queue_id=get_slowest_push_id(QueueRecord.objects.filter(status__in=[QueueRecord.DONE])))
+        unhurried_duration = str(timedelta(minutes=int(unhurried.push_duration())))
     except IndexError:
         unhurried = None
+        unhurried_duration = None
 
     return render_to_response('heroes/dpq_heroes_popup_content.html',
                               RequestContext(request, {'hero': hero,
@@ -459,7 +461,8 @@ def heroes_and_villains(request):
                                                        'reverter_count': reverter_count,
                                                        'skipper': skipper,
                                                        'skipper_count': skipper_count,
-                                                       'unhurried': unhurried}))
+                                                       'unhurried': unhurried,
+                                                       'unhurried_duration': unhurried_duration}))
 
 
 def maintenance_page(request):

@@ -371,11 +371,11 @@ def move_queue_item(request):
         index = item.index
         branch = item.branch
 
-        if data['mode'] == 'up':
+        if data['mode'] == 'down':
             target = QueueRecord.objects.filter(index__gt=index, branch=branch,
                                                 status__in=[QueueRecord.WAITING, QueueRecord.IN_PROGRESS]).order_by(
                 'index')[0]
-        elif data['mode'] == 'down' and request.user.is_superuser:
+        elif data['mode'] == 'up' and request.user.is_superuser:
             target = QueueRecord.objects.filter(index__lt=index, branch=branch,
                                                 status__in=[QueueRecord.WAITING, QueueRecord.IN_PROGRESS]).order_by(
                 '-index')[0]

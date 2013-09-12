@@ -26,7 +26,7 @@
         {% for item in data.push_table %}
             <tr {% if item.status == item.IN_PROGRESS %} class="warning"{% endif %}>
                 <td>
-                    {% if user.is_superuser or item.owner == user %}
+                    {% if user.is_superuser %}
                         {% if item.index != data.last_item %}
                             <a class="prevent-default move-link" href="#"
                                onclick="moveRecord('{{ item.queue_id }}', 'up')" title="Move up"><b>↑</b></a>
@@ -37,7 +37,7 @@
                     {{ item.index }}
                 </td>
                 <td>
-                    {% if user.is_superuser %}
+                    {% if user.is_superuser or item.owner == user %}
                         {% if item.index != data.first_item %}
                             <a class="prevent-default move-link" href="#"
                                onclick="moveRecord('{{ item.queue_id }}', 'down')" title="Move down"><b>↓</b></a>

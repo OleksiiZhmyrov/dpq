@@ -40,7 +40,7 @@ def get_last_pushes_for_branch(branch_name):
         log_info('Updating tab for branch ' + branch_name + ' from database')
         branch_obj = Branch.objects.get(name=branch_name)
         push_table = QueueRecord.objects.filter(branch=branch_obj,
-                                          status__in=[QueueRecord.WAITING, QueueRecord.IN_PROGRESS]).order_by('-index')
+                                          status__in=[QueueRecord.WAITING, QueueRecord.IN_PROGRESS]).order_by('index')
         cache.set(branch_name, push_table)
 
     else:

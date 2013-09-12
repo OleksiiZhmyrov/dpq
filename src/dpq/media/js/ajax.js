@@ -221,9 +221,9 @@ function fetchAndUpdateBranchesStatuses() {
             element = response[i];
             var image = $('li#'+element.branch+' a img');
             if(element.status == true) {
-                image.attr('src', '/media/img/build/success.png');
+                image.attr('src', '/media/img/build/success_hq.png');
             } else {
-                image.attr('src', '/media/img/build/failure.png');
+                image.attr('src', '/media/img/build/failure_hq.png');
             }
         }
     });

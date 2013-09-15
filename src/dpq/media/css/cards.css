@@ -1,0 +1,22 @@
+
+[class^="trump-"],
+[class*=" trump-"] {
+  display: inline-block;
+  width: 15px;
+  height: 16px;
+  margin-top: 1px;
+  *margin-right: .3em;
+  line-height: 14px;
+  vertical-align: text-top;
+  background-image: url('/media/img/cards.png');
+  background-position: 15px 16px;
+  background-repeat: no-repeat;
+}
+
+.trump-enabled {
+  background-position: -5px -1px;
+}
+
+.trump-disabled {
+  background-position: -25px -1px;
+}

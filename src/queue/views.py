@@ -563,3 +563,33 @@ def api_download_cards(request):
     filename = render_cards(cards)
 
     return redirect('/media/cards/'+filename)
+
+
+@login_required
+def api_joker(request):
+    try:
+        data = loads(request.body)
+        queue_id = data['id']
+        queue_record = QueueRecord.objects.get(queue_id=queue_id)
+        owner = queue_record.owner
+
+        custom_user_record = CustomUserRecord.objects.get(django_user__id=owner.id)
+        trump_cards_count = custom_user_record.trump_cards
+        custom_user_record.trump_cards = trump_cards_count - 1
+        custom_user_record.save()
+
+        queue_record.status = QueueRecord.JOKER_MODE
+        queue_record.save()
+
+        invalidate_cache()
+
+        response = {
+            'status': 'success'
+        }
+
+    except KeyError:
+        response = {
+            'status': 'error',
+            'reason': 'invalid request'
+        }
+    return HttpResponse(dumps(response), mimetype='application/json')

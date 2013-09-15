@@ -81,12 +81,14 @@ class QueueRecord(models.Model):
     REVERTED = "R"
     DONE = "D"
     SKIPPED = "S"
+    JOKER_MODE = "J"
     STATUS_CHOICES = (
         (WAITING, 'waiting'),
         (IN_PROGRESS, 'in progress'),
         (REVERTED, 'reverted'),
         (DONE, 'done'),
         (SKIPPED, 'skipped'),
+        (JOKER_MODE, 'Joker mode'),
     )
     status = models.CharField("status", max_length=1, choices=STATUS_CHOICES, default=WAITING)
     hidden = models.BooleanField(default=False)
@@ -122,6 +124,9 @@ class Role(models.Model):
 class CustomUserRecord(models.Model):
     django_user = models.ForeignKey(User)
     role = models.ForeignKey(Role)
+    trump_cards = models.IntegerField(default=0, null=True, blank=True)
 
     def __unicode__(self):
-        return '{username} ({role})'.format(username=self.django_user.username, role=self.role.description)
+        return '{username} ({role}, {trump_cards} jokers)'.format(username=self.django_user.username,
+                                                                  role=self.role.description,
+                                                                  trump_cards=self.trump_cards)

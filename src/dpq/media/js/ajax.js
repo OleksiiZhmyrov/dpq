@@ -269,3 +269,21 @@ function fetchHeroesAndVillainsList() {
             $('div#dpq-heroes>div.modal-body').html('<center>Request failed.</center>');
         });
 }
+
+
+function useJoker(recordId) {
+    if(confirm("Are you sure you want to apply Joker?")) {
+        $.ajax({
+            url: "/api/joker/",
+            headers: {
+                "Content-type": "application/x-www-form-urlencoded",
+                "X-CSRFToken": $.cookie('csrftoken')
+            },
+            data: JSON.stringify({
+                "id": recordId
+            })
+        }).done(function () {
+                update_branch_tab($("div.dpq-queue-tabs > ul > li.active").attr("id"));
+            });
+    }
+}

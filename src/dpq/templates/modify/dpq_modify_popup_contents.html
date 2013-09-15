@@ -6,16 +6,17 @@
 
             <div class="controls">
                 <select name="status" id="dpq-modify-queue-status">
-                    <option
-                            {% if item.status == item.WAITING %} selected="selected" {% endif %}
-                                                                 value={{ item.WAITING }}>waiting
-                    </option>
+                    {% if item.status != item.JOKER_MODE %}
+                        <option
+                                {% if item.status == item.WAITING %} selected="selected" {% endif %}
+                                                                     value={{ item.WAITING }}>waiting
+                        </option>
 
-                    <option
-                            {% if item.status == item.IN_PROGRESS %} selected="selected" {% endif %}
-                                                                     value={{ item.IN_PROGRESS }}>in progress
-                    </option>
-
+                        <option
+                                {% if item.status == item.IN_PROGRESS %} selected="selected" {% endif %}
+                                                                         value={{ item.IN_PROGRESS }}>in progress
+                        </option>
+                    {% endif %}
                     {% if item.status == item.WAITING %}
                         <option
                                 {% if item.status == item.SKIPPED %} selected="selected" {% endif %}
@@ -23,7 +24,7 @@
                         </option>
                     {% endif %}
 
-                    {% if item.status == item.IN_PROGRESS %}
+                    {% if item.status == item.IN_PROGRESS or item.status == item.JOKER_MODE %}
                         <option
                                 {% if item.status == item.DONE %} selected="selected" {% endif %}
                                                                   value={{ item.DONE }}>done
@@ -33,6 +34,13 @@
                                 {% if item.status == item.REVERTED %} selected="selected" {% endif %}
                                                                       value={{ item.REVERTED }}>reverted
                         </option>
+
+                        {% if item.status == item.JOKER_MODE %}
+                            <option
+                                    {% if item.status == item.JOKER_MODE %} selected="selected" {% endif %}
+                                                                          value={{ item.JOKER_MODE }}>Joker mode
+                            </option>
+                        {% endif %}
                     {% endif %}
                 </select>
             </div>

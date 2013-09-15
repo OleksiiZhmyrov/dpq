@@ -1,0 +1,6 @@
+<td>{% if user = item.owner and item.trump_cards >= 1 and item.status = item.IN_PROGRESS %}<a href="#" onclick="useJoker('{{ item.queue_id }}')">{% endif %}
+    <i class="{% if item.trump_cards >= 1 %}trump-enabled{% else %}trump-disabled{%  endif %}"
+        title="{{ item.trump_cards }} joker(s) available.{% if user = item.owner and item.trump_cards >= 1 and item.status = item.IN_PROGRESS %} Click to apply joker.{% endif %}">
+    </i>
+    {% if user = item.owner and item.trump_cards >= 1 and item.status != item.IN_PROGRESS %}</a>{% endif %}
+</td>

@@ -18,6 +18,7 @@
         <th style="width: 100px;">Created</th>
         <th style="width: 6px;"></th>
         <th style="width: 6px;"></th>
+        <th style="width: 6px;"></th>
         <th style="width: 80px;">Status</th>
     </tr>
     </thead>
@@ -51,6 +52,9 @@
                     <img src='/media/img/IconAppTypeJira.png' title='Browse story in JIRA'/></a></td>
                 <td title="{{ item.summary }}">{{ item.story.summary|truncatechars:120 }}</td>
                 <td>{{ item.creation_date|date:"M j, H:i" }}</td>
+
+                {% include "queue/dpq_queue_joker_column.html" %}
+
                 <td>{% if item.owner == user or user.is_superuser %}
                     {% if item.status != item.DONE and item.status != item.REVERTED %}
                         <a href="#dpq-modify-queue" data-toggle="modal" title="Modify record"
@@ -62,7 +66,8 @@
                        onclick="fetchPushDetails('{{ item.queue_id }}')"><i class="icon-info-sign"></i></a>
                 </td>
 
-                <td><span {% if item.status == item.IN_PROGRESS %} class="label label-warning"{% endif %}>
+                <td><span {% if item.status == item.IN_PROGRESS %} class="label label-warning"
+                            {% elif item.status == item.JOKER_MODE %} class="label label-success"{% endif %}>
                     {{ item.get_status_display }}
                     </span>
                 </td>

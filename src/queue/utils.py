@@ -40,7 +40,14 @@ def get_last_pushes_for_branch(branch_name):
         log_info('Updating tab for branch ' + branch_name + ' from database')
         branch_obj = Branch.objects.get(name=branch_name)
         push_table = QueueRecord.objects.filter(branch=branch_obj,
-                                          status__in=[QueueRecord.WAITING, QueueRecord.IN_PROGRESS]).order_by('index')
+                                                status__in=[QueueRecord.WAITING, QueueRecord.JOKER_MODE,
+                                                            QueueRecord.IN_PROGRESS]).order_by('index')
+        custom_user_records = CustomUserRecord.objects.all()
+        trump_cards = dict([(cur.django_user.id, cur.trump_cards) for cur in custom_user_records])
+
+        for item in push_table:
+            item.trump_cards = trump_cards.get(item.owner.id, 0)
+
         cache.set(branch_name, push_table)
 
     else:
@@ -159,7 +166,6 @@ def shift_indexes(first, second):
 
 
 def get_slowest_push_id(input):
-
     array = []
 
     for item in input.values_list('push_date', 'done_date', 'queue_id'):
@@ -168,9 +174,9 @@ def get_slowest_push_id(input):
     for index in range(len(array)):
         moved = False
 
-        for bubble in reversed(range(index+1, len(array))):
-            if array[bubble-1][1]-array[bubble-1][0] > array[bubble][1]-array[bubble][0]:
-                array[bubble], array[bubble-1] = array[bubble-1], array[bubble]
+        for bubble in reversed(range(index + 1, len(array))):
+            if array[bubble - 1][1] - array[bubble - 1][0] > array[bubble][1] - array[bubble][0]:
+                array[bubble], array[bubble - 1] = array[bubble - 1], array[bubble]
                 moved = True
 
         if not moved:

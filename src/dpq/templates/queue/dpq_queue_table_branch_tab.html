@@ -25,7 +25,8 @@
     <tbody>
     {% if data.push_table %}
         {% for item in data.push_table %}
-            <tr {% if item.status == item.IN_PROGRESS %} class="warning"{% endif %}>
+            <tr {% if item.status == item.IN_PROGRESS %} class="warning"
+            {% elif item.status == item.JOKER_MODE %} class="info" {% endif %}>
                 <td>
                     {% if user.is_superuser %}
                         {% if item.index != data.last_item %}

@@ -284,7 +284,7 @@ def visualisation_branch_duration(request, branch, mode):
 
     response = [['Developer', 'Time']]
     for push in last_pushes:
-        if push.push_date != None and push.done_date != None:
+        if push.push_date is not None and push.done_date is not None:
             if mode == 'duration':
                 duration_obj = push.done_date - push.push_date
             if mode == 'pending':

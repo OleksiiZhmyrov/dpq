@@ -294,6 +294,9 @@ def visualisation_branch_duration(request, branch, mode):
             duration = 0
         response.append([push.story.assignee, duration])
 
+    if len(response) == 1:
+        response.append(['no data available yet', 0])
+
     return HttpResponse(dumps(response))
 
 

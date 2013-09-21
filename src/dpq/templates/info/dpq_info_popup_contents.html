@@ -82,7 +82,9 @@
         <tbody>
         <tr>
             <td>Created by:</td>
-            <td>{{ item.owner }}</td>
+            <td>{{ item.owner }} <i class="{% if item.trump_cards > 0 %}
+                                              trump-enabled{% else %}trump-disabled{% endif %}"
+                title="{{ item.trump_cards }} joker(s) available"></i></td>
         </tr>
         <tr>
             <td>Branch:</td>

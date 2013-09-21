@@ -118,6 +118,7 @@ def get_item_by_id(item_id):
     """
     try:
         item = QueueRecord.objects.get(queue_id=item_id)
+        item.trump_cards = CustomUserRecord.objects.get(django_user_id=item.owner.id).trump_cards
         return item
     except QueueRecord.DoesNotExist:
         raise Http404(u'Queue item with selected id does not exist.')

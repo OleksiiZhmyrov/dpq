@@ -183,3 +183,16 @@ def get_slowest_push_id(input):
             break
 
     return array[-1][2]
+
+
+def change_branch_status(branch, status):
+    if status == "success":
+        branch.build_success = True
+    elif status == "failure":
+        branch.build_success = False
+    branch.save()
+    invalidate_cache()
+    log_info(" === Status for branch {branch_name} is changed to {branch_status}".format(
+        branch_name=branch.name, branch_status=status))
+    response = {'status': 'OK'}
+    return branch, response

@@ -508,16 +508,8 @@ def api_update_branch_status(request):
     if branch_name and status:
         try:
             branch = Branch.objects.get(name__iexact=branch_name)
-            if branch and status == "success":
-                branch.build_success = True
-                branch.save()
-                invalidate_cache()
-                response = {'status': 'OK'}
-            elif branch and status == "failure":
-                branch.build_success = False
-                branch.save()
-                invalidate_cache()
-                response = {'status': 'OK'}
+            if branch:
+                branch, response = change_branch_status(branch, status)
             else:
                 response = {
                     'status': 'error',

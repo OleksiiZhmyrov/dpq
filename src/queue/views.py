@@ -213,6 +213,10 @@ def history(request, branch):
                                             status__in=[QueueRecord.DONE, QueueRecord.REVERTED,
                                                         QueueRecord.SKIPPED]).order_by(
         '-done_date')
+
+    for item in items_list:
+        item.formatted_duration = str(timedelta(minutes=int(item.push_duration())))
+
     paginator = DiggPaginator(items_list, 15, body=5, padding=1, margin=2)
 
     current_page = request.GET.get('page')

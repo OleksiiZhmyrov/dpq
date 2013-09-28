@@ -9,6 +9,7 @@
             <th>Key</th>
             <th>Summary</th>
             <th style="width: 80px;">Date</th>
+            <th>Duration</th>
             <th style="width: 8px;"></th>
             <th style="width: 80px;">Status</th>
         </tr>
@@ -24,6 +25,7 @@
                         <img src='/media/img/IconAppTypeJira.png' title='Browse story in JIRA'/></a></td>
                     <td>{{ item.story.summary|truncatechars:120 }}</td>
                     <td>{{ item.done_date|date:"d.m.Y" }}</td>
+                    <td>{{ item.formatted_duration }}</td>
                     <td><a href="#dpq-push-details"
                            style="text-decoration: none;"
                            data-toggle="modal"

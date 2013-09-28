@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
+from dpq.settings import PROJECT_NAME
+import re
 
 
 class Statistics(models.Model):
@@ -63,6 +65,11 @@ class UserStory(models.Model):
 
     def __unicode__(self):
         return '[{key}] {summary} ({assignee})'.format(key=self.key, summary=self.summary[:32], assignee=self.assignee)
+
+    def is_jira_story(self):
+        pattern = PROJECT_NAME + "-?[1-9]{1,3}[0-9]"
+        p = re.compile(pattern)
+        return p.match(self.key)
 
 
 class QueueRecord(models.Model):

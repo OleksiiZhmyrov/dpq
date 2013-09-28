@@ -6,7 +6,7 @@
             <th style="width: 50px;">Team</th>
             <th>Developer</th>
             <th>Tester</th>
-            <th>Key</th>
+            <th style="width: 140px;">Key</th>
             <th>Summary</th>
             <th style="width: 80px;">Date</th>
             <th>Duration</th>
@@ -21,8 +21,10 @@
                     <td>{{ item.team.label|safe }}</td>
                     <td>{{ item.story.assignee }}</td>
                     <td>{{ item.story.tester }}</td>
-                    <td>{{ item.story.key }} <a href="{{ jira_browse_url }}{{ item.story.key }}" target="_blank">
-                        <img src='/media/img/IconAppTypeJira.png' title='Browse story in JIRA'/></a></td>
+                    <td>{{ item.story.key }}{% if item.story.is_jira_story %}
+                        <a href="{{ jira_browse_url }}{{ item.story.key }}" target="_blank">
+                        <img src='/media/img/IconAppTypeJira.png' title='Browse story in JIRA' class="pull-right"/>
+                        </a>{% endif %}</td>
                     <td>{{ item.story.summary|truncatechars:120 }}</td>
                     <td>{{ item.done_date|date:"d.m.Y" }}</td>
                     <td>{% if item.status != item.SKIPPED %}{{ item.formatted_duration }}{% endif %}</td>

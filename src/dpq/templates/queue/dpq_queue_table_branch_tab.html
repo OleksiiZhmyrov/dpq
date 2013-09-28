@@ -49,8 +49,10 @@
                 <td>{{ item.team.label|safe }}</td>
                 <td>{{ item.story.assignee }}</td>
                 <td>{{ item.story.tester }}</td>
-                <td>{{ item.story.key }} <a href="{{ jira_browse_url }}{{ item.story.key }}" target="_blank">
-                    <img src='/media/img/IconAppTypeJira.png' title='Browse story in JIRA'/></a></td>
+                <td>{{ item.story.key }}{% if item.story.is_jira_story %}
+                        <a href="{{ jira_browse_url }}{{ item.story.key }}" target="_blank">
+                        <img src='/media/img/IconAppTypeJira.png' title='Browse story in JIRA' class="pull-right"/>
+                        </a>{% endif %}</td>
                 <td title="{{ item.summary }}">{{ item.story.summary|truncatechars:120 }}</td>
                 <td>{{ item.creation_date|date:"M j, H:i" }}</td>
 

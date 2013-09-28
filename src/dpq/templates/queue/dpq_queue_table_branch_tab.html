@@ -68,7 +68,10 @@
                 </td>
 
                 <td><span {% if item.status == item.IN_PROGRESS %} class="label label-warning"
-                            {% elif item.status == item.JOKER_MODE %} class="label label-success"{% endif %}>
+                    title="In progress since {{ item.push_date|date:"M j, H:i" }}"
+                            {% elif item.status == item.JOKER_MODE %} class="label label-success"
+                    title="Fixing build since {{ item.push_date|date:"M j, H:i" }}"
+                {% endif %}>
                     {{ item.get_status_display }}
                     </span>
                 </td>

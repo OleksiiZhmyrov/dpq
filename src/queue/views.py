@@ -175,18 +175,19 @@ def modify_queue_item(request):
         else:
             item.team = Team.objects.get(name__iexact=data['team'])
 
-        item.status = data['status']
-
         item.modified_date = datetime.now()
 
-        if data['status'] == QueueRecord.DONE or data['status'] == QueueRecord.REVERTED:
+        status_ = data['status']
+        item.status = status_
+
+        if status_ == QueueRecord.DONE or status_ == QueueRecord.REVERTED:
             item.done_date = datetime.now()
             update_daily_statistics(item.push_duration())
 
-        if data['status'] == QueueRecord.SKIPPED:
+        if status_ == QueueRecord.SKIPPED:
             item.done_date = datetime.now()
 
-        if data['status'] == QueueRecord.IN_PROGRESS:
+        if status_ == QueueRecord.IN_PROGRESS or status_ == QueueRecord.JOKER_MODE:
             item.push_date = datetime.now()
 
         item.save()

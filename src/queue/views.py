@@ -97,6 +97,7 @@ def fetch_queue_item(request):
             except IndexError:
                 return render_to_response('add/dpq_add_popup_contents.html',
                                           RequestContext(request, {'teams': get_teams(),
+                                                                   'project_name': PROJECT_NAME,
                                                                    'active_branches': get_active_branches()}))
     except KeyError:
         raise Http404(u'No parameters found in request.')

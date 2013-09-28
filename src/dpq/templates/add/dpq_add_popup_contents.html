@@ -6,8 +6,14 @@
             <label class="control-label" for="dpq-add-queue-key">Story Key:</label>
             <div class="controls">
                 <div class="input-append">
-                      <input type="text" class="span2" name="key" id="dpq-add-queue-key" placeholder="PROJECT-0000">
-                      <button class="btn" type="button" id="dpq-add-queue-jira">
+                      <input type="text" class="span2"
+                             name="key" id="dpq-add-queue-key"
+                             placeholder="PROJECT-0000"
+                             title="If your commit is not related to any user story in JIRA, just type {{ project_name }}-0000">
+                      <button class="btn"
+                              type="button"
+                              id="dpq-add-queue-jira"
+                              title="Click to sync with JIRA">
                           <i class="icon-refresh"></i>&nbsp;&nbsp;JIRA</button>
                 </div><span id="validation-msg"></span>
             </div>

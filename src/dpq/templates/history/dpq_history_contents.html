@@ -25,7 +25,7 @@
                         <img src='/media/img/IconAppTypeJira.png' title='Browse story in JIRA'/></a></td>
                     <td>{{ item.story.summary|truncatechars:120 }}</td>
                     <td>{{ item.done_date|date:"d.m.Y" }}</td>
-                    <td>{{ item.formatted_duration }}</td>
+                    <td>{% if item.status != item.SKIPPED %}{{ item.formatted_duration }}{% endif %}</td>
                     <td><a href="#dpq-push-details"
                            style="text-decoration: none;"
                            data-toggle="modal"

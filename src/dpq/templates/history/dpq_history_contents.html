@@ -16,7 +16,7 @@
         </thead>
         <tbody> {% spaceless %}
             {% for item in page %}
-                <tr {% if item.status == item.SKIPPED %} style="color: #E0E0E0;" {% endif %}>
+                <tr {% if item.status == item.SKIPPED or item.status == item.REVERTED %} style="color: #E0E0E0;" {% endif %}>
                     <td>{{ item.index }}</td>
                     <td>{{ item.team.label|safe }}</td>
                     <td>{{ item.story.assignee }}</td>

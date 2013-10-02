@@ -3,7 +3,6 @@ from exceptions import TypeError
 from json import loads, dumps
 from uuid import uuid1
 from django.views.decorators.csrf import csrf_exempt
-from docutils.utils import assemble_option_dict
 from jira import *
 
 from django.contrib.admin.views.decorators import staff_member_required

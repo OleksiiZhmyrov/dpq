@@ -3,6 +3,7 @@ from exceptions import TypeError
 from json import loads, dumps
 from uuid import uuid1
 from django.views.decorators.csrf import csrf_exempt
+from docutils.utils import assemble_option_dict
 from jira import *
 
 from django.contrib.admin.views.decorators import staff_member_required
@@ -136,9 +137,14 @@ def create_queue_item(request):
             last_sync=None
         )
 
+        # Panda Easter Egg (^_^)
+        if story.tester.lower() == "panda":
+            story.tester = story.assignee
+            story.assignee = "I am Panda!!1"
+
         story.save()
 
-        queue = QueueRecord(
+        queue_record = QueueRecord(
             owner=request.user,
             queue_id=uuid1().hex,
             index=index,
@@ -146,7 +152,7 @@ def create_queue_item(request):
             team=team,
             story=story
         )
-        queue.save()
+        queue_record.save()
         invalidate_cache()
         update_key()
         return HttpResponse("OK")

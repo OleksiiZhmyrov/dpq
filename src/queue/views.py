@@ -123,8 +123,13 @@ def create_queue_item(request):
         except IndexError:
             index = 1
 
+        key_ = data['key']
+        p = re.compile(PROJECT_NAME + "-{1,4}[0-9]")
+        if not p.match(key_):
+            key_ = PROJECT_NAME+"-0000"
+
         story = UserStory(
-            key=data['key'],
+            key=key_,
             summary=data['summary'],
             assignee=data['developer'],
             tester=data['tester'],
@@ -162,7 +167,12 @@ def modify_queue_item(request):
         item = QueueRecord.objects.get(queue_id=data['id'])
         story = item.story
 
-        story.key = data['key']
+        key_ = data['key']
+        p = re.compile(PROJECT_NAME + "-{1,4}[0-9]")
+        if not p.match(key_):
+            key_ = PROJECT_NAME+"-0000"
+
+        story.key = key_
         story.summary = data['summary']
         story.assignee = data['developer']
         story.tester = data['tester']

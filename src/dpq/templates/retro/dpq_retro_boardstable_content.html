@@ -1,3 +1,11 @@
+{% block javascript %}
+<script type="text/javascript">
+    function navigate(url) {
+           document.location.href = url;
+    }
+</script>
+{% endblock %}
+
 <div id="boards-table">
     <table class="table table-hover table-stripped">
         <thead>
@@ -8,17 +16,21 @@
                 <th>Vote limit</th>
                 <th>Status</th>
                 <th>Owner</th>
+                <th style="width: 30px;"></th>
             </tr>
         </thead>
         <tbody> {% spaceless %}
             {% for item in page %}
-                <tr{% if item.is_active %} class="success"{% endif %}>
+                <tr{% if item.is_active %} class="success"{% endif %}
+                        onclick="navigate('/retro/{{ item.sprint.number }}/{{ item.team.name }}/')">
                     <td>Sprint {{ item.sprint.number }}</td>
                     <td>{{ item.team.name }}</td>
                     <td>{{ item.creation_date|date:"d.m.Y" }}</td>
                     <td>{{ item.vote_limit }}</td>
                     <td>{% if item.is_active %}voting in progress{% else %}voting closed{% endif %}</td>
                     <td>{{ item.created_by.django_user.username }}</td>
+                    <td><a href="/retro/{{ item.sprint.number }}/{{ item.team.name }}/">
+                        <i class="icon-share"></i></a></td>
                 </tr>
             {% endfor %} {% endspaceless %}
         </tbody>

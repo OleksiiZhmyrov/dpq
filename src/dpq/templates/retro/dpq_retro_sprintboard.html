@@ -1,0 +1,66 @@
+{% extends "dpq_base.html" %}
+{% block title %}{{ team }} sprint {{ sprint }}{% endblock %}
+
+{% block main %}
+
+<div class="span5">
+    <h4 style="color: darkgreen; text-align: center">Went Good</h4>
+    <table class="table table-hover table-stripped">
+        <thead>
+            <tr>
+                <th style="width: 25px;">Rating</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody> {% spaceless %}
+            {% for sticker in stickers_good %}
+                <tr>
+                    <td>{{ sticker.votes }}</td>
+                    <td>{{ sticker.summary }}</td>
+                </tr>
+            {% endfor %} {% endspaceless %}
+        </tbody>
+    </table>
+</div>
+
+<div class="span5">
+    <h4 style="color: darkorange; text-align: center">Need to Change</h4>
+    <table class="table table-hover table-stripped">
+        <thead>
+            <tr>
+                <th style="width: 25px;">Rating</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody> {% spaceless %}
+            {% for sticker in stickers_change %}
+                <tr>
+                    <td>{{ sticker.votes }}</td>
+                    <td>{{ sticker.summary }}</td>
+                </tr>
+            {% endfor %} {% endspaceless %}
+        </tbody>
+    </table>
+</div>
+
+<div class="span5">
+    <h4 style="color: darkslateblue; text-align: center">Action Points</h4>
+    <table class="table table-hover table-stripped">
+        <thead>
+            <tr>
+                <th style="width: 25px;">Rating</th>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody> {% spaceless %}
+            {% for sticker in stickers_actions %}
+                <tr>
+                    <td>{{ sticker.votes }}</td>
+                    <td>{{ sticker.summary }}</td>
+                </tr>
+            {% endfor %} {% endspaceless %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}

@@ -170,7 +170,7 @@ class BoardSticker(models.Model):
     is_modified = models.BooleanField('Is Modified', default=False)
     summary = models.CharField('Description', max_length=256, null=True, blank=True)
     votes = models.IntegerField(default=0)
-    voters = models.CharField('Description', max_length=512, null=True, blank=True)
+    voters = models.CharField('Voters', max_length=512, null=True, blank=True)
     GOOD = "G"
     CHANGE = "C"
     ACTION = "A"

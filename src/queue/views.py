@@ -622,3 +622,18 @@ def retro_boards_list(request):
     except EmptyPage:
         page = paginator.page(paginator.num_pages)
     return render_to_response('retro/dpq_retro.html', RequestContext(request, {'page': page}))
+
+
+def retro_boards_sprint(request, sprint, team):
+    sprint = Sprint.objects.get(number=sprint)
+    team = Team.objects.get(name=team)
+    retro_board = RetroBoard.objects.get(sprint=sprint, team=team)
+    stickers_good = BoardSticker.objects.filter(retroBoard=retro_board, type=BoardSticker.GOOD).order_by('-votes')
+    stickers_change = BoardSticker.objects.filter(retroBoard=retro_board, type=BoardSticker.CHANGE).order_by('-votes')
+    stickers_actions = BoardSticker.objects.filter(retroBoard=retro_board, type=BoardSticker.ACTION).order_by('-votes')
+    return render_to_response('retro/dpq_retro_sprintboard.html',
+                              RequestContext(request, {'sprint': sprint,
+                                                       'team': team,
+                                                       'stickers_good': stickers_good,
+                                                       'stickers_change': stickers_change,
+                                                       'stickers_actions': stickers_actions}))

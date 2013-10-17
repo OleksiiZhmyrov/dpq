@@ -609,3 +609,16 @@ def api_joker(request):
             'reason': 'invalid request'
         }
     return HttpResponse(dumps(response), mimetype='application/json')
+
+
+def retro_boards_list(request):
+    boards_list = RetroBoard.objects.all().order_by('-creation_date')
+    paginator = DiggPaginator(boards_list, 15, body=5, padding=1, margin=2)
+    current_page = request.GET.get('page')
+    try:
+        page = paginator.page(current_page)
+    except (TypeError, PageNotAnInteger):
+        page = paginator.page(1)
+    except EmptyPage:
+        page = paginator.page(paginator.num_pages)
+    return render_to_response('retro/dpq_retro.html', RequestContext(request, {'page': page}))

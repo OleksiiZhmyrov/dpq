@@ -137,3 +137,51 @@ class CustomUserRecord(models.Model):
         return '{username} ({role}, {trump_cards} jokers)'.format(username=self.django_user.username,
                                                                   role=self.role.description,
                                                                   trump_cards=self.trump_cards)
+
+
+class Sprint(models.Model):
+    description = models.CharField('Description', max_length=128, null=True, blank=True)
+    number = models.IntegerField('Number')
+    motto = models.CharField('Description', max_length=128, null=True, blank=True)
+    start_date = models.DateTimeField('Start Date', blank=True, null=True)
+    finish_date = models.DateTimeField('Finish Date', blank=True, null=True)
+
+    def __unicode__(self):
+        return 'Sprint {number}'.format(number=self.number)
+
+
+class RetroBoard(models.Model):
+    sprint = models.ForeignKey(Sprint)
+    team = models.ForeignKey(Team)
+    created_by = models.ForeignKey(CustomUserRecord)
+    vote_limit = models.IntegerField('Vote Limit', default=3)
+    creation_date = models.DateTimeField('Creation Date', auto_now_add=True)
+    is_active = models.BooleanField('Is Active', default=True)
+
+    def __unicode__(self):
+        return '{team} board for sprint {sprint}'.format(team=self.team, sprint=self.sprint.number)
+
+
+class BoardSticker(models.Model):
+    created_by = models.ForeignKey(CustomUserRecord)
+    retroBoard = models.ForeignKey(RetroBoard)
+    creation_date = models.DateTimeField('Creation Date', auto_now_add=True)
+    modification_date = models.DateTimeField('Modification Date', blank=True, null=True)
+    is_modified = models.BooleanField('Is Modified', default=False)
+    summary = models.CharField('Description', max_length=256, null=True, blank=True)
+    votes = models.IntegerField(default=0)
+    voters = models.CharField('Description', max_length=512, null=True, blank=True)
+    GOOD = "G"
+    CHANGE = "C"
+    ACTION = "A"
+    TYPE_CHOICES = (
+        (GOOD, 'was good'),
+        (CHANGE, 'need to change'),
+        (ACTION, 'action point'),
+    )
+    type = models.CharField("type", max_length=1, choices=TYPE_CHOICES, default=CHANGE)
+
+    def __unicode__(self):
+        return 'Sticker ({type}, {votes} votes, sprint {sprint}: {summary} )'.format(type=self.type, votes=self.votes,
+                                                                                     sprint=self.retroBoard.sprint,
+                                                                                     summary=self.summary)

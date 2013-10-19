@@ -168,7 +168,7 @@ class BoardSticker(models.Model):
     creation_date = models.DateTimeField('Creation Date', auto_now_add=True)
     modification_date = models.DateTimeField('Modification Date', blank=True, null=True)
     is_modified = models.BooleanField('Is Modified', default=False)
-    summary = models.CharField('Description', max_length=256, null=True, blank=True)
+    summary = models.CharField('Description', max_length=512, null=True, blank=True)
     votes = models.IntegerField(default=0)
     voters = models.CharField('Voters', max_length=512, null=True, blank=True)
     GOOD = "G"

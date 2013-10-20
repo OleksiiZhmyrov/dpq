@@ -685,5 +685,10 @@ def retro_board_add_sticker(request):
             'status': 'error',
             'reason': 'illegal or missing parameters in request'
         }
+    except ValueError:
+        response = {
+            'status': 'error',
+            'reason': 'no JSON object could be decoded'
+        }
     return HttpResponse(dumps(response), mimetype='application/json')
 

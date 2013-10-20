@@ -707,8 +707,9 @@ def retro_board_voteup_sticker(request):
 
         if voters is not None:
             voters_list = voters.split(";")
-            voters_list.append(current_user_id)
-            sticker.voters = ";".join(str(x) for x in voters_list)
+            voters_list.append(str(current_user_id))
+            voters_set = set(voters_list)
+            sticker.voters = ";".join(str(x) for x in voters_set)
         else:
             sticker.voters = str(current_user_id)
 

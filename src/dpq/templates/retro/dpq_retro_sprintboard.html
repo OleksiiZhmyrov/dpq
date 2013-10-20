@@ -27,7 +27,7 @@
                    href="#retro-add-popup"
                    class="btn btn-small btn-success prevent-default"
                    data-toggle="modal"
-                   onclick="fetchLastQueueData()"
+                   onclick="clearAddPopup()"
                    {% else %}
                    class="btn btn-small disabled"
                    title="You can't add stickers to closed retrospective board"
@@ -49,7 +49,9 @@
     <center><img src="/media/img/ajax-loader.gif"/></center>
 </div>
 
-{% include "retro/popups/dpq_retro_add_popup.html" %}
+{% if user.is_authenticated %}
+    {% include "retro/popups/dpq_retro_add_popup.html" %}
+{% endif %}
 <input type="hidden" id="retro-team" value="{{ team }}">
 <input type="hidden" id="retro-sprint" value="{{ sprint }}">
 

@@ -1,4 +1,16 @@
 $(document).ready(function () {
+    $('div#retro-add-popup').find('#btn-save').click(function () {
+        if (retroIsValidAddForm()) {
+            retroDisableAddForm();
+            addSticker();
+        }
+    });
+    $.ajaxSetup(
+        {
+            type: "POST",
+            dataType: "html",
+            cache: false
+    });
     update_board();
 });
 
@@ -30,4 +42,39 @@ function retroTimedRefresh() {
         }
         tick--;
     }, 1000);
+}
+
+function clearAddPopup() {
+    retroEnableAddForm();
+    $('textarea#retro-sticker-summary').val("");
+}
+
+function addSticker() {
+    $.ajax({
+        url: "/api/retro/sticker/add/",
+        headers: {
+            "Content-type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": $.cookie('csrftoken')
+        },
+        data: JSON.stringify({
+            "summary": $('textarea#retro-sticker-summary').val(),
+            "sprint": $('input#retro-sprint').val(),
+            "team": $('input#retro-team').val(),
+            "type": $('select#retro-add-sticker-type').val()
+        })
+    }).done(function () {
+            update_board();
+            $('div#retro-add-popup button.close').click();
+            $("#retro-add-popup #btn-save").addClass('btn-primary').attr("disabled", false).html('Add');
+        });
+}
+
+function retroDisableAddForm() {
+    $("#retro-add-popup #btn-save").removeClass('btn-primary').attr("disabled", true).html('Working ...');
+    $("div#retro-add-popup textarea").attr("disabled", true);
+}
+
+function retroEnableAddForm() {
+    $("#retro-add-popup #btn-save").addClass('btn-primary').attr("disabled", false).html('Add');
+    $("div#retro-add-popup textarea").attr("disabled", false);
 }

@@ -1,15 +1,29 @@
-<div class="modal hide fade" id="retro-add-popup" style="width: 430px;">
-    <div class="modal-header">
-        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-        <h3>Add sticker</h3>
+<form id="retro-add-sticker-form" class="form-horizontal">
+    <div class="modal hide fade" id="retro-add-popup" style="width: 450px;">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+            <h3>Add sticker</h3>
+        </div>
+        <div class="modal-body">
+            <div class="control-group">
+                <label class="control-label" for="dpq-add-queue-branch">Type:</label>
+                <div class="controls">
+                    <select name="type" id="retro-add-sticker-type">
+                        <option selected="selected" value="G">went good</option>
+                        <option value="C">need to change</option>
+                        {% if user.is_superuser %}
+                            <option value="A">action point</option>
+                        {% endif %}
+                    </select>
+                </div>
+            </div>
+            <center>
+                <textarea name="summary" class="field span5" id="retro-sticker-summary" rows="6" placeholder="Enter a short summary, 512 characters max"></textarea>
+            </center>
+        </div>
+        <div class="modal-footer">
+            <a id="btn-save" href="#" class="btn btn-primary prevent-default">Add</a>
+            <a href="#" class="btn" data-dismiss="modal" aria-hidden="true" id="closeDialog">Cancel</a>
+        </div>
     </div>
-    <div class="modal-body">
-        <center>
-            <textarea class="field span5" id="textarea" rows="6" placeholder="Enter a short summary, 512 characters max"></textarea>
-        </center>
-    </div>
-    <div class="modal-footer">
-        <a id="btn-save" href="#" class="btn btn-primary prevent-default">Add</a>
-        <a href="#" class="btn" data-dismiss="modal" aria-hidden="true" id="closeDialog">Cancel</a>
-    </div>
-</div>
+</form>

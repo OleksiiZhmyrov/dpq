@@ -212,3 +212,31 @@ function isValidStoryKey() {
         });
     return $("#add-to-queue-form").valid();
 }
+
+function retroIsValidAddForm() {
+    $("#retro-add-sticker-form").validate(
+        {
+            rules: {
+                summary: {
+                    required: true,
+                    maxlength: 512
+                }
+            },
+            highlight: function (label) {
+                $(label).closest('.control-group').addClass('error').removeClass('success');
+            },
+            success: function (label) {
+                label.closest('.control-group').addClass('success').removeClass('error');
+            },
+            messages: {
+                summary: {
+                    required: "Summary is mandatory",
+                    maxlength: "Max length is 512 characters",
+                }
+            },
+            errorPlacement: function(error, element) {
+                error.insertAfter(element);
+            }
+        });
+    return $("#retro-add-sticker-form").valid();
+}

@@ -649,3 +649,41 @@ def retro_board_table_contents(request, sprint, team):
                                                        'stickers_good': stickers_good,
                                                        'stickers_change': stickers_change,
                                                        'stickers_actions': stickers_actions}))
+
+
+@login_required
+def retro_board_add_sticker(request):
+    try:
+        data = loads(request.body)
+        summary = data['summary']
+        team = data['team']
+        sprint = data['sprint']
+        sticker_type = data['type']
+
+        sprint = Sprint.objects.get(number=sprint)
+        team = Team.objects.get(name=team)
+        retro_board = RetroBoard.objects.get(sprint=sprint, team=team)
+        creator = CustomUserRecord.objects.get(django_user=request.user)
+
+        sticker = BoardSticker(
+            created_by=creator,
+            retroBoard=retro_board,
+            summary=summary,
+            type=sticker_type
+        )
+        sticker.save()
+        response = {
+            'status': 'OK'
+        }
+    except ObjectDoesNotExist:
+        response = {
+            'status': 'error',
+            'reason': 'sprint or team does not exist'
+        }
+    except KeyError:
+        response = {
+            'status': 'error',
+            'reason': 'illegal or missing parameters in request'
+        }
+    return HttpResponse(dumps(response), mimetype='application/json')
+

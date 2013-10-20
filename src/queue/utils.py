@@ -197,3 +197,12 @@ def change_branch_status(branch, status):
         branch_name=branch.name, branch_status=status))
     response = {'status': 'OK'}
     return branch, response
+
+
+def add_voters_list_to_stickers(stickers):
+    for sticker in stickers:
+        if sticker.voters is not None:
+            voters_ids_list = sticker.voters.split(";")
+            voters = User.objects.filter(id__in=voters_ids_list)
+            sticker.voters_string = ", ".join(str(x.username) for x in voters)
+    return stickers

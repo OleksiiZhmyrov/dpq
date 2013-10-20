@@ -16,7 +16,7 @@
                 </tr>
             {% endif %}
             {% for sticker in stickers_good %}
-                <tr title="Created by {{ sticker.created_by.django_user.username }}">
+                <tr title="Created by {{ sticker.created_by.django_user.username }}{% if sticker.voters_string %}, voted up by {{ sticker.voters_string }}{% endif %}">
                     <td>{{ sticker.votes }}{% if user.is_authenticated %}
                         &nbsp;<a href="#" class="prevent-default" onclick="voteUp('{{ sticker.id }}')"><i class="icon-thumbs-up"></i></a>{% endif %}</td>
                     <td>{{ sticker.summary }}</td>
@@ -52,7 +52,7 @@
                 </tr>
             {% endif %}
             {% for sticker in stickers_change %}
-                <tr title="Created by {{ sticker.created_by.django_user.username }}">
+                <tr title="Created by {{ sticker.created_by.django_user.username }}{% if sticker.voters_string %}, voted up by {{ sticker.voters_string }}{% endif %}">
                     <td>{{ sticker.votes }}{% if user.is_authenticated %}
                         &nbsp;<a href="#" class="prevent-default" onclick="voteUp('{{ sticker.id }}')"><i class="icon-thumbs-up"></i></a>{% endif %}</td>
                     <td>{{ sticker.summary }}</td>

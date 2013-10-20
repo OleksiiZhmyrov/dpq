@@ -640,14 +640,19 @@ def retro_board_table_contents(request, sprint, team):
     sprint = Sprint.objects.get(number=sprint)
     team = Team.objects.get(name=team)
     retro_board = RetroBoard.objects.get(sprint=sprint, team=team)
+
     stickers_good = BoardSticker.objects.filter(retroBoard=retro_board, type=BoardSticker.GOOD).order_by('-votes')
+    stickers_good_with_voters = add_voters_list_to_stickers(stickers_good)
+
     stickers_change = BoardSticker.objects.filter(retroBoard=retro_board, type=BoardSticker.CHANGE).order_by('-votes')
+    stickers_change_with_voters = add_voters_list_to_stickers(stickers_change)
+
     stickers_actions = BoardSticker.objects.filter(retroBoard=retro_board, type=BoardSticker.ACTION).order_by('-votes')
     return render_to_response('retro/dpq_retro_sprintboard_tables.html',
                               RequestContext(request, {'sprint': sprint.number,
                                                        'team': team,
-                                                       'stickers_good': stickers_good,
-                                                       'stickers_change': stickers_change,
+                                                       'stickers_good': stickers_good_with_voters,
+                                                       'stickers_change': stickers_change_with_voters,
                                                        'stickers_actions': stickers_actions}))
 
 
@@ -707,7 +712,7 @@ def retro_board_voteup_sticker(request):
 
         if voters is not None:
             voters_list = voters.split(";")
-            voters_list.append(str(current_user_id))
+            voters_list.append(unicode(current_user_id+""))
             voters_set = set(voters_list)
             sticker.voters = ";".join(str(x) for x in voters_set)
         else:

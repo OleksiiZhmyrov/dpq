@@ -692,3 +692,44 @@ def retro_board_add_sticker(request):
         }
     return HttpResponse(dumps(response), mimetype='application/json')
 
+
+@login_required
+def retro_board_voteup_sticker(request):
+    try:
+        data = loads(request.body)
+        sticker_id = data['id']
+
+        sticker = BoardSticker.objects.get(id=sticker_id)
+        sticker.votes += 1
+
+        voters = sticker.voters
+        current_user_id = request.user.id
+
+        if voters is not None:
+            voters_list = voters.split(";")
+            voters_list.append(current_user_id)
+            sticker.voters = ";".join(str(x) for x in voters_list)
+        else:
+            sticker.voters = str(current_user_id)
+
+        sticker.save()
+
+        response = {
+            'status': 'OK'
+        }
+    except ObjectDoesNotExist:
+        response = {
+            'status': 'error',
+            'reason': 'sticker not found'
+        }
+    except ValueError:
+        response = {
+            'status': 'error',
+            'reason': 'no JSON object could be decoded'
+        }
+    except KeyError:
+        response = {
+            'status': 'error',
+            'reason': 'illegal or missing parameters in request'
+        }
+    return HttpResponse(dumps(response), mimetype='application/json')

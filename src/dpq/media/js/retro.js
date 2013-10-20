@@ -78,3 +78,18 @@ function retroEnableAddForm() {
     $("#retro-add-popup #btn-save").addClass('btn-primary').attr("disabled", false).html('Add');
     $("div#retro-add-popup textarea").attr("disabled", false);
 }
+
+function voteUp(stickerId) {
+    $.ajax({
+        url: "/api/retro/sticker/voteup/",
+        headers: {
+            "Content-type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": $.cookie('csrftoken')
+        },
+        data: JSON.stringify({
+            "id": stickerId
+        })
+    }).done(function () {
+            update_board();
+        });
+}

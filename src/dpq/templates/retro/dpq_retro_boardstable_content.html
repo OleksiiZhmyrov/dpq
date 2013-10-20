@@ -30,7 +30,7 @@
                     <td>{% if item.is_active %}voting in progress{% else %}voting closed{% endif %}</td>
                     <td>{{ item.created_by.django_user.username }}</td>
                     <td><a href="/retro/{{ item.sprint.number }}/{{ item.team.name }}/">
-                        <i class="icon-share"></i></a></td>
+                        <i title="Open board" class="icon-share"></i></a></td>
                 </tr>
             {% endfor %} {% endspaceless %}
         </tbody>

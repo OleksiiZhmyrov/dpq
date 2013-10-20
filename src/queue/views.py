@@ -621,18 +621,30 @@ def retro_boards_list(request):
         page = paginator.page(1)
     except EmptyPage:
         page = paginator.page(paginator.num_pages)
-    return render_to_response('retro/dpq_retro.html', RequestContext(request, {'page': page}))
+    return render_to_response('retro/dpq_retro.html', RequestContext(request, {'page': page,
+                                                                               'active_branches': get_active_branches()}))
 
 
 def retro_boards_sprint(request, sprint, team):
+    sprint = Sprint.objects.get(number=sprint)
+    team = Team.objects.get(name=team)
+    is_active = RetroBoard.objects.get(sprint=sprint, team=team).is_active
+    return render_to_response('retro/dpq_retro_sprintboard.html',
+                              RequestContext(request, {'sprint': sprint.number,
+                                                       'team': team,
+                                                       'is_active': is_active,
+                                                       'active_branches': get_active_branches()}))
+
+
+def retro_board_table_contents(request, sprint, team):
     sprint = Sprint.objects.get(number=sprint)
     team = Team.objects.get(name=team)
     retro_board = RetroBoard.objects.get(sprint=sprint, team=team)
     stickers_good = BoardSticker.objects.filter(retroBoard=retro_board, type=BoardSticker.GOOD).order_by('-votes')
     stickers_change = BoardSticker.objects.filter(retroBoard=retro_board, type=BoardSticker.CHANGE).order_by('-votes')
     stickers_actions = BoardSticker.objects.filter(retroBoard=retro_board, type=BoardSticker.ACTION).order_by('-votes')
-    return render_to_response('retro/dpq_retro_sprintboard.html',
-                              RequestContext(request, {'sprint': sprint,
+    return render_to_response('retro/dpq_retro_sprintboard_tables.html',
+                              RequestContext(request, {'sprint': sprint.number,
                                                        'team': team,
                                                        'stickers_good': stickers_good,
                                                        'stickers_change': stickers_change,

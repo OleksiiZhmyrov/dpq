@@ -1,23 +1,56 @@
 {% extends "dpq_base.html" %}
 {% block title %}{{ team }} sprint {{ sprint }}{% endblock %}
 
+{% block javascript %}
+    <script>
+        $(document).ready(function () {
+            retroTimedRefresh();
+        });
+    </script>
+{% endblock %}
+
 {% block main %}
+
+<script src="/media/js/retro.js"></script>
+
+<div class="alert" id="retro-refresh-alert" style="display: none;">
+    <button type="button" class="close">&times;</button>
+    <strong>Warning!</strong> Last attempt to automatically update stickers failed. This may be caused by connection issues. Please refresh page manually.
+</div>
 
 <div>
     <div class="btn-group" style="margin-bottom: 20px;">
         {% if user.is_authenticated %}
-            <a href="#retro-add-popup"
+            <a
                    role="button"
+                   {% if is_active %}
+                   href="#retro-add-popup"
                    class="btn btn-small btn-success prevent-default"
                    data-toggle="modal"
-                   onclick="fetchLastQueueData()"><i class="icon-plus"></i> Add Sticker</a>
+                   onclick="fetchLastQueueData()"
+                   {% else %}
+                   class="btn btn-small disabled"
+                   title="You can't add stickers to closed retrospective board"
+                   {% endif %}><i class="icon-plus"></i> Add Sticker</a>
         {% endif %}
+    </div>
+    <div class="pull-right">
+        <div id="timer"
+            style="padding-right: 10px; color: lightgrey">0:30</div>
+    </div>
+    <div class="pull-right">
+        <img id="timer-ajax-loader"
+            style="display: none;"
+            src="/media/img/ajax-loader-1.gif">
+    </div>
 </div>
 
-<div>
-{% include "retro/dpq_retro_sprintboard_tables.html" %}
+<div id="retro-board-tables">
+    <center><img src="/media/img/ajax-loader.gif"/></center>
 </div>
 
 {% include "retro/popups/dpq_retro_add_popup.html" %}
+<input type="hidden" id="retro-team" value="{{ team }}">
+<input type="hidden" id="retro-sprint" value="{{ sprint }}">
 
 {% endblock %}

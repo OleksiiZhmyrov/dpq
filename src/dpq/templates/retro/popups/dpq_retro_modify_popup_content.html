@@ -1,0 +1,16 @@
+<div class="control-group">
+    <label class="control-label" for="dpq-modify-sticker-type">Type:</label>
+        <div class="controls">
+            <select name="type" id="retro-modify-sticker-type">
+                <option {% if sticker.type == sticker.GOOD %}selected="selected"{% endif %} value="G">went good</option>
+                <option {% if sticker.type == sticker.CHANGE %}selected="selected"{% endif %}value="C">need to change</option>
+            </select>
+        </div>
+</div>
+<center>
+    <textarea name="summary"
+              class="field span5"
+              id="retro-sticker-summary-modify"
+              rows="6">{{ sticker.summary }}</textarea>
+</center>
+<input type="hidden" id="modify-sticker-id" value="{{ sticker.id }}" />

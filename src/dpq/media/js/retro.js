@@ -79,6 +79,16 @@ function retroEnableAddForm() {
     $("div#retro-add-popup textarea").attr("disabled", false);
 }
 
+function retroDisableModifyForm() {
+    $("#retro-modify-popup #btn-save").removeClass('btn-primary').attr("disabled", true).html('Working ...');
+    $("div#retro-modify-popup textarea").attr("disabled", true);
+}
+
+function retroEnableModifyForm() {
+    $("#retro-modify-popup #btn-save").addClass('btn-primary').attr("disabled", false).html('Save');
+    $("div#retro-modify-popup textarea").attr("disabled", false);
+}
+
 function voteUp(stickerId) {
     $.ajax({
         url: "/api/retro/sticker/voteup/",
@@ -91,5 +101,41 @@ function voteUp(stickerId) {
         })
     }).done(function () {
             update_board();
+        });
+}
+
+function fetchStickerData(stickerId) {
+    $.ajax({
+        url: "/api/retro/sticker/fetch/",
+        headers: {
+            "Content-type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": $.cookie('csrftoken')
+        },
+        data: JSON.stringify({
+            "id": stickerId
+        })
+    }).done(function(data) {
+            $('div#dpq-retro-modify-sticker-modal-body').html(data);
+        });
+}
+
+function saveModifiedSticker() {
+    retroDisableModifyForm();
+    $.ajax({
+        url: "/api/retro/sticker/modify/",
+        headers: {
+            "Content-type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": $.cookie('csrftoken')
+        },
+        data: JSON.stringify({
+            "summary": $('textarea#retro-sticker-summary-modify').val(),
+            "sticker_id": $('input#modify-sticker-id').val(),
+            "type": $('select#retro-modify-sticker-type').val()
+        })
+    }).done(function () {
+            update_board();
+            retroEnableModifyForm();
+            $('div#dpq-retro-modify-sticker-modal-body').html('<center><img src="/media/img/ajax-loader.gif"/></center>');
+            $('div#retro-modify-popup button.close').click();
         });
 }

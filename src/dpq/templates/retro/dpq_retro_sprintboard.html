@@ -51,6 +51,7 @@
 
 {% if user.is_authenticated %}
     {% include "retro/popups/dpq_retro_add_popup.html" %}
+    {% include "retro/popups/dpq_retro_modify_popup.html" %}
 {% endif %}
 <input type="hidden" id="retro-team" value="{{ team }}">
 <input type="hidden" id="retro-sprint" value="{{ sprint }}">

@@ -712,7 +712,7 @@ def retro_board_voteup_sticker(request):
 
         if voters is not None:
             voters_list = voters.split(";")
-            voters_list.append(unicode(current_user_id+""))
+            voters_list.append(unicode(current_user_id))
             voters_set = set(voters_list)
             sticker.voters = ";".join(str(x) for x in voters_set)
         else:
@@ -737,5 +737,71 @@ def retro_board_voteup_sticker(request):
         response = {
             'status': 'error',
             'reason': 'illegal or missing parameters in request'
+        }
+    return HttpResponse(dumps(response), mimetype='application/json')
+
+
+@login_required
+def retro_board_fetch_sticker(request):
+    try:
+        data = loads(request.body)
+        sticker_id = data['id']
+
+        sticker = BoardSticker.objects.get(id=sticker_id)
+
+        return render_to_response('retro/popups/dpq_retro_modify_popup_content.html',
+                                  RequestContext(request, {'sticker': sticker}))
+    except ObjectDoesNotExist:
+        response = {
+            'status': 'error',
+            'reason': 'sticker not found'
+        }
+    except ValueError:
+        response = {
+            'status': 'error',
+            'reason': 'no JSON object could be decoded'
+        }
+    except KeyError:
+        response = {
+            'status': 'error',
+            'reason': 'illegal or missing parameters in request'
+        }
+    return HttpResponse(dumps(response), mimetype='application/json')
+
+
+@login_required
+def retro_board_modify_sticker(request):
+    try:
+        data = loads(request.body)
+        sticker_id = data['sticker_id']
+        summary = data['summary']
+        sticker_type = data['type']
+
+        sticker = BoardSticker.objects.get(id=sticker_id)
+
+        sticker.summary = summary
+        sticker.type = sticker_type
+        sticker.is_modified = 1
+        sticker.modification_date = datetime.now()
+
+        sticker.save()
+
+        response = {
+            'status': 'OK'
+        }
+    except ObjectDoesNotExist:
+        response = {
+            'status': 'error',
+            'reason': 'sprint or team does not exist'
+        }
+    except KeyError:
+        response = {
+            'status': 'error',
+            'reason': 'illegal or missing parameters in request'
+        }
+    except ValueError:
+        response = {
+            'status': 'error',
+            'reason': 'no JSON object could be decoded'
         }
     return HttpResponse(dumps(response), mimetype='application/json')

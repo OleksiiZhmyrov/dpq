@@ -142,7 +142,7 @@ class CustomUserRecord(models.Model):
 class Sprint(models.Model):
     description = models.CharField('Description', max_length=128, null=True, blank=True)
     number = models.IntegerField('Number')
-    motto = models.CharField('Description', max_length=128, null=True, blank=True)
+    motto = models.CharField('Motto', max_length=128, null=True, blank=True)
     start_date = models.DateTimeField('Start Date', blank=True, null=True)
     finish_date = models.DateTimeField('Finish Date', blank=True, null=True)
 
@@ -185,3 +185,9 @@ class BoardSticker(models.Model):
         return 'Sticker ({type}, {votes} votes, sprint {sprint}: {summary} )'.format(type=self.type, votes=self.votes,
                                                                                      sprint=self.retroBoard.sprint,
                                                                                      summary=self.summary)
+
+
+class UserToRetroBoardConnector(models.Model):
+    custom_user_record = models.ForeignKey(CustomUserRecord)
+    retroBoard = models.ForeignKey(RetroBoard)
+    votes = models.IntegerField(default=0)

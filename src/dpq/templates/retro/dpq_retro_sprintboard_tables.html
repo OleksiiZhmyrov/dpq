@@ -17,7 +17,7 @@
             {% endif %}
             {% for sticker in stickers_good %}
                 <tr title="Created {% if sticker.is_modified %}and modified {% endif %}by {{ sticker.created_by.django_user.username }}{% if sticker.voters_string %}, voted up by {{ sticker.voters_string }}{% endif %}">
-                    <td>{{ sticker.votes }}{% if user.is_authenticated %}
+                    <td>{{ sticker.votes }}{% if user.is_authenticated and can_vote %}
                         &nbsp;<a href="#" class="prevent-default" onclick="voteUp('{{ sticker.id }}')"><i class="icon-thumbs-up"></i></a>{% endif %}</td>
                     <td>{{ sticker.summary }}</td>
                     <td>{% if sticker.created_by.django_user.id == user.id or user.is_superuser %}
@@ -57,7 +57,7 @@
             {% endif %}
             {% for sticker in stickers_change %}
                 <tr title="Created {% if sticker.is_modified %}and modified {% endif %}by {{ sticker.created_by.django_user.username }}{% if sticker.voters_string %}, voted up by {{ sticker.voters_string }}{% endif %}">
-                    <td>{{ sticker.votes }}{% if user.is_authenticated %}
+                    <td>{{ sticker.votes }}{% if user.is_authenticated and can_vote %}
                         &nbsp;<a href="#" class="prevent-default" onclick="voteUp('{{ sticker.id }}')">
                             <i class="icon-thumbs-up"></i></a>{% endif %}</td>
                     <td>{{ sticker.summary }}</td>

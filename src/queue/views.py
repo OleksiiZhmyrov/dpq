@@ -648,9 +648,17 @@ def retro_board_table_contents(request, sprint, team):
     stickers_change_with_voters = add_voters_list_to_stickers(stickers_change)
 
     stickers_actions = BoardSticker.objects.filter(retroBoard=retro_board, type=BoardSticker.ACTION).order_by('-votes')
+
+    cur = CustomUserRecord.objects.get(django_user_id=request.user.id)
+    user_to_board_connector, is_created = \
+        UserToRetroBoardConnector.objects.get_or_create(custom_user_record=cur,
+                                                        retroBoard=retro_board)
+    can_vote = retro_board.vote_limit - user_to_board_connector.votes > 0
+
     return render_to_response('retro/dpq_retro_sprintboard_tables.html',
                               RequestContext(request, {'sprint': sprint.number,
                                                        'team': team,
+                                                       'can_vote': can_vote,
                                                        'stickers_good': stickers_good_with_voters,
                                                        'stickers_change': stickers_change_with_voters,
                                                        'stickers_actions': stickers_actions}))
@@ -705,24 +713,38 @@ def retro_board_voteup_sticker(request):
         sticker_id = data['id']
 
         sticker = BoardSticker.objects.get(id=sticker_id)
-        sticker.votes += 1
+        cur = CustomUserRecord.objects.get(django_user_id=request.user.id)
 
-        voters = sticker.voters
-        current_user_id = request.user.id
-
-        if voters is not None:
-            voters_list = voters.split(";")
-            voters_list.append(unicode(current_user_id))
-            voters_set = set(voters_list)
-            sticker.voters = ";".join(str(x) for x in voters_set)
+        user_to_board_connector, is_created = \
+            UserToRetroBoardConnector.objects.get_or_create(custom_user_record=cur,
+                                                            retroBoard=sticker.retroBoard)
+        if user_to_board_connector.votes >= sticker.retroBoard.vote_limit:
+            response = {
+                'status': 'error',
+                'reason': 'votes number has exceeded the limit for current retro board'
+            }
         else:
-            sticker.voters = str(current_user_id)
+            user_to_board_connector.votes += 1
+            sticker.votes += 1
 
-        sticker.save()
+            voters = sticker.voters
+            current_user_id = request.user.id
 
-        response = {
-            'status': 'OK'
-        }
+            if voters is not None:
+                voters_list = voters.split(";")
+                voters_list.append(unicode(current_user_id))
+                voters_set = set(voters_list)
+                sticker.voters = ";".join(str(x) for x in voters_set)
+            else:
+                sticker.voters = str(current_user_id)
+
+            sticker.save()
+            user_to_board_connector.save()
+
+            response = {
+                'status': 'OK',
+                'votes left': sticker.retroBoard.vote_limit - user_to_board_connector.votes
+            }
     except ObjectDoesNotExist:
         response = {
             'status': 'error',

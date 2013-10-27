@@ -655,7 +655,12 @@ def retro_board_table_contents(request, sprint, team):
                                                         retroBoard=retro_board)
     can_vote = retro_board.vote_limit - user_to_board_connector.votes > 0
 
-    return render_to_response('retro/dpq_retro_sprintboard_tables.html',
+    if retro_board.is_active:
+        template = 'retro/dpq_retro_sprintboard_tables.html'
+    else:
+        template = 'retro/dpq_retro_sprintboard_tables_readonly.html'
+
+    return render_to_response(template,
                               RequestContext(request, {'sprint': sprint.number,
                                                        'team': team,
                                                        'can_vote': can_vote,
@@ -684,10 +689,16 @@ def retro_board_add_sticker(request):
             summary=summary,
             type=sticker_type
         )
-        sticker.save()
-        response = {
-            'status': 'OK'
-        }
+        if retro_board.is_active:
+            sticker.save()
+            response = {
+                'status': 'OK'
+            }
+        else:
+            response = {
+                'status': 'warning',
+                'reason': 'board is not active'
+            }
     except ObjectDoesNotExist:
         response = {
             'status': 'error',

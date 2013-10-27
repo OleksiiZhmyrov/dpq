@@ -1,0 +1,78 @@
+{% spaceless %}
+<div class="span5">
+    <h4 style="color: darkgreen; text-align: center"><i class="icon-ok"></i> Went Good</h4>
+    <table class="table table-hover table-stripped">
+        <thead>
+            <tr>
+                <th style="width: 25px;">Rating</th>
+                <th>Summary</th>
+                <th style="width: 15px;"></th>
+            </tr>
+        </thead>
+        <tbody> {% spaceless %}
+            {% if not stickers_good %}
+                <tr>
+                    <td colspan="2"><span class="pull-right">No stickers yet in this category</span></td>
+                </tr>
+            {% endif %}
+            {% for sticker in stickers_good %}
+                <tr title="Created {% if sticker.is_modified %}and modified {% endif %}by {{ sticker.created_by.django_user.username }}{% if sticker.voters_string %}, voted up by {{ sticker.voters_string }}{% endif %}">
+                    <td>{{ sticker.votes }}</td>
+                    <td>{{ sticker.summary }}</td>
+                    <td></td>
+                </tr>
+            {% endfor %} {% endspaceless %}
+        </tbody>
+    </table>
+</div>
+
+<div class="span5">
+    <h4 style="color: darkorange; text-align: center"><i class="icon-remove"></i> Need to Change</h4>
+    <table class="table table-hover table-stripped">
+        <thead>
+            <tr>
+                <th style="width: 25px;">Rating</th>
+                <th>Summary</th>
+                <th style="width: 15px;"></th>
+            </tr>
+        </thead>
+        <tbody> {% spaceless %}
+            {% if not stickers_change %}
+                <tr>
+                    <td colspan="2"><span class="pull-right">No stickers yet in this category</span></td>
+                </tr>
+            {% endif %}
+            {% for sticker in stickers_change %}
+                <tr title="Created {% if sticker.is_modified %}and modified {% endif %}by {{ sticker.created_by.django_user.username }}{% if sticker.voters_string %}, voted up by {{ sticker.voters_string }}{% endif %}">
+                    <td>{{ sticker.votes }}</td>
+                    <td>{{ sticker.summary }}</td>
+                    <td></td>
+                </tr>
+            {% endfor %} {% endspaceless %}
+        </tbody>
+    </table>
+</div>
+
+<div class="span5">
+    <h4 style="color: darkslateblue; text-align: center"><i class="icon-filter"></i> Action Points</h4>
+    <table class="table table-hover table-stripped">
+        <thead>
+            <tr>
+                <th>Summary</th>
+            </tr>
+        </thead>
+        <tbody> {% spaceless %}
+            {% if not stickers_actions %}
+                <tr>
+                    <td><span class="pull-right">No stickers yet in this category</span></td>
+                </tr>
+            {% endif %}
+            {% for sticker in stickers_actions %}
+                <tr title="Created by {{ sticker.created_by.django_user.username }}">
+                    <td>{{ sticker.summary }}</td>
+                </tr>
+            {% endfor %} {% endspaceless %}
+        </tbody>
+    </table>
+</div>
+{% endspaceless %}

@@ -22,6 +22,18 @@
                 </div>
             </div>
         </div>
+        <div class="accordion-group">
+            <div class="accordion-heading">
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapse_count_acc">
+                    Average push duration for all branches
+                </a>
+            </div>
+            <div id="collapse_count_acc" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <div id="vis_daily" style="width: 1200px; height: 400px;"></div>
+                </div>
+            </div>
+        </div>
         {% for branch in active_branches %}
             <div class="accordion-group">
                 <div class="accordion-heading">

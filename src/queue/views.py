@@ -289,6 +289,18 @@ def visualisation_average(request):
     return HttpResponse(dumps(response))
 
 
+def visualization_daily_pushes(request):
+    results = QueueRecord.objects.filter(status__in=[QueueRecord.DONE, QueueRecord.REVERTED]).extra({
+        'done_date': "date(done_date)"}).values('done_date').annotate(push_count=Count('id')).order_by('-done_date')[:14]
+    response = [['Date', 'Push count']]
+
+    for item in reversed(results):
+        date_obj = datetime.strptime(item['done_date'], '%Y-%m-%d').date()
+        date_str = "{day}.{month}".format(month=date_obj.month, day=date_obj.day)
+        response.append([date_str, item['push_count']])
+    return HttpResponse(dumps(response))
+
+
 def visualisation_branch_duration(request, branch, mode):
     """
 
@@ -319,7 +331,6 @@ def visualisation_branch_duration(request, branch, mode):
         response.append(['no data available yet', 0])
 
     return HttpResponse(dumps(response))
-
 
 def charts(request):
     """

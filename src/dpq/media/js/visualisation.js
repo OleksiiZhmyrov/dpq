@@ -1,6 +1,7 @@
 $(document).ready(function () {
 
     drawAveragePushDuration();
+    drawPushDailyCount();
 
     $.ajaxSetup(
         {
@@ -29,6 +30,31 @@ function drawAveragePushDuration() {
             width: 1200,
             height: 400,
             vAxis: {title: "Time, mins"},
+            hAxis: {title: "Date"}
+        });
+    }
+
+    google.setOnLoadCallback(drawVisualization);
+}
+
+function drawPushDailyCount() {
+
+    function drawVisualization() {
+        var json_data = $.ajax({
+            url: '/ajax/request/visualisation/daily/'
+        }).responseText;
+
+        var parsed_data = JSON.parse(json_data);
+
+        var data = google.visualization.arrayToDataTable(parsed_data);
+        var ac = new google.visualization.AreaChart(document.getElementById('vis_daily'));
+        ac.draw(data, {
+            legend: 'none',
+            title: 'Push count for past period',
+            isStacked: true,
+            width: 1200,
+            height: 400,
+            vAxis: {title: "Push count"},
             hAxis: {title: "Date"}
         });
     }

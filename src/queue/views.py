@@ -545,6 +545,8 @@ def api_update_branch_status(request):
             branch = Branch.objects.get(name__iexact=branch_name)
             if branch:
                 branch, response = change_branch_status(branch, status)
+                if status == 'success':
+                    finalize_active_pushes(branch)
             else:
                 response = {
                     'status': 'error',

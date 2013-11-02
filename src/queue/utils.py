@@ -206,3 +206,11 @@ def add_voters_list_to_stickers(stickers):
             voters = User.objects.filter(id__in=voters_ids_list)
             sticker.voters_string = ", ".join(str(x.username) for x in voters)
     return stickers
+
+
+def finalize_active_pushes(branch):
+    queue_list = QueueRecord.objects.filter(branch=branch, status=QueueRecord.IN_PROGRESS)
+    for item in queue_list:
+        item.done_date = datetime.now()
+        item.status = QueueRecord.DONE
+        item.save()

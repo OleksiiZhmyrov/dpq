@@ -823,6 +823,7 @@ def retro_board_modify_sticker(request):
         sticker_id = data['sticker_id']
         summary = data['summary']
         sticker_type = data['type']
+        is_completed = data['is_completed']
 
         sticker = BoardSticker.objects.get(id=sticker_id)
 
@@ -832,6 +833,8 @@ def retro_board_modify_sticker(request):
 
         if sticker_type != BoardSticker.ACTION:
             sticker.type = sticker_type
+
+        sticker.is_completed = is_completed
 
         sticker.save()
 

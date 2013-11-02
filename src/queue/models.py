@@ -171,6 +171,7 @@ class BoardSticker(models.Model):
     summary = models.CharField('Description', max_length=512, null=True, blank=True)
     votes = models.IntegerField(default=0)
     voters = models.CharField('Voters', max_length=512, null=True, blank=True)
+    is_completed = models.BooleanField('Is Completed', default=False)
     GOOD = "G"
     CHANGE = "C"
     ACTION = "A"

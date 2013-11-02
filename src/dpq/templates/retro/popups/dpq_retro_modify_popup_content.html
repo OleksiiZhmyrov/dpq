@@ -8,7 +8,13 @@
                 </select>
             </div>
     </div>
+    <input type="hidden" id="retro-sticker-is-completed" />
 {% else %}
+    <label class="checkbox" style="padding-left: 40px; padding-bottom: 15px;">
+        <input type="checkbox"
+               id="retro-sticker-is-completed"
+               {% if sticker.is_completed %} checked="checked"{% endif %}> Action point is completed
+    </label>
     <input type="hidden" id="retro-modify-sticker-type" value="A" />
 {% endif %}
 <center>

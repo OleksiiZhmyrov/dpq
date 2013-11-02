@@ -27,6 +27,10 @@
                                    onclick="fetchStickerData({{ sticker.id }})"
                                    data-toggle="modal">
                                     <i title="Edit sticker" class="icon-pencil"></i></a>
+                                <a href="#"
+                                   class="prevent-default"
+                                   onclick="removeSticker('{{ sticker.id }}')">
+                                    <i title="Remove sticker" class="icon-remove"></i></a>
                             {% else %}
                                 <i title="You can't edit sticker that has non-zero rating"
                                    class="icon-info-sign"></i>
@@ -59,7 +63,8 @@
                 <tr title="Created {% if sticker.is_modified %}and modified {% endif %}by {{ sticker.created_by.django_user.username }}{% if sticker.voters_string %}, voted up by {{ sticker.voters_string }}{% endif %}">
                     <td>{{ sticker.votes }}{% if user.is_authenticated and can_vote %}
                         &nbsp;<a href="#" class="prevent-default" onclick="voteUp('{{ sticker.id }}')">
-                            <i class="icon-thumbs-up"></i></a>{% endif %}</td>
+                            <i class="icon-thumbs-up"></i></a>{% endif %}
+                    </td>
                     <td>{{ sticker.summary }}</td>
                     <td>{% if sticker.created_by.django_user.id == user.id or user.is_superuser %}
                             {% if sticker.votes == 0 %}
@@ -68,8 +73,12 @@
                                    onclick="fetchStickerData({{ sticker.id }})"
                                    data-toggle="modal">
                                     <i title="Edit sticker" class="icon-pencil"></i></a>
+                                <a href="#"
+                                   class="prevent-default"
+                                   onclick="removeSticker('{{ sticker.id }}')">
+                                    <i title="Remove sticker" class="icon-remove"></i></a>
                             {% else %}
-                                <i title="You can't edit sticker that has non-zero rating"
+                                <i title="You can't edit or remove sticker that has non-zero rating"
                                    class="icon-info-sign"></i>
                             {% endif %}
                         {% endif %}
@@ -105,6 +114,10 @@
                            onclick="fetchStickerData({{ sticker.id }})"
                            data-toggle="modal">
                             <i title="Edit sticker" class="icon-pencil"></i>
+                        <a href="#"
+                           class="prevent-default"
+                           onclick="removeSticker('{{ sticker.id }}')">
+                            <i title="Remove sticker" class="icon-remove"></i></a>
                         </a>
                     {% endif %}
                     </td>

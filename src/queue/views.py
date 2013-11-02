@@ -832,7 +832,7 @@ def retro_board_modify_sticker(request):
 
         if sticker_type != BoardSticker.ACTION:
             sticker.type = sticker_type
-            
+
         sticker.save()
 
         response = {
@@ -852,5 +852,40 @@ def retro_board_modify_sticker(request):
         response = {
             'status': 'error',
             'reason': 'no JSON object could be decoded'
+        }
+    return HttpResponse(dumps(response), mimetype='application/json')
+
+
+@login_required
+def retro_board_remove_sticker(request):
+    try:
+        data = loads(request.body)
+        sticker_id = data['id']
+
+        sticker = BoardSticker.objects.get(id=sticker_id)
+
+        if sticker.created_by.django_user_id == request.user.id or request.user.is_superuser:
+            sticker.delete()
+            response = {
+                'status': 'OK'
+            }
+        response = {
+            'status': 'error',
+            'reason': 'permission denied'
+        }
+    except ObjectDoesNotExist:
+        response = {
+            'status': 'error',
+            'reason': 'sticker not found'
+        }
+    except ValueError:
+        response = {
+            'status': 'error',
+            'reason': 'no JSON object could be decoded'
+        }
+    except KeyError:
+        response = {
+            'status': 'error',
+            'reason': 'illegal or missing parameters in request'
         }
     return HttpResponse(dumps(response), mimetype='application/json')

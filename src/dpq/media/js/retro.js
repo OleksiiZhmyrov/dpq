@@ -139,3 +139,18 @@ function saveModifiedSticker() {
             $('div#retro-modify-popup button.close').click();
         });
 }
+function removeSticker(stickerId) {
+    $.ajax({
+        url: "/api/retro/sticker/remove/",
+        headers: {
+            "Content-type": "application/x-www-form-urlencoded",
+            "X-CSRFToken": $.cookie('csrftoken')
+        },
+        data: JSON.stringify({
+            "id": stickerId
+        })
+    }).done(function () {
+            update_board();
+        });
+}
+

@@ -660,11 +660,14 @@ def retro_board_table_contents(request, sprint, team):
 
     stickers_actions = BoardSticker.objects.filter(retroBoard=retro_board, type=BoardSticker.ACTION).order_by('-votes')
 
-    cur = CustomUserRecord.objects.get(django_user_id=request.user.id)
-    user_to_board_connector, is_created = \
-        UserToRetroBoardConnector.objects.get_or_create(custom_user_record=cur,
-                                                        retroBoard=retro_board)
-    can_vote = retro_board.vote_limit - user_to_board_connector.votes > 0
+    try:
+        cur = CustomUserRecord.objects.get(django_user_id=request.user.id)
+        user_to_board_connector, is_created = \
+            UserToRetroBoardConnector.objects.get_or_create(custom_user_record=cur,
+                                                            retroBoard=retro_board)
+        can_vote = retro_board.vote_limit - user_to_board_connector.votes > 0
+    except CustomUserRecord.DoesNotExist:
+        can_vote = False
 
     if retro_board.is_active:
         template = 'retro/dpq_retro_sprintboard_tables.html'

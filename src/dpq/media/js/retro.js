@@ -130,7 +130,7 @@ function saveModifiedSticker() {
         data: JSON.stringify({
             "summary": $('textarea#retro-sticker-summary-modify').val(),
             "sticker_id": $('input#modify-sticker-id').val(),
-            "type": $('select#retro-modify-sticker-type').val()
+            "type": $('#retro-modify-sticker-type').val()
         })
     }).done(function () {
             update_board();

@@ -86,6 +86,7 @@
         <thead>
             <tr>
                 <th>Summary</th>
+                <th></th>
             </tr>
         </thead>
         <tbody> {% spaceless %}
@@ -97,6 +98,16 @@
             {% for sticker in stickers_actions %}
                 <tr title="Created by {{ sticker.created_by.django_user.username }}">
                     <td>{{ sticker.summary }}</td>
+                    <td>
+                    {% if user.is_superuser %}
+                        <a class="prevent-default"
+                           href="#retro-modify-popup"
+                           onclick="fetchStickerData({{ sticker.id }})"
+                           data-toggle="modal">
+                            <i title="Edit sticker" class="icon-pencil"></i>
+                        </a>
+                    {% endif %}
+                    </td>
                 </tr>
             {% endfor %} {% endspaceless %}
         </tbody>

@@ -827,10 +827,12 @@ def retro_board_modify_sticker(request):
         sticker = BoardSticker.objects.get(id=sticker_id)
 
         sticker.summary = summary
-        sticker.type = sticker_type
         sticker.is_modified = 1
         sticker.modification_date = datetime.now()
 
+        if sticker_type != BoardSticker.ACTION:
+            sticker.type = sticker_type
+            
         sticker.save()
 
         response = {

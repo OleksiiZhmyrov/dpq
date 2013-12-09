@@ -20,11 +20,13 @@ class JIRAStory:
         self.reporter = reporter
         self.points = points
         self.epic = epic
+        self.is_deskcheck = False
 
     def __parse_custom_fields(self, node):
         sp = "n/a"
         epic_key = None
         tester = None
+        is_deskcheck = False
 
         for i in range(1, len(node) + 1):
             try:
@@ -37,11 +39,15 @@ class JIRAStory:
                 elif node[i].customfieldId in TESTER_CUSTOM_FIELDS:
                     tester = node[i].values[0]
                     continue
+                elif node[i].customfieldId in DESK_CHECK_CUSTOM_FIELDS:
+                    if node[i].values[0] == "Yes":
+                        is_deskcheck = True
+                    continue
                 else:
                     continue
             except IndexError:
                 break
-        return epic_key, sp, tester
+        return epic_key, sp, tester, is_deskcheck
 
     def __format_description(self, description):
         return (description, description[:127] + ' ...')[len(description) > 128]
@@ -62,7 +68,7 @@ class JIRAStory:
             self.success = False
 
         if issue:
-            epic_key, story_points, tester = self.__parse_custom_fields(issue[5])
+            epic_key, story_points, tester, is_deskcheck = self.__parse_custom_fields(issue[5])
 
             if epic_key is not None:
                 epic = soap.getIssue(auth, epic_key)
@@ -77,57 +83,64 @@ class JIRAStory:
             self.key = issue.key
             self.summary = issue.summary
             self.points = story_points
+            self.is_deskcheck = is_deskcheck
 
     def render(self, sheet):
 
         # Story number
         self.key = re.sub(PROJECT_NAME + '-', '', self.key)
-        sheet.write_merge(r1=self.row+0, c1=self.column+0,
-                          r2=self.row+3, c2=self.column+0,
-                          label=self.key, style=STORY_KEY_STYLE)
+
+        if self.is_deskcheck:
+            key_style = STORY_KEY_STYLE_DESK_CHECK
+        else:
+            key_style = STORY_KEY_STYLE
+
+        sheet.write_merge(r1=self.row+1, c1=self.column+0,
+                          r2=self.row+4, c2=self.column+0,
+                          label=self.key, style=key_style)
 
         #Summary
-        sheet.write_merge(r1=self.row+0, c1=self.column+1,
-                          r2=self.row+3, c2=self.column+5,
+        sheet.write_merge(r1=self.row+1, c1=self.column+1,
+                          r2=self.row+4, c2=self.column+5,
                           label=self.summary, style=SUMMARY_STYLE)
 
         #Description
-        sheet.write_merge(r1=self.row+4, c1=self.column+0,
-                          r2=self.row+10, c2=self.column+5,
+        sheet.write_merge(r1=self.row+5, c1=self.column+0,
+                          r2=self.row+11, c2=self.column+5,
                           label=self.description, style=DESCRIPTION_STYLE)
 
         #Assignee
-        sheet.write_merge(r1=self.row+11, c1=self.column+0,
-                          r2=self.row+11, c2=self.column+1,
+        sheet.write_merge(r1=self.row+12, c1=self.column+0,
+                          r2=self.row+12, c2=self.column+1,
                           label="Assignee:", style=ASSIGNEE_LABEL_STYLE)
-        sheet.write_merge(r1=self.row+11, c1=self.column+2,
-                          r2=self.row+11, c2=self.column+4,
+        sheet.write_merge(r1=self.row+12, c1=self.column+2,
+                          r2=self.row+12, c2=self.column+4,
                           label=self.assignee, style=ASSIGNEE_STYLE)
 
         #Tester
-        sheet.write_merge(r1=self.row+12, c1=self.column+0,
-                          r2=self.row+12, c2=self.column+1,
+        sheet.write_merge(r1=self.row+13, c1=self.column+0,
+                          r2=self.row+13, c2=self.column+1,
                           label="Tester:", style=TESTER_LABEL_STYLE)
-        sheet.write_merge(r1=self.row+12, c1=self.column+2,
-                          r2=self.row+12, c2=self.column+4,
+        sheet.write_merge(r1=self.row+13, c1=self.column+2,
+                          r2=self.row+13, c2=self.column+4,
                           label=self.tester, style=TESTER_STYLE)
 
         #Reporter
-        sheet.write_merge(r1=self.row+13, c1=self.column+0,
-                          r2=self.row+13, c2=self.column+1,
+        sheet.write_merge(r1=self.row+14, c1=self.column+0,
+                          r2=self.row+14, c2=self.column+1,
                           label="Reporter:", style=REPORTER_LABEL_STYLE)
-        sheet.write_merge(r1=self.row+13, c1=self.column+2,
-                          r2=self.row+13, c2=self.column+4,
+        sheet.write_merge(r1=self.row+14, c1=self.column+2,
+                          r2=self.row+14, c2=self.column+4,
                           label=self.reporter, style=REPORTER_STYLE)
 
         #Story points
-        sheet.write_merge(r1=self.row+11, c1=self.column+5,
-                          r2=self.row+13, c2=self.column+5,
+        sheet.write_merge(r1=self.row+12, c1=self.column+5,
+                          r2=self.row+14, c2=self.column+5,
                           label=self.points, style=STORY_POINTS_STYLE)
 
         #Epic
-        sheet.write_merge(r1=self.row+14, c1=self.column+0,
-                          r2=self.row+14, c2=self.column+5,
+        sheet.write_merge(r1=self.row+15, c1=self.column+0,
+                          r2=self.row+15, c2=self.column+5,
                           label=self.epic, style=EPIC_STYLE)
 
         return sheet
@@ -150,6 +163,8 @@ def render_cards(cards):
 
     for card in cards:
         sheet = card.render(sheet)
+
+    sheet.write_merge(r1=0, c1=0, r2=0, c2=6, label='DeskCheck stories are marked with green colour.')
 
     filename, path = get_cards_filename()
     out_file.save(path+filename)

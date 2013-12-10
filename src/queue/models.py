@@ -192,3 +192,16 @@ class UserToRetroBoardConnector(models.Model):
     custom_user_record = models.ForeignKey(CustomUserRecord)
     retroBoard = models.ForeignKey(RetroBoard)
     votes = models.IntegerField(default=0)
+
+
+class ConfluenceSettings(models.Model):
+    # This model is experimental
+    # TODO: Must be replaced with proper code later
+    login = models.CharField('Login', max_length=20, null=True, blank=True)
+    password = models.CharField('Password', max_length=64, null=True, blank=True)
+    url = models.CharField('URL', max_length=128, null=True, blank=True)
+    namespace = models.CharField('Namespace', max_length=32, null=True, blank=True)
+    page_title = models.CharField('Page title', max_length=64, null=True, blank=True)
+
+    def __unicode__(self):
+        return '{namespace}: {page_title}'.format(namespace=self.namespace, page_title=self.page_title)

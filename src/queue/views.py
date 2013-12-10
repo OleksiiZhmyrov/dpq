@@ -4,6 +4,7 @@ from json import loads, dumps
 from uuid import uuid1
 from django.views.decorators.csrf import csrf_exempt
 from jira import *
+from confluence import get_statistics
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
@@ -894,3 +895,8 @@ def retro_board_remove_sticker(request):
             'reason': 'illegal or missing parameters in request'
         }
     return HttpResponse(dumps(response), mimetype='application/json')
+
+
+def ci_display(request):
+    statistics = get_statistics()
+    return render_to_response('ci/base.html', RequestContext(request, {'statistics': statistics}))

@@ -20,5 +20,6 @@ admin.site.register(CustomUserRecord)
 admin.site.register(Sprint)
 admin.site.register(RetroBoard)
 admin.site.register(BoardSticker)
+admin.site.register(ConfluenceSettings)
 
 # admin.site.register(UserToRetroBoardConnector)

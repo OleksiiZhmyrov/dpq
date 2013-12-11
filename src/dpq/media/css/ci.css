@@ -1,0 +1,36 @@
+
+.table-ci
+{
+    font-size: x-large;
+}
+
+tr.ci-table-data td
+{
+    text-align: center;
+    font-weight: bold;
+}
+
+tr.ci-table-data td.green
+{
+    color: darkgreen;
+}
+
+tr.ci-table-data td.blue
+{
+    color: blue;
+}
+
+tr.ci-table-data td.red
+{
+    color: red;
+}
+
+table.table-ci
+{
+     font-size: x-large;
+}
+
+table.table-ci tbody tr td
+{
+    text-align: center;
+}

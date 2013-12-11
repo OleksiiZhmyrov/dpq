@@ -1,13 +1,62 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <title>Desk Check Status</title>
+    <link href="/media/css/ci.css" rel="stylesheet"/>
+    <link href="/media/bootstrap/css/bootstrap.css" rel="stylesheet"/>
+    <meta http-equiv="refresh" content="60">
 </head>
 <body>
-    Total [{{ statistics.total.count }}]<br>
-    Other [{{ statistics.other.count }} / {{ statistics.other.percent }}%]<br>
-    Passed [{{ statistics.passed.count }} / {{ statistics.passed.percent }}%]<br>
-    Ready [{{ statistics.ready.count }} / {{ statistics.ready.percent }}%]<br>
-    Failed [{{ statistics.failed.count }} / {{ statistics.failed.percent }}%]<br>
+<div class="container" style="margin-top: 20%">
+    <table class="table table-bordered table-ci">
+        <thead>
+            <tr>
+                <th colspan="4" style="text-align: center;">
+                    Story Points
+                </th>
+                <th colspan="4" style="text-align: center;">
+                    Number of Stories
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="font-size: large;">
+                <td>Passed</td>
+                <td>Ready</td>
+                <td>Failed</td>
+                <td>To Do</td>
+                <td>Passed</td>
+                <td>Ready</td>
+                <td>Failed</td>
+                <td>To Do</td>
+            </tr>
+            <tr class="ci-table-data">
+                <td class="green">{{ statistics.passed.count_sp }}</td>
+                <td class="blue">{{ statistics.ready.count_sp }}</td>
+                <td class="red">{{ statistics.failed.count_sp }}</td>
+                <td>{{ statistics.other.count_sp }}</td>
+                <td class="green">{{ statistics.passed.count }}</td>
+                <td class="blue">{{ statistics.ready.count }}</td>
+                <td class="red">{{ statistics.failed.count }}</td>
+                <td>{{ statistics.other.count }}</td>
+            </tr>
+            <tr class="ci-table-data">
+                <td class="green">{{ statistics.passed.percent_sp }}%</td>
+                <td class="blue">{{ statistics.ready.percent_sp }}%</td>
+                <td class="red">{{ statistics.failed.percent_sp }}%</td>
+                <td>{{ statistics.other.percent_sp }}%</td>
+                <td class="green">{{ statistics.passed.percent }}%</td>
+                <td class="blue">{{ statistics.ready.percent }}%</td>
+                <td class="red">{{ statistics.failed.percent }}%</td>
+                <td>{{ statistics.other.percent }}%</td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="pull-right">
+        <small>
+            <i>Last sync with JIRA and Confluence</i>: <b>{{ statistics.datetime|date:"M j, H:i" }}</b>
+        </small>
+    </div>
+</div>
 </body>
 </html>

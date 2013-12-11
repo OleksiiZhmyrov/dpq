@@ -205,3 +205,28 @@ class ConfluenceSettings(models.Model):
 
     def __unicode__(self):
         return '{namespace}: {page_title}'.format(namespace=self.namespace, page_title=self.page_title)
+
+
+class DeskCheckStatistic(models.Model):
+    creation_date = models.DateTimeField('Creation Date', auto_now_add=True)
+    total_count = models.FloatField('Total story count')
+    total_count_sp = models.FloatField('Total story points count')
+    other_count = models.FloatField('Stories ToDo count')
+    other_count_sp = models.FloatField('Story points ToDo count')
+    other_percent = models.FloatField('Stories ToDo percent')
+    other_percent_sp = models.FloatField('Story points ToDo percents')
+    passed_count = models.FloatField('Stories Passed count')
+    passed_count_sp = models.FloatField('Story points Passed count')
+    passed_percent = models.FloatField('Stories Passed percent')
+    passed_percent_sp = models.FloatField('Story points Passed percents')
+    ready_count = models.FloatField('Stories Ready count')
+    ready_count_sp = models.FloatField('Story points Ready count')
+    ready_percent = models.FloatField('Stories Ready percent')
+    ready_percent_sp = models.FloatField('Story points Ready percents')
+    failed_count = models.FloatField('Stories Failed count')
+    failed_count_sp = models.FloatField('Story points Failed count')
+    failed_percent = models.FloatField('Stories Failed percent')
+    failed_percent_sp = models.FloatField('Story points Failed percents')
+
+    def __unicode__(self):
+        return 'Desk check stats for {date}'.format(date=self.creation_date)

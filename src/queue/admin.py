@@ -21,5 +21,6 @@ admin.site.register(Sprint)
 admin.site.register(RetroBoard)
 admin.site.register(BoardSticker)
 admin.site.register(ConfluenceSettings)
+admin.site.register(DeskCheckStatistic)
 
 # admin.site.register(UserToRetroBoardConnector)

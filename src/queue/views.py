@@ -4,7 +4,7 @@ from json import loads, dumps
 from uuid import uuid1
 from django.views.decorators.csrf import csrf_exempt
 from jira import *
-from confluence import get_statistics
+from confluence import get_statistics, store_statistics
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
@@ -127,7 +127,7 @@ def create_queue_item(request):
         key_ = data['key']
         p = re.compile(PROJECT_NAME + "-{1,4}[0-9]")
         if not p.match(key_):
-            key_ = PROJECT_NAME+"-0000"
+            key_ = PROJECT_NAME + "-0000"
 
         story = UserStory(
             key=key_,
@@ -176,7 +176,7 @@ def modify_queue_item(request):
         key_ = data['key']
         p = re.compile(PROJECT_NAME + "-{1,4}[0-9]")
         if not p.match(key_):
-            key_ = PROJECT_NAME+"-0000"
+            key_ = PROJECT_NAME + "-0000"
 
         story.key = key_
         story.summary = data['summary']
@@ -292,7 +292,8 @@ def visualisation_average(request):
 
 def visualization_daily_pushes(request):
     results = QueueRecord.objects.filter(status__in=[QueueRecord.DONE, QueueRecord.REVERTED]).extra({
-        'done_date': "date(done_date)"}).values('done_date').annotate(push_count=Count('id')).order_by('-done_date')[:14]
+        'done_date': "date(done_date)"}).values('done_date').annotate(push_count=Count('id')).order_by('-done_date')[
+              :14]
     response = [['Date', 'Push count']]
 
     for item in reversed(results):
@@ -332,6 +333,7 @@ def visualisation_branch_duration(request, branch, mode):
         response.append(['no data available yet', 0])
 
     return HttpResponse(dumps(response))
+
 
 def charts(request):
     """
@@ -581,9 +583,9 @@ def api_download_cards(request):
     story_keys = request.POST.get('print-data')
     if story_keys is None:
         response = {
-                'status': 'error',
-                'reason': 'invalid request'
-            }
+            'status': 'error',
+            'reason': 'invalid request'
+        }
         return HttpResponse(dumps(response), mimetype='application/json')
 
     story_keys = story_keys.split(",")
@@ -592,7 +594,7 @@ def api_download_cards(request):
     cards = get_stories_from_list(keys)
     filename = render_cards(cards)
 
-    return redirect('/media/cards/'+filename)
+    return redirect('/media/cards/' + filename)
 
 
 @login_required
@@ -900,3 +902,9 @@ def retro_board_remove_sticker(request):
 def ci_display(request):
     statistics = get_statistics()
     return render_to_response('ci/base.html', RequestContext(request, {'statistics': statistics}))
+
+
+@csrf_exempt
+def ci_sync_desk_check_data(request):
+    store_statistics()
+    return HttpResponse("OK")

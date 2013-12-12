@@ -105,20 +105,20 @@ def __save_statistics_to_database(lines):
         total_count_sp=total_sp,
         other_count=len(other),
         other_count_sp=other_sp,
-        other_percent=round(100.0 * len(other) / total, 1),
-        other_percent_sp=round(100.0 * other_sp / total_sp, 1),
+        other_percent=round(100.0 * len(other) / total, 0),
+        other_percent_sp=round(100.0 * other_sp / total_sp, 0),
         passed_count=len(passed),
         passed_count_sp=passed_sp,
-        passed_percent=round(100.0 * len(passed) / total, 1),
-        passed_percent_sp=round(100.0 * passed_sp / total_sp, 1),
+        passed_percent=round(100.0 * len(passed) / total, 0),
+        passed_percent_sp=round(100.0 * passed_sp / total_sp, 0),
         ready_count=len(ready),
         ready_count_sp=ready_sp,
-        ready_percent=round(100.0 * len(ready) / total, 1),
-        ready_percent_sp=round(100.0 * ready_sp / total_sp, 1),
+        ready_percent=round(100.0 * len(ready) / total, 0),
+        ready_percent_sp=round(100.0 * ready_sp / total_sp, 0),
         failed_count=len(failed),
         failed_count_sp=failed_sp,
-        failed_percent=round(100.0 * len(failed) / total, 1),
-        failed_percent_sp=round(100.0 * failed_sp / total_sp, 1)
+        failed_percent=round(100.0 * len(failed) / total, 0),
+        failed_percent_sp=round(100.0 * failed_sp / total_sp, 0)
     )
     db_item.save()
 

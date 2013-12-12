@@ -154,6 +154,11 @@ def __get_formatted_statistics():
             'count_sp': int(db_item.failed_count_sp),
             'percent': db_item.failed_percent,
             'percent_sp': db_item.failed_percent_sp
+        },
+        'progressbar': {
+            'passed': int(db_item.passed_percent),
+            'ready': int(db_item.ready_percent),
+            'other': int(db_item.failed_percent + db_item.other_percent)
         }
     }
 

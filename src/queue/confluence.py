@@ -134,26 +134,26 @@ def __get_formatted_statistics():
         'other': {
             'count': int(db_item.other_count),
             'count_sp': int(db_item.other_count_sp),
-            'percent': db_item.other_percent,
-            'percent_sp': db_item.other_percent_sp
+            'percent': int(db_item.other_percent),
+            'percent_sp': int(db_item.other_percent_sp)
         },
         'passed': {
             'count': int(db_item.passed_count),
             'count_sp': int(db_item.passed_count_sp),
-            'percent': db_item.passed_percent,
-            'percent_sp': db_item.passed_percent_sp
+            'percent': int(db_item.passed_percent),
+            'percent_sp': int(db_item.passed_percent_sp)
         },
         'ready': {
             'count': int(db_item.ready_count),
             'count_sp': int(db_item.ready_count_sp),
-            'percent': db_item.ready_percent,
-            'percent_sp': db_item.ready_percent_sp
+            'percent': int(db_item.ready_percent),
+            'percent_sp': int(db_item.ready_percent_sp)
         },
         'failed': {
             'count': int(db_item.failed_count),
             'count_sp': int(db_item.failed_count_sp),
-            'percent': db_item.failed_percent,
-            'percent_sp': db_item.failed_percent_sp
+            'percent': int(db_item.failed_percent),
+            'percent_sp': int(db_item.failed_percent_sp)
         },
         'progressbar': {
             'passed': int(db_item.passed_percent),

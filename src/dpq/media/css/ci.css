@@ -34,3 +34,9 @@ table.table-ci tbody tr td
 {
     text-align: center;
 }
+
+h1.ci-header-title
+{
+    margin-bottom: 40px;
+    text-align: center;
+}

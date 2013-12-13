@@ -55,10 +55,9 @@ class JIRAStory:
     def __remove_underscores(self, field):
         return (re.sub('_', ' ', str(field)), 'not assigned')[field is None]
 
-    def __init__(self, key, index):
+    def __init__(self, key, index, auth):
         self.row = index / 2 * 15
         self.column = (6, 0)[index % 2 == 0]
-        auth = soap.login(JIRA_LOGIN, JIRA_PASSWORD)
 
         try:
             issue = soap.getIssue(auth, key)
@@ -147,13 +146,15 @@ class JIRAStory:
 
 
 def fetch_story(key):
-    return JIRAStory(key, 0)
+    auth = get_auth()
+    return JIRAStory(key, 0, auth)
 
 
 def get_stories_from_list(list):
     result = []
+    auth = get_auth()
     for index, story_number in enumerate(list):
-        result.append(JIRAStory(story_number, index))
+        result.append(JIRAStory(story_number, index, auth))
     return result
 
 
@@ -181,3 +182,7 @@ def get_sheet_name(prefix):
 def get_cards_filename():
     now = datetime.datetime.now()
     return 'Cards_' + now.strftime("%Y.%m.%d_%H-%M-%S") + '.xls', MEDIA_ROOT + '/cards/'
+
+
+def get_auth():
+    return soap.login(JIRA_LOGIN, JIRA_PASSWORD)

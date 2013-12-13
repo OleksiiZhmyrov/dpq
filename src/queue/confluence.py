@@ -22,12 +22,12 @@ def store_statistics():
 
 class TableRecord:
     def __init__(self, html_line):
-        self.story_number = html_line[0][1]
-        self.status = html_line[1][1]
+        self.story_number = html_line[0][1].strip()
+        self.status = html_line[1][1].strip()
         self.ba = html_line[2][1]
         self.comments = html_line[3][1]
         self.date = html_line[4][1]
-        self.sp = int(JIRAStory(self.story_number, 0).points)
+        self.sp = 0
 
 
 def __get_page_from_confluence(page_title):
@@ -57,8 +57,11 @@ def __parse_html_to_data_sets(html):
 
 def __get_array_of_table_rows_from_data_sets(data_sets):
     lines = []
+    auth = get_auth()
     for item in data_sets:
-        lines.append(TableRecord(item))
+        record = TableRecord(item)
+        record.sp = int(JIRAStory(record.story_number, 0, auth).points)
+        lines.append(record)
     return lines
 
 
@@ -100,25 +103,39 @@ def __save_statistics_to_database(lines):
 
     total = len(all_items)
 
+    passed_count = len(passed)
+    passed_percent = round(100.0 * len(passed) / total, 0)
+    passed_percent_sp = round(100.0 * passed_sp / total_sp, 0)
+    ready_count = len(ready)
+    ready_percent = round(100.0 * len(ready) / total, 0)
+    ready_percent_sp = round(100.0 * ready_sp / total_sp, 0)
+    failed_count = len(failed)
+    failed_percent = round(100.0 * len(failed) / total, 0)
+    failed_percent_sp = round(100.0 * failed_sp / total_sp, 0)
+
+    other_count = len(other)
+    other_percent = 100 - passed_percent - ready_percent - failed_percent
+    other_percent_sp = 100 - passed_percent_sp - ready_percent_sp - failed_percent_sp
+
     db_item = DeskCheckStatistic(
         total_count=total,
         total_count_sp=total_sp,
-        other_count=len(other),
+        other_count=other_count,
         other_count_sp=other_sp,
-        other_percent=round(100.0 * len(other) / total, 0),
-        other_percent_sp=round(100.0 * other_sp / total_sp, 0),
-        passed_count=len(passed),
+        other_percent=other_percent,
+        other_percent_sp=other_percent_sp,
+        passed_count=passed_count,
         passed_count_sp=passed_sp,
-        passed_percent=round(100.0 * len(passed) / total, 0),
-        passed_percent_sp=round(100.0 * passed_sp / total_sp, 0),
-        ready_count=len(ready),
+        passed_percent=passed_percent,
+        passed_percent_sp=passed_percent_sp,
+        ready_count=ready_count,
         ready_count_sp=ready_sp,
-        ready_percent=round(100.0 * len(ready) / total, 0),
-        ready_percent_sp=round(100.0 * ready_sp / total_sp, 0),
-        failed_count=len(failed),
+        ready_percent=ready_percent,
+        ready_percent_sp=ready_percent_sp,
+        failed_count=failed_count,
         failed_count_sp=failed_sp,
-        failed_percent=round(100.0 * len(failed) / total, 0),
-        failed_percent_sp=round(100.0 * failed_sp / total_sp, 0)
+        failed_percent=failed_percent,
+        failed_percent_sp=failed_percent_sp
     )
     db_item.save()
 

@@ -60,7 +60,10 @@ def __get_array_of_table_rows_from_data_sets(data_sets):
     auth = get_auth()
     for item in data_sets:
         record = TableRecord(item)
-        record.sp = int(JIRAStory(record.story_number, 0, auth).points)
+        try:
+            record.sp = int(JIRAStory(record.story_number, 0, auth).points)
+        except AttributeError:
+            record.sp = 0
         lines.append(record)
     return lines
 

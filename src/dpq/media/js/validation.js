@@ -219,7 +219,8 @@ function retroIsValidAddForm() {
             rules: {
                 summary: {
                     required: true,
-                    maxlength: 512
+                    maxlength: 512,
+                    regexp: '^[A-Za-z0-9 \-.,;+?!]*$'
                 }
             },
             highlight: function (label) {
@@ -232,6 +233,7 @@ function retroIsValidAddForm() {
                 summary: {
                     required: "Summary is mandatory",
                     maxlength: "Max length is 512 characters",
+                    regexp: "Only digits latin letters are allowed"
                 }
             },
             errorPlacement: function(error, element) {

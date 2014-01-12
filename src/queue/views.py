@@ -899,12 +899,18 @@ def retro_board_remove_sticker(request):
     return HttpResponse(dumps(response), mimetype='application/json')
 
 
-def ci_display(request):
+def ci_display_deskcheck(request):
     statistics = get_statistics()
-    return render_to_response('ci/base.html', RequestContext(request, {'statistics': statistics}))
+    return render_to_response('ci/deskcheck.html', RequestContext(request, {'statistics': statistics}))
+
+
+def ci_display_outdated_stories(request):
+    issues = get_outdated_issues()
+    return render_to_response('ci/outdated_issues.html', RequestContext(request, {'issues': issues}))
 
 
 @csrf_exempt
 def ci_sync_desk_check_data(request):
     store_statistics()
+    store_outdated_issues()
     return HttpResponse("OK")

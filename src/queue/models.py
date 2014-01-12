@@ -207,6 +207,19 @@ class ConfluenceSettings(models.Model):
         return '{namespace}: {page_title}'.format(namespace=self.namespace, page_title=self.page_title)
 
 
+class JiraSettings(models.Model):
+    # This model is experimental
+    # TODO: Must be replaced with proper code later
+    login = models.CharField('Login', max_length=20, null=True, blank=True)
+    password = models.CharField('Password', max_length=64, null=True, blank=True)
+    url = models.CharField('WADL URL', max_length=128, null=True, blank=True)
+    browse_url = models.CharField('Browse URL', max_length=128, null=True, blank=True)
+    project_name = models.CharField('Project Name', max_length=64, null=True, blank=True)
+
+    def __unicode__(self):
+        return 'Jira settings: {login}'.format(login=self.login)
+
+
 class DeskCheckStatistic(models.Model):
     creation_date = models.DateTimeField('Creation Date', auto_now_add=True)
     total_count = models.FloatField('Total story count')
@@ -230,3 +243,16 @@ class DeskCheckStatistic(models.Model):
 
     def __unicode__(self):
         return 'Desk check stats for {date}'.format(date=self.creation_date)
+
+
+class OutdatedJiraIssue(models.Model):
+    key = models.CharField('Key', max_length=32)
+    summary = models.CharField('Summary', max_length=1024, null=True, blank=True)
+    description = models.CharField('Description', max_length=1024, null=True, blank=True)
+    assignee = models.CharField('Assignee', max_length=64, null=True, blank=True)
+    tester = models.CharField('Tester', max_length=64, null=True, blank=True)
+    reporter = models.CharField('Reporter', max_length=64, null=True, blank=True)
+    points = models.IntegerField('Story Points', default=0)
+    epic = models.CharField('Epic', max_length=32, null=True, blank=True)
+    team = models.CharField('Team', max_length=32, null=True, blank=True)
+    is_deskcheck = models.BooleanField('Is Desk check story', default=False)

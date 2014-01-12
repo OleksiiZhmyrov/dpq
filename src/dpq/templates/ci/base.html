@@ -7,62 +7,6 @@
     <meta http-equiv="refresh" content="60">
 </head>
 <body>
-<div class="container" style="margin-top: 10%; width: 700px;">
-    <h1 class="ci-header-title">BA Desk Check</h1>
-    <table class="table table-bordered table-ci">
-        <thead>
-            <tr>
-                <th colspan="4" style="text-align: center;">
-                    {{ statistics.total.count_sp }} Story Points
-                </th>
-                <th colspan="4" style="text-align: center;">
-                    {{ statistics.total.count }} Stories
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr style="font-size: large;">
-                <td>Passed</td>
-                <td>Ready</td>
-                <td>Failed</td>
-                <td>To Do</td>
-                <td>Passed</td>
-                <td>Ready</td>
-                <td>Failed</td>
-                <td>To Do</td>
-            </tr>
-            <tr class="ci-table-data">
-                <td class="green">{{ statistics.passed.count_sp }}</td>
-                <td class="blue">{{ statistics.ready.count_sp }}</td>
-                <td class="red">{{ statistics.failed.count_sp }}</td>
-                <td>{{ statistics.other.count_sp }}</td>
-                <td class="green">{{ statistics.passed.count }}</td>
-                <td class="blue">{{ statistics.ready.count }}</td>
-                <td class="red">{{ statistics.failed.count }}</td>
-                <td>{{ statistics.other.count }}</td>
-            </tr>
-            <tr class="ci-table-data">
-                <td class="green">{{ statistics.passed.percent_sp }}%</td>
-                <td class="blue">{{ statistics.ready.percent_sp }}%</td>
-                <td class="red">{{ statistics.failed.percent_sp }}%</td>
-                <td>{{ statistics.other.percent_sp }}%</td>
-                <td class="green">{{ statistics.passed.percent }}%</td>
-                <td class="blue">{{ statistics.ready.percent }}%</td>
-                <td class="red">{{ statistics.failed.percent }}%</td>
-                <td>{{ statistics.other.percent }}%</td>
-            </tr>
-        </tbody>
-    </table>
-    <div class="progress">
-        <div class="bar bar-success" style="width: {{ statistics.progressbar.passed }}%;"></div>
-        <div class="bar bar-warning" style="width: {{ statistics.progressbar.ready }}%;"></div>
-        <div class="bar bar-danger" style="width: {{ statistics.progressbar.other }}%;"></div>
-    </div>
-    <div class="pull-right">
-        <small>
-            <i>Last sync with JIRA and Confluence</i>: <b>{{ statistics.datetime|date:"M j, H:i" }}</b>
-        </small>
-    </div>
-</div>
+{% block content %}{% endblock %}
 </body>
 </html>

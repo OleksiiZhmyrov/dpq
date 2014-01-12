@@ -9,7 +9,7 @@ soap = SOAPpy.WSDL.Proxy(confluence_settings.url)
 
 
 def get_statistics():
-    return __get_formatted_statistics()
+    return __get_formatted_statistics__()
 
 
 def store_statistics():
@@ -143,7 +143,7 @@ def __save_statistics_to_database(lines):
     db_item.save()
 
 
-def __get_formatted_statistics():
+def __get_formatted_statistics__():
     db_item = DeskCheckStatistic.objects.all().order_by('-creation_date')[0]
     return {
         'datetime': db_item.creation_date,

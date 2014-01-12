@@ -1,0 +1,35 @@
+{% extends "ci/base.html" %}
+{% block content %}
+
+<div class="container" style="margin-top: 10%; width: 1000px;">
+    <h1 class="ci-header-title">Outdated Stories</h1>
+    <table class="table table-bordered table-ci">
+        <thead>
+            <tr>
+                <th style="text-align: center;">Key</th>
+                <th style="text-align: center;">Summary</th>
+                <th style="text-align: center;">Team</th>
+                <th style="text-align: center;">Estimate</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if not issues %}
+                <tr>
+                    <td colspan="4">
+                        No issues found
+                    </td>
+                </tr>
+            {% else %}
+                {% for issue in issues %}
+                    <tr>
+                        <td>{{ issue.key|slice:"-4:" }}</td>
+                        <td>{{ issue.summary|truncatechars:64 }}</td>
+                        <td>{{ issue.team }}</td>
+                        <td>{{ issue.points }}</td>
+                    </tr>
+                {% endfor %}
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

@@ -1,15 +1,16 @@
 import SOAPpy
 import re
 from dpq.settings import *
+from queue.models import JiraSettings, OutdatedJiraIssue
 import datetime
-import xlwt
 from xlwt_styles import *
 
 soap = SOAPpy.WSDL.Proxy(JIRA_URL)
+jira_settings = JiraSettings.objects.all()[0]
 
 
 class JIRAStory:
-    def __init__(self, index, key, summary, description, assignee, tester, reporter, points, epic):
+    def __init__(self, index, key, summary, description, assignee, tester, reporter, points, epic, team=''):
         self.row = index / 2 * 15
         self.column = (6, 0)[index % 2 == 0]
         self.key = key
@@ -20,9 +21,11 @@ class JIRAStory:
         self.reporter = reporter
         self.points = points
         self.epic = epic
+        self.team = team
         self.is_deskcheck = False
 
-    def __parse_custom_fields(self, node):
+    @staticmethod
+    def __parse_custom_fields__(node):
         sp = "n/a"
         epic_key = None
         tester = None
@@ -39,6 +42,9 @@ class JIRAStory:
                 elif node[i].customfieldId in TESTER_CUSTOM_FIELDS:
                     tester = node[i].values[0]
                     continue
+                elif node[i].customfieldId in TEAM_CUSTOM_FIELDS:
+                    team = node[i].values[0]
+                    continue
                 elif node[i].customfieldId in DESK_CHECK_CUSTOM_FIELDS:
                     if node[i].values[0] == "Yes":
                         is_deskcheck = True
@@ -47,12 +53,14 @@ class JIRAStory:
                     continue
             except IndexError:
                 break
-        return epic_key, sp, tester, is_deskcheck
+        return epic_key, sp, tester, is_deskcheck, team
 
-    def __format_description(self, description):
+    @staticmethod
+    def __format_description__(description):
         return (description, description[:127] + ' ...')[len(description) > 128]
 
-    def __remove_underscores(self, field):
+    @staticmethod
+    def __remove_underscores__(field):
         return (re.sub('_', ' ', str(field)), 'not assigned')[field is None]
 
     def __init__(self, key, index, auth):
@@ -67,7 +75,7 @@ class JIRAStory:
             self.success = False
 
         if issue:
-            epic_key, story_points, tester, is_deskcheck = self.__parse_custom_fields(issue[5])
+            epic_key, story_points, tester, is_deskcheck, team = self.__parse_custom_fields__(issue[5])
 
             if epic_key is not None:
                 epic = soap.getIssue(auth, epic_key)
@@ -75,14 +83,15 @@ class JIRAStory:
             else:
                 self.epic = "n/a"
 
-            self.description = self.__format_description(issue.description)
-            self.assignee = self.__remove_underscores(issue.assignee)
-            self.reporter = self.__remove_underscores(issue.reporter)
-            self.tester = self.__remove_underscores(tester)
+            self.description = self.__format_description__(issue.description)
+            self.assignee = self.__remove_underscores__(issue.assignee)
+            self.reporter = self.__remove_underscores__(issue.reporter)
+            self.tester = self.__remove_underscores__(tester)
             self.key = issue.key
             self.summary = issue.summary
             self.points = story_points
             self.is_deskcheck = is_deskcheck
+            self.team = team
 
     def render(self, sheet):
 
@@ -186,3 +195,33 @@ def get_cards_filename():
 
 def get_auth():
     return soap.login(JIRA_LOGIN, JIRA_PASSWORD)
+
+
+def get_outdated_issues():
+    return OutdatedJiraIssue.objects.all()
+
+
+def store_outdated_issues():
+    project_name = unicode(jira_settings.project_name)
+    auth = get_auth()
+    request = '''Sprint in openSprints() AND project = {project}
+        AND type in (Story, Bug, Improvement)
+        AND "Estimation Date" < endOfDay()'''.format(project=project_name)
+    issues = soap.getIssuesFromJqlSearch(auth, request, SOAPpy.Types.intType(20))
+
+    OutdatedJiraIssue.objects.all().delete()
+
+    for issue in issues:
+        jira_issue = JIRAStory(issue.key, 0, auth)
+        db_issue = OutdatedJiraIssue.objects.get_or_create(key=issue.key)[0]
+        db_issue.summary = jira_issue.summary
+        db_issue.description = jira_issue.description
+        db_issue.assignee = jira_issue.assignee
+        db_issue.tester = jira_issue.tester
+        db_issue.reporter = jira_issue.reporter
+        db_issue.points = jira_issue.points
+        db_issue.epic = jira_issue.epic
+        db_issue.team = jira_issue.team
+        db_issue.is_deskcheck = jira_issue.is_deskcheck
+
+        db_issue.save()

@@ -1,25 +1,29 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 from exceptions import TypeError
 from json import loads, dumps
 from uuid import uuid1
 from django.views.decorators.csrf import csrf_exempt
-from jira import *
-from confluence import get_statistics, store_statistics
+from jira import JiraIssue
+from dpq_util import CanbanCardsUtil
 
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
 from django.core.paginator import EmptyPage, PageNotAnInteger
-from django.http import Http404, HttpResponse
+from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
 
 from queue.forms import *
-from queue.models import *
 from django.db.models import Q, Count
 from queue.paginators import DiggPaginator
 from queue.utils import *
+from queue.dpq_util import JiraUtil, ConfluenceDeskCheckUtil
+
+jira_settings = JiraSettings.objects.all()[0]
+
+PROJECT_NAME = jira_settings.project_name
+JIRA_BROWSE_URL = jira_settings.browse_url
 
 
 def queue(request):
@@ -512,24 +516,21 @@ def get_story_data_from_JIRA(request):
     data = loads(request.body)
     story_key = data['key']
 
-    story = fetch_story(story_key)
-
-    if not story.success:
+    try:
+        story = JiraIssue(story_key)
+        result = {
+            'key': story_key,
+            'summary': story.summary,
+            'assignee': story.assignee,
+            'tester': story.tester,
+            'epic': story.epic_name,
+            'reporter': story.reporter,
+            'sp': story.story_points
+        }
+        json_response = dumps(result)
+        return HttpResponse(json_response, mimetype='application/json')
+    except:
         raise Http404(u'Error occurred while communicating with JIRA')
-
-    result = {
-        'key': story_key,
-        'summary': story.summary,
-        'assignee': story.assignee,
-        'tester': story.tester,
-        'epic': story.epic,
-        'reporter': story.reporter,
-        'sp': story.points
-    }
-
-    json_response = dumps(result)
-
-    return HttpResponse(json_response, mimetype='application/json')
 
 
 @csrf_exempt
@@ -591,8 +592,8 @@ def api_download_cards(request):
     story_keys = story_keys.split(",")
     keys = filter(None, story_keys)
 
-    cards = get_stories_from_list(keys)
-    filename = render_cards(cards)
+    cards = CanbanCardsUtil.generate_cards(keys)
+    filename = CanbanCardsUtil.save_cards_to_file(cards)
 
     return redirect('/media/cards/' + filename)
 
@@ -900,17 +901,11 @@ def retro_board_remove_sticker(request):
 
 
 def ci_display_deskcheck(request):
-    statistics = get_statistics()
+    statistics = ConfluenceDeskCheckUtil.get_statistics()
     return render_to_response('ci/deskcheck.html', RequestContext(request, {'statistics': statistics}))
 
 
 def ci_display_outdated_stories(request):
-    issues = get_outdated_issues()
+    issues = JiraUtil.get_outdated_issues()
     return render_to_response('ci/outdated_issues.html', RequestContext(request, {'issues': issues}))
 
-
-@csrf_exempt
-def ci_sync_desk_check_data(request):
-    store_statistics()
-    store_outdated_issues()
-    return HttpResponse("OK")

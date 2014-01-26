@@ -179,18 +179,3 @@ CACHES = {
         'TIMEOUT': 60 * 30,
     }
 }
-
-JIRA_URL = ''
-JIRA_LOGIN = ''
-JIRA_PASSWORD = ''
-JIRA_BROWSE_URL = ''
-PROJECT_NAME = ''
-STORY_POINTS_CUSTOM_FIELDS = []
-EPIC_NAME_CUSTOM_FIELDS = []
-TESTER_CUSTOM_FIELDS = []
-DESK_CHECK_CUSTOM_FIELDS = []
-
-try:
-    from local_settings import *
-except ImportError:
-    pass

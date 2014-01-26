@@ -11,6 +11,7 @@
                 <th style="text-align: center;">Summary</th>
                 <th style="text-align: center;">Team</th>
                 <th style="text-align: center;">Estimate</th>
+                <th style="text-align: center;">Estimation date</th>
             </tr>
         </thead>
         <tbody>
@@ -27,6 +28,7 @@
                         <td>{{ issue.summary|truncatechars:64 }}</td>
                         <td>{{ issue.team }}</td>
                         <td>{{ issue.points }}</td>
+                        <td>{{ issue.estimation_date }}</td>
                     </tr>
                 {% endfor %}
             {% endif %}

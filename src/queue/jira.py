@@ -1,59 +1,96 @@
 import SOAPpy
 import re
-from dpq.settings import *
-from queue.models import JiraSettings, OutdatedJiraIssue
-import datetime
+from queue.models import JiraSettings
+from queue.rpc_util import setup_logging, jira_rpc_init
+from time import strptime, mktime
+from datetime import datetime
 from xlwt_styles import *
 
-soap = SOAPpy.WSDL.Proxy(JIRA_URL)
 jira_settings = JiraSettings.objects.all()[0]
+log = setup_logging()
+
+STORY_POINTS = jira_settings.custom_field_story_points
+EPIC_NAME = jira_settings.custom_field_epic_name
+TESTER = jira_settings.custom_field_tester
+DESK_CHECK = jira_settings.custom_field_desk_check
+TEAM = jira_settings.custom_field_team
+ESTIMATION_DATE = jira_settings.custom_field_estimation_date
 
 
-class JIRAStory:
-    def __init__(self, index, key, summary, description, assignee, tester, reporter, points, epic, team=''):
+class CanbanCard(object):
+
+    def __init__(self, issue, index):
         self.row = index / 2 * 15
         self.column = (6, 0)[index % 2 == 0]
-        self.key = key
-        self.summary = summary
-        self.description = description
-        self.assignee = assignee
-        self.tester = tester
-        self.reporter = reporter
-        self.points = points
-        self.epic = epic
-        self.team = team
-        self.is_deskcheck = False
+        self.issue = issue
 
-    @staticmethod
-    def __parse_custom_fields__(node):
-        sp = "n/a"
-        epic_key = None
-        tester = None
-        is_deskcheck = False
+    def render(self, sheet):
 
-        for i in range(1, len(node) + 1):
-            try:
-                if node[i].customfieldId in STORY_POINTS_CUSTOM_FIELDS:
-                    sp = node[i].values[0]
-                    continue
-                elif node[i].customfieldId in EPIC_NAME_CUSTOM_FIELDS:
-                    epic_key = node[i].values[0]
-                    continue
-                elif node[i].customfieldId in TESTER_CUSTOM_FIELDS:
-                    tester = node[i].values[0]
-                    continue
-                elif node[i].customfieldId in TEAM_CUSTOM_FIELDS:
-                    team = node[i].values[0]
-                    continue
-                elif node[i].customfieldId in DESK_CHECK_CUSTOM_FIELDS:
-                    if node[i].values[0] == "Yes":
-                        is_deskcheck = True
-                    continue
-                else:
-                    continue
-            except IndexError:
-                break
-        return epic_key, sp, tester, is_deskcheck, team
+        if self.issue.desk_check:
+            key_style = STORY_KEY_STYLE_DESK_CHECK
+        else:
+            key_style = STORY_KEY_STYLE
+
+        #Key
+        project_name = re.sub('-', '', jira_settings.project_name)
+        what = '{project_name}-'.format(project_name=project_name)
+        key = re.sub(what, ' ', self.issue.key)
+        sheet.write_merge(r1=self.row+1, c1=self.column+0,
+                          r2=self.row+4, c2=self.column+0,
+                          label=key, style=key_style)
+
+        #Summary
+        summary = self.issue.summary
+        sheet.write_merge(r1=self.row+1, c1=self.column+1,
+                          r2=self.row+4, c2=self.column+5,
+                          label=summary, style=SUMMARY_STYLE)
+
+        #Description
+        description = self.__format_description__(self.issue.description)
+        sheet.write_merge(r1=self.row+5, c1=self.column+0,
+                          r2=self.row+11, c2=self.column+5,
+                          label=description, style=DESCRIPTION_STYLE)
+
+        #Assignee
+        assignee = self.__remove_underscores__(self.issue.assignee)
+        sheet.write_merge(r1=self.row+12, c1=self.column+0,
+                          r2=self.row+12, c2=self.column+1,
+                          label="Assignee:", style=ASSIGNEE_LABEL_STYLE)
+        sheet.write_merge(r1=self.row+12, c1=self.column+2,
+                          r2=self.row+12, c2=self.column+4,
+                          label=assignee, style=ASSIGNEE_STYLE)
+
+        #Tester
+        tester = self.__remove_underscores__(self.issue.tester)
+        sheet.write_merge(r1=self.row+13, c1=self.column+0,
+                          r2=self.row+13, c2=self.column+1,
+                          label="Tester:", style=TESTER_LABEL_STYLE)
+        sheet.write_merge(r1=self.row+13, c1=self.column+2,
+                          r2=self.row+13, c2=self.column+4,
+                          label=tester, style=TESTER_STYLE)
+
+        #Reporter
+        reporter = self.__remove_underscores__(self.issue.reporter)
+        sheet.write_merge(r1=self.row+14, c1=self.column+0,
+                          r2=self.row+14, c2=self.column+1,
+                          label="Reporter:", style=REPORTER_LABEL_STYLE)
+        sheet.write_merge(r1=self.row+14, c1=self.column+2,
+                          r2=self.row+14, c2=self.column+4,
+                          label=reporter, style=REPORTER_STYLE)
+
+        #Story points
+        points = self.issue.story_points
+        sheet.write_merge(r1=self.row+12, c1=self.column+5,
+                          r2=self.row+14, c2=self.column+5,
+                          label=points, style=STORY_POINTS_STYLE)
+
+        #Epic
+        epic = self.issue.epic_name
+        sheet.write_merge(r1=self.row+15, c1=self.column+0,
+                          r2=self.row+15, c2=self.column+5,
+                          label=epic, style=EPIC_STYLE)
+
+        return sheet
 
     @staticmethod
     def __format_description__(description):
@@ -63,165 +100,56 @@ class JIRAStory:
     def __remove_underscores__(field):
         return (re.sub('_', ' ', str(field)), 'not assigned')[field is None]
 
-    def __init__(self, key, index, auth):
-        self.row = index / 2 * 15
-        self.column = (6, 0)[index % 2 == 0]
 
-        try:
-            issue = soap.getIssue(auth, key)
-            self.success = True
-        except:
-            issue = None
-            self.success = False
+class JiraIssue(object):
 
-        if issue:
-            epic_key, story_points, tester, is_deskcheck, team = self.__parse_custom_fields__(issue[5])
+    def __init__(self, key):
+        self.key = key
+        self.env = jira_rpc_init(log)
+        client = self.env['client']
+        auth = self.env['auth']
 
-            if epic_key is not None:
-                epic = soap.getIssue(auth, epic_key)
-                self.epic = epic.summary
-            else:
-                self.epic = "n/a"
+        raw_data = client.getIssue(auth, key)
+        custom_fields = self.__get_custom_fields__(raw_data)
 
-            self.description = self.__format_description__(issue.description)
-            self.assignee = self.__remove_underscores__(issue.assignee)
-            self.reporter = self.__remove_underscores__(issue.reporter)
-            self.tester = self.__remove_underscores__(tester)
-            self.key = issue.key
-            self.summary = issue.summary
-            self.points = story_points
-            self.is_deskcheck = is_deskcheck
-            self.team = team
+        self.summary = raw_data.summary
+        self.description = raw_data.description
+        self.assignee = raw_data.assignee
+        self.reporter = raw_data.reporter
 
-    def render(self, sheet):
+        self.tester = self.__get_custom_field_value__(custom_fields, TESTER)
+        self.story_points = self.__get_custom_field_value__(custom_fields, STORY_POINTS)
+        self.team = self.__get_custom_field_value__(custom_fields, TEAM)
+        self.desk_check = (False, True)[self.__get_custom_field_value__(custom_fields, DESK_CHECK) == 'Yes']
 
-        # Story number
-        self.key = re.sub(PROJECT_NAME + '-', '', self.key)
+        estimation_date = self.__get_custom_field_value__(custom_fields, ESTIMATION_DATE)
+        if estimation_date:
+            try:
+                time_struct = strptime(estimation_date, "%d/%b/%y")
+                self.estimation_date = datetime.fromtimestamp(mktime(time_struct))
+            except TypeError:
+                log.warn('Issue {key} does not have valid estimation date'.format(key=key))
 
-        if self.is_deskcheck:
-            key_style = STORY_KEY_STYLE_DESK_CHECK
-        else:
-            key_style = STORY_KEY_STYLE
+        epic = client.getIssue(auth, self.__get_custom_field_value__(custom_fields, EPIC_NAME))
+        self.epic_key = epic.key
+        self.epic_name = epic.summary
 
-        sheet.write_merge(r1=self.row+1, c1=self.column+0,
-                          r2=self.row+4, c2=self.column+0,
-                          label=self.key, style=key_style)
+    @staticmethod
+    def __get_custom_fields__(raw_data):
+        result = dict()
+        if raw_data:
+            for node in raw_data:
+                if type(node) == SOAPpy.Types.typedArrayType:
+                    for item in node:
+                        try:
+                            result[item.customfieldId] = item.values[0]
+                        except AttributeError:
+                            continue
+        return result
 
-        #Summary
-        sheet.write_merge(r1=self.row+1, c1=self.column+1,
-                          r2=self.row+4, c2=self.column+5,
-                          label=self.summary, style=SUMMARY_STYLE)
-
-        #Description
-        sheet.write_merge(r1=self.row+5, c1=self.column+0,
-                          r2=self.row+11, c2=self.column+5,
-                          label=self.description, style=DESCRIPTION_STYLE)
-
-        #Assignee
-        sheet.write_merge(r1=self.row+12, c1=self.column+0,
-                          r2=self.row+12, c2=self.column+1,
-                          label="Assignee:", style=ASSIGNEE_LABEL_STYLE)
-        sheet.write_merge(r1=self.row+12, c1=self.column+2,
-                          r2=self.row+12, c2=self.column+4,
-                          label=self.assignee, style=ASSIGNEE_STYLE)
-
-        #Tester
-        sheet.write_merge(r1=self.row+13, c1=self.column+0,
-                          r2=self.row+13, c2=self.column+1,
-                          label="Tester:", style=TESTER_LABEL_STYLE)
-        sheet.write_merge(r1=self.row+13, c1=self.column+2,
-                          r2=self.row+13, c2=self.column+4,
-                          label=self.tester, style=TESTER_STYLE)
-
-        #Reporter
-        sheet.write_merge(r1=self.row+14, c1=self.column+0,
-                          r2=self.row+14, c2=self.column+1,
-                          label="Reporter:", style=REPORTER_LABEL_STYLE)
-        sheet.write_merge(r1=self.row+14, c1=self.column+2,
-                          r2=self.row+14, c2=self.column+4,
-                          label=self.reporter, style=REPORTER_STYLE)
-
-        #Story points
-        sheet.write_merge(r1=self.row+12, c1=self.column+5,
-                          r2=self.row+14, c2=self.column+5,
-                          label=self.points, style=STORY_POINTS_STYLE)
-
-        #Epic
-        sheet.write_merge(r1=self.row+15, c1=self.column+0,
-                          r2=self.row+15, c2=self.column+5,
-                          label=self.epic, style=EPIC_STYLE)
-
-        return sheet
-
-
-def fetch_story(key):
-    auth = get_auth()
-    return JIRAStory(key, 0, auth)
-
-
-def get_stories_from_list(list):
-    result = []
-    auth = get_auth()
-    for index, story_number in enumerate(list):
-        result.append(JIRAStory(story_number, index, auth))
-    return result
-
-
-def render_cards(cards):
-    out_file = xlwt.Workbook()
-    sheet = out_file.add_sheet(get_sheet_name('Cards'))
-
-    for card in cards:
-        sheet = card.render(sheet)
-
-    sheet.write_merge(r1=0, c1=0, r2=0, c2=6, label='DeskCheck stories are marked with green colour.')
-
-    filename, path = get_cards_filename()
-    out_file.save(path+filename)
-    return filename
-
-
-def get_sheet_name(prefix):
-    now = datetime.datetime.now()
-    sheet_name = '{prefix} {datetime}'.format(prefix=prefix,
-                                              datetime=now.strftime("%Y.%m.%d %H-%M-%S"))
-    return sheet_name
-
-
-def get_cards_filename():
-    now = datetime.datetime.now()
-    return 'Cards_' + now.strftime("%Y.%m.%d_%H-%M-%S") + '.xls', MEDIA_ROOT + '/cards/'
-
-
-def get_auth():
-    return soap.login(JIRA_LOGIN, JIRA_PASSWORD)
-
-
-def get_outdated_issues():
-    return OutdatedJiraIssue.objects.all()
-
-
-def store_outdated_issues():
-    project_name = unicode(jira_settings.project_name)
-    auth = get_auth()
-    request = '''Sprint in openSprints() AND project = {project}
-        AND type in (Story, Bug, Improvement)
-        AND "Estimation Date" < endOfDay()'''.format(project=project_name)
-    issues = soap.getIssuesFromJqlSearch(auth, request, SOAPpy.Types.intType(20))
-
-    OutdatedJiraIssue.objects.all().delete()
-
-    for issue in issues:
-        jira_issue = JIRAStory(issue.key, 0, auth)
-        db_issue = OutdatedJiraIssue.objects.get_or_create(key=issue.key)[0]
-        db_issue.summary = jira_issue.summary
-        db_issue.description = jira_issue.description
-        db_issue.assignee = jira_issue.assignee
-        db_issue.tester = jira_issue.tester
-        db_issue.reporter = jira_issue.reporter
-        db_issue.points = jira_issue.points
-        db_issue.epic = jira_issue.epic
-        db_issue.team = jira_issue.team
-        db_issue.is_deskcheck = jira_issue.is_deskcheck
-
-        db_issue.save()
+    @staticmethod
+    def __get_custom_field_value__(custom_fields_dict, name):
+        value = None
+        if custom_fields_dict:
+            value = custom_fields_dict.get(name, None)
+        return value

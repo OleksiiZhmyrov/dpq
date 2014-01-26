@@ -1,6 +1,5 @@
 from django.db import models
 from django.contrib.auth.models import User
-from dpq.settings import PROJECT_NAME
 import re
 
 
@@ -216,6 +215,13 @@ class JiraSettings(models.Model):
     browse_url = models.CharField('Browse URL', max_length=128, null=True, blank=True)
     project_name = models.CharField('Project Name', max_length=64, null=True, blank=True)
 
+    custom_field_story_points = models.CharField('Custom field: story points', null=True, max_length=32, default='')
+    custom_field_epic_name = models.CharField('Custom field: epic name', null=True, max_length=32, default='')
+    custom_field_tester = models.CharField('Custom field: tester', null=True, max_length=32, default='')
+    custom_field_team = models.CharField('Custom field: team', null=True, max_length=32, default='')
+    custom_field_estimation_date = models.CharField('Custom field: est. date', null=True, max_length=32, default='')
+    custom_field_desk_check = models.CharField('Custom field: is desk check', null=True, max_length=32, default='')
+
     def __unicode__(self):
         return 'Jira settings: {login}'.format(login=self.login)
 
@@ -256,3 +262,4 @@ class OutdatedJiraIssue(models.Model):
     epic = models.CharField('Epic', max_length=32, null=True, blank=True)
     team = models.CharField('Team', max_length=32, null=True, blank=True)
     is_deskcheck = models.BooleanField('Is Desk check story', default=False)
+    estimation_date = models.DateField('Estimation date', null=True, blank=True)

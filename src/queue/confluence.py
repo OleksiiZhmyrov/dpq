@@ -8,9 +8,6 @@ confluence_settings = ConfluenceSettings.objects.all()[0]
 soap = SOAPpy.WSDL.Proxy(confluence_settings.url)
 
 
-def get_statistics():
-    return __get_formatted_statistics__()
-
 
 def store_statistics():
     page_title = confluence_settings.page_title
@@ -143,42 +140,4 @@ def __save_statistics_to_database(lines):
     db_item.save()
 
 
-def __get_formatted_statistics__():
-    db_item = DeskCheckStatistic.objects.all().order_by('-creation_date')[0]
-    return {
-        'datetime': db_item.creation_date,
-        'total': {
-            'count': int(db_item.total_count),
-            'count_sp': int(db_item.total_count_sp)
-        },
-        'other': {
-            'count': int(db_item.other_count),
-            'count_sp': int(db_item.other_count_sp),
-            'percent': int(db_item.other_percent),
-            'percent_sp': int(db_item.other_percent_sp)
-        },
-        'passed': {
-            'count': int(db_item.passed_count),
-            'count_sp': int(db_item.passed_count_sp),
-            'percent': int(db_item.passed_percent),
-            'percent_sp': int(db_item.passed_percent_sp)
-        },
-        'ready': {
-            'count': int(db_item.ready_count),
-            'count_sp': int(db_item.ready_count_sp),
-            'percent': int(db_item.ready_percent),
-            'percent_sp': int(db_item.ready_percent_sp)
-        },
-        'failed': {
-            'count': int(db_item.failed_count),
-            'count_sp': int(db_item.failed_count_sp),
-            'percent': int(db_item.failed_percent),
-            'percent_sp': int(db_item.failed_percent_sp)
-        },
-        'progressbar': {
-            'passed': int(db_item.passed_percent),
-            'ready': int(db_item.ready_percent),
-            'other': int(db_item.failed_percent + db_item.other_percent)
-        }
-    }
 

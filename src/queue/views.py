@@ -909,3 +909,9 @@ def ci_display_outdated_stories(request):
     issues = JiraUtil.get_outdated_issues()
     return render_to_response('ci/outdated_issues.html', RequestContext(request, {'issues': issues}))
 
+
+@csrf_exempt
+def ci_sync_desk_check_data(request):
+    JiraUtil.store_outdated_issues()
+    ConfluenceDeskCheckUtil.save_statistics()
+    return HttpResponse("OK")

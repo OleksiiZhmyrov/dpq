@@ -197,7 +197,7 @@ class JiraUtil(object):
 
         request = '''Sprint in openSprints() AND project = {project}
             AND type in (Story, Bug, Improvement)
-            AND "Estimation Date" < endOfMonth()'''.format(project=project_name)
+            AND "Estimation Date" < endOfDay()'''.format(project=project_name)
 
         log.info('Queuing JIRA for outdated issues...')
         response = client.getIssuesFromJqlSearch(auth, request, Types.intType(20))
@@ -233,7 +233,7 @@ class JiraUtil(object):
 
     @staticmethod
     def get_outdated_issues():
-        return OutdatedJiraIssue.objects.all()
+        return OutdatedJiraIssue.objects.all().order_by('estimation_date')
 
 
 class CanbanCardsUtil(object):

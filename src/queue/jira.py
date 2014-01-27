@@ -128,10 +128,10 @@ class JiraIssue(object):
         self.key = raw_data.key
         self.summary = raw_data.summary
         self.description = raw_data.description
-        self.assignee = raw_data.assignee
-        self.reporter = raw_data.reporter
+        self.assignee = str(raw_data.assignee).replace('_', ' ')
+        self.reporter = str(raw_data.reporter).replace('_', ' ')
 
-        self.tester = self.__get_custom_field_value__(custom_fields, TESTER)
+        self.tester = str(self.__get_custom_field_value__(custom_fields, TESTER)).replace('_', ' ')
         self.story_points = self.__get_custom_field_value__(custom_fields, STORY_POINTS)
         self.team = self.__get_custom_field_value__(custom_fields, TEAM)
         self.desk_check = (False, True)[self.__get_custom_field_value__(custom_fields, DESK_CHECK) == 'Yes']

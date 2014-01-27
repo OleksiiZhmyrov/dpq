@@ -256,7 +256,12 @@ class JiraUtil(object):
 
     @staticmethod
     def get_outdated_issues():
-        return OutdatedJiraIssue.objects.all().order_by('estimation_date')
+        now = datetime.now().date()
+        issues = OutdatedJiraIssue.objects.all().order_by('estimation_date')
+        for issue in issues:
+            if issue.estimation_date < now:
+                issue.outdated = True
+        return issues
 
     @staticmethod
     def __raw_data_to_issues_list__(raw_data):

@@ -1,5 +1,4 @@
-import logging
-import sys
+
 import SOAPpy
 from queue.models import JiraSettings, ConfluenceSettings
 
@@ -17,17 +16,6 @@ CONFLUENCE_USERNAME = confluence_settings.login
 CONFLUENCE_PASSWORD = confluence_settings.password
 CONFLUENCE_NAMESPACE = confluence_settings.namespace
 CONFLUENCE_PAGE_TITLE = confluence_settings.page_title
-
-
-def setup_logging(log_level=logging.INFO):
-    logger = logging.getLogger()
-    logger.setLevel(log_level)
-    formatter = logging.Formatter("%(message)s")
-    handler = logging.StreamHandler(sys.stdout)
-    handler.setLevel(log_level)
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    return logger
 
 
 def get_jira_client(logger):
@@ -49,7 +37,7 @@ def jira_rpc_init(logger):
     )
 
     try:
-        logger.debug('Starting authorization')
+        logger.info('Starting authorization')
 
         client = get_jira_client(logger)
         auth = client.login(

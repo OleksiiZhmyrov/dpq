@@ -1,13 +1,13 @@
-import SOAPpy
+from SOAPpy import Types
 import re
 from queue.models import JiraSettings
-from queue.rpc_util import setup_logging, jira_rpc_init
+from queue.rpc_util import jira_rpc_init
 from time import strptime, mktime
 from datetime import datetime
 from xlwt_styles import *
+from queue.logger import LOGGER
 
 jira_settings = JiraSettings.objects.all()[0]
-log = setup_logging()
 
 STORY_POINTS = jira_settings.custom_field_story_points
 EPIC_NAME = jira_settings.custom_field_epic_name
@@ -15,6 +15,25 @@ TESTER = jira_settings.custom_field_tester
 DESK_CHECK = jira_settings.custom_field_desk_check
 TEAM = jira_settings.custom_field_team
 ESTIMATION_DATE = jira_settings.custom_field_estimation_date
+
+
+class AdvancedSearchRequest():
+
+    def __init__(self, request, limit=100):
+        self.__request = request
+        self.__response = None
+        self.__limit = limit
+        self.__env = jira_rpc_init(LOGGER)
+
+    def request(self):
+        client = self.__env['client']
+        auth = self.__env['auth']
+
+        LOGGER.info('JIRA Advanced Search request: {request}'.format(request=self.__request))
+        self.__response = client.getIssuesFromJqlSearch(auth, self.__request, Types.intType(self.__limit))
+
+    def get_response(self):
+        return self.__response
 
 
 class CanbanCard(object):
@@ -103,15 +122,10 @@ class CanbanCard(object):
 
 class JiraIssue(object):
 
-    def __init__(self, key):
-        self.key = key
-        self.env = jira_rpc_init(log)
-        client = self.env['client']
-        auth = self.env['auth']
-
-        raw_data = client.getIssue(auth, key)
+    def __init__(self, raw_data):
         custom_fields = self.__get_custom_fields__(raw_data)
 
+        self.key = raw_data.key
         self.summary = raw_data.summary
         self.description = raw_data.description
         self.assignee = raw_data.assignee
@@ -128,23 +142,25 @@ class JiraIssue(object):
                 time_struct = strptime(estimation_date, "%d/%b/%y")
                 self.estimation_date = datetime.fromtimestamp(mktime(time_struct))
             except TypeError:
-                log.warn('Issue {key} does not have valid estimation date'.format(key=key))
+                LOGGER.warn('Issue {key} does not have valid estimation date'.format(key=self.key))
 
         epic_name = self.__get_custom_field_value__(custom_fields, EPIC_NAME)
-        if epic_name:
-            epic = client.getIssue(auth, epic_name)
-            self.epic_key = epic.key
-            self.epic_name = epic.summary
-        else:
-            self.epic_key = ''
-            self.epic_name = ''
+        self.epic_key = epic_name
+        self.epic_name = epic_name
+        # if epic_name:
+        #     epic = client.getIssue(auth, epic_name)
+        #     self.epic_key = epic.key
+        #     self.epic_name = epic.summary
+        # else:
+        #     self.epic_key = ''
+        #     self.epic_name = ''
 
     @staticmethod
     def __get_custom_fields__(raw_data):
         result = dict()
         if raw_data:
             for node in raw_data:
-                if type(node) == SOAPpy.Types.typedArrayType:
+                if type(node) == Types.typedArrayType:
                     for item in node:
                         try:
                             result[item.customfieldId] = item.values[0]

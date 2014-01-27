@@ -514,10 +514,10 @@ def maintenance_page(request):
 
 def get_story_data_from_JIRA(request):
     data = loads(request.body)
-    story_key = data['key']
+    story_key = data['key'].encode('ascii', 'ignore')
 
     try:
-        story = JiraIssue(story_key)
+        story = JiraUtil.get_issues([story_key])[0]
         result = {
             'key': story_key,
             'summary': story.summary,

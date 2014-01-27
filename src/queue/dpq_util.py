@@ -1,17 +1,17 @@
-from queue.models import JiraSettings, OutdatedJiraIssue, DeskCheckStatistic, ConfluenceSettings
-from queue.rpc_util import jira_rpc_init, confluence_rpc_init, setup_logging
+from queue.models import OutdatedJiraIssue, DeskCheckStatistic
+from queue.rpc_util import jira_rpc_init, confluence_rpc_init
 from queue.jira import JiraIssue, CanbanCard
 from SOAPpy import Types
 from bs4 import BeautifulSoup
 from datetime import datetime
 from dpq.settings import MEDIA_ROOT
+from queue.logger import LOGGER
+from queue.jira import jira_settings, AdvancedSearchRequest
 import xlwt
-
-log = setup_logging()
+import re
 
 
 class ConfluenceDeskCheckUtil(object):
-
     class TableRecord:
         def __init__(self, html_line):
             self.story_number = html_line[0][1].strip()
@@ -87,7 +87,7 @@ class ConfluenceDeskCheckUtil(object):
                 total_sp += item.sp
             except TypeError:
                 skip = True
-                log_info('Story {key} is not estimated'.format(key=item.story_number))
+                LOGGER.info('Story {key} is not estimated'.format(key=item.story_number))
             if item.status == 'Pass':
                 passed.append(item)
                 if not skip:
@@ -145,16 +145,26 @@ class ConfluenceDeskCheckUtil(object):
 
     @staticmethod
     def data_sets_to_table_records(data_sets):
-        table_records = []
+
+        table_records = {}
+        issue_key_list = []
         for item in data_sets:
             record = ConfluenceDeskCheckUtil.TableRecord(item)
-            try:
-                log.info('Queuing JIRA for story points for issue {key}'.format(key=record.story_number))
-                record.sp = int(JiraIssue(record.story_number).story_points)
-            except AttributeError:
+            key = record.story_number.encode('ascii', 'ignore')
+            table_records[key] = record
+            issue_key_list.append(key)
+
+        issues = JiraUtil.get_issues(issue_key_list)
+
+        result = []
+        for issue in issues:
+            record = table_records[issue.key]
+            if issue.story_points:
+                record.sp = int(issue.story_points)
+            else:
                 record.sp = 0
-            table_records.append(record)
-        return table_records
+            result.append(record)
+        return result
 
     @staticmethod
     def html_to_data_sets(html):
@@ -167,30 +177,44 @@ class ConfluenceDeskCheckUtil(object):
             data_set = zip(headings, (td.get_text() for td in row.find_all("td")))
             data_sets.append(data_set)
 
-        log.info('Page contains {count} data sets'.format(count=len(data_set)))
+        LOGGER.info('Page contains {count} data sets'.format(count=len(data_set)))
         return data_sets
 
     @staticmethod
     def get_confluence_page_content():
-        env = confluence_rpc_init(log)
+        env = confluence_rpc_init(LOGGER)
         auth = env['auth']
         client = env['client']
         namespace = env['namespace']
         page_title = env['page_title']
 
-        log.info('Queuing Confluence for page with title {title}'.format(title=page_title))
+        LOGGER.info('Queuing Confluence for page with title {title}'.format(title=page_title))
         page = client.getPage(auth, namespace, page_title)
 
         html = page.content
-        log.info('Confluence returned {size} bytes of html data'.format(size=len(html)))
+        LOGGER.info('Confluence returned {size} bytes of html data'.format(size=len(html)))
         return html
 
 
 class JiraUtil(object):
 
     @staticmethod
+    def get_issues(key_list):
+        normalized_keys = []
+        for key in key_list:
+            normalized_keys.append(key.encode('ascii', 'ignore'))
+        issue_key_list = re.sub(r'[\[\]]', '', str(normalized_keys))
+        request = '''project={project} AND key in ({list})'''.format(project=jira_settings.project_name,
+                                                                     list=issue_key_list)
+        search_request = AdvancedSearchRequest(request)
+        search_request.request()
+        response = search_request.get_response()
+
+        return JiraUtil.__raw_data_to_issues_list__(response)
+
+    @staticmethod
     def store_outdated_issues():
-        env = jira_rpc_init(log)
+        env = jira_rpc_init(LOGGER)
         client = env['client']
         auth = env['auth']
         project_name = env['project_name']
@@ -199,19 +223,18 @@ class JiraUtil(object):
             AND type in (Story, Bug, Improvement)
             AND "Estimation Date" <= endOfDay()'''.format(project=project_name)
 
-        log.info('Queuing JIRA for outdated issues...')
+        LOGGER.info('Queuing JIRA for outdated issues...')
         response = client.getIssuesFromJqlSearch(auth, request, Types.intType(20))
-        log.info('Response contains {count} issues'.format(count=len(response)))
+        LOGGER.info('Response contains {count} issues'.format(count=len(response)))
 
-        log.info('Removing all outdated issues from database...')
+        LOGGER.info('Removing all outdated issues from database...')
         OutdatedJiraIssue.objects.all().delete()
 
-        log.info('Starting to import issues to database...')
-        for item in response:
-            message = '\tIssue {key} is being saved in database'.format(key=item.key)
-            log.info(message)
+        LOGGER.info('Starting to import issues to database...')
+        for issue in JiraUtil.__raw_data_to_issues_list__(response):
+            message = '\tIssue {key} is being saved in database'.format(key=issue.key)
+            LOGGER.info(message)
 
-            issue = JiraIssue(item.key)
             outdated_jira_issue = JiraUtil.get_filled_in_outdated_jira_issue_obj(issue)
             outdated_jira_issue.save()
 
@@ -235,14 +258,21 @@ class JiraUtil(object):
     def get_outdated_issues():
         return OutdatedJiraIssue.objects.all().order_by('estimation_date')
 
+    @staticmethod
+    def __raw_data_to_issues_list__(raw_data):
+        result = []
+        for item in raw_data:
+            issue = JiraIssue(item)
+            result.append(issue)
+        return result
+
 
 class CanbanCardsUtil(object):
-
     @staticmethod
     def generate_cards(key_list):
+        issues = JiraUtil.get_issues(key_list)
         result = []
-        for index, story_number in enumerate(key_list):
-            issue = JiraIssue(story_number)
+        for index, issue in enumerate(issues):
             card = CanbanCard(issue, index)
             result.append(card)
         return result

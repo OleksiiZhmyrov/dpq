@@ -197,7 +197,7 @@ class JiraUtil(object):
 
         request = '''Sprint in openSprints() AND project = {project}
             AND type in (Story, Bug, Improvement)
-            AND "Estimation Date" < endOfDay()'''.format(project=project_name)
+            AND "Estimation Date" <= endOfDay()'''.format(project=project_name)
 
         log.info('Queuing JIRA for outdated issues...')
         response = client.getIssuesFromJqlSearch(auth, request, Types.intType(20))

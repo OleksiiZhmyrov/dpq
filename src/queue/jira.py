@@ -130,9 +130,14 @@ class JiraIssue(object):
             except TypeError:
                 log.warn('Issue {key} does not have valid estimation date'.format(key=key))
 
-        epic = client.getIssue(auth, self.__get_custom_field_value__(custom_fields, EPIC_NAME))
-        self.epic_key = epic.key
-        self.epic_name = epic.summary
+        epic_name = self.__get_custom_field_value__(custom_fields, EPIC_NAME)
+        if epic_name:
+            epic = client.getIssue(auth, epic_name)
+            self.epic_key = epic.key
+            self.epic_name = epic.summary
+        else:
+            self.epic_key = ''
+            self.epic_name = ''
 
     @staticmethod
     def __get_custom_fields__(raw_data):

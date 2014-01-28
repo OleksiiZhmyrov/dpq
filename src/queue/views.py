@@ -907,7 +907,11 @@ def ci_display_deskcheck(request):
 
 def ci_display_outdated_stories(request):
     issues = JiraUtil.get_outdated_issues()
-    return render_to_response('ci/outdated_issues.html', RequestContext(request, {'issues': issues}))
+    browse_url = JIRA_BROWSE_URL
+    project_name = PROJECT_NAME.replace('-', '') + '-'
+    return render_to_response('ci/outdated_issues.html', RequestContext(request, {'issues': issues,
+                                                                                  'browse_url': browse_url,
+                                                                                  'project_name': project_name}))
 
 
 @csrf_exempt

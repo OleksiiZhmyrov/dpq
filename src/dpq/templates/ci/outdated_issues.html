@@ -24,8 +24,10 @@
                 </tr>
             {% else %}
                 {% for issue in issues %}
-                    <tr {% if issue.outdated %}class="error"{% endif %}>
-                        <td>{{ issue.key|slice:"-4:" }}</td>
+                    <tr {% if issue.outdated %}style="background: #ff0000; color: #ffffff;"{% endif %}>
+                        <td><a {% if issue.outdated %}style="color: #ffffff;"{% endif %}
+                               target="_blank"
+                               href="{{ browse_url }}{{ issue.key }}">{{ issue.key|cut:project_name }}</a></td>
                         <td>{{ issue.summary|truncatechars:64 }}</td>
                         <td>{{ issue.team }}</td>
                         <td>{{ issue.assignee }}</td>

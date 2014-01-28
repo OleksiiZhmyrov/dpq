@@ -220,7 +220,7 @@ class JiraUtil(object):
         project_name = env['project_name']
 
         request = '''Sprint in openSprints() AND project = {project}
-            AND type in (Story, Bug, Improvement)
+            AND type in (Story, Bug, Improvement) AND status in (Defined,Undefined,"In Progress")
             AND "Estimation Date" <= endOfDay()'''.format(project=project_name)
 
         LOGGER.info('Queuing JIRA for outdated issues...')

@@ -10,7 +10,7 @@
                 <th style="text-align: center;">Key</th>
                 <th style="text-align: center;">Summary</th>
                 <th style="text-align: center;">Team</th>
-                <th style="text-align: center;">Assignee</th>
+                {# <th style="text-align: center;">Assignee</th> #}
                 <th style="text-align: center;">Points</th>
                 <th style="text-align: center;">Est. date</th>
             </tr>
@@ -28,9 +28,9 @@
                         <td><a {% if issue.outdated %}style="color: #ffffff;"{% endif %}
                                target="_blank"
                                href="{{ browse_url }}{{ issue.key }}">{{ issue.key|cut:project_name }}</a></td>
-                        <td>{{ issue.summary|truncatechars:64 }}</td>
+                        <td>{{ issue.summary|truncatechars:46 }}</td>
                         <td>{{ issue.team }}</td>
-                        <td>{{ issue.assignee }}</td>
+                        {# <td>{{ issue.assignee }}</td> #}
                         <td>{{ issue.points }}</td>
                         <td>{{ issue.estimation_date|date:"M j" }}</td>
                     </tr>

@@ -5,15 +5,16 @@
             <th>Sprint</th>
             <th style="width: 120px;">Type</th>
             <th>Summary</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
         {% for sticker in stickers %}
-            <tr {% if sticker.type == sticker.ACTION and sticker.is_completed == False %} class="error"{% endif %}>
-                <td>
-                    {{ sticker.retroBoard.team.name }}
+            <tr>
+                <td style="text-align: center;">
+                    {{ sticker.retroBoard.team.label|safe }}
                 </td>
-                <td>
+                <td style="text-align: center;">
                     <a href="/retro/{{ sticker.retroBoard.sprint.number }}/{{ sticker.retroBoard.team.name }}/"
                             target="_blank">
                     {{ sticker.retroBoard.sprint.number }}
@@ -24,6 +25,21 @@
                 </td>
                 <td>
                     {{ sticker.summary }}
+                </td>
+                <td style="text-align: right">
+                    {% if sticker.type == sticker.ACTION %}
+                        {% if sticker.is_completed %}
+                            <span class="label label-success">completed</span>
+                        {% else %}
+                            <span class="label label-important">in progress</span>
+                        {% endif %}
+                    {% elif sticker.type == sticker.GOOD or sticker.type == sticker.CHANGE %}
+                        {% if sticker.votes == 1 %}
+                            {{ sticker.votes }} vote
+                        {% else %}
+                            {{ sticker.votes }} votes
+                        {% endif %}
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}

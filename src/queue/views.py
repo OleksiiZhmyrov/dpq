@@ -926,6 +926,7 @@ def retro_browse_points(request):
     selected_team_name = 'allteams'
     selected_sprint_number = 'allsprints'
     selected_sticker_type = 'alltypes'
+    count = 15
 
     teams = Team.objects.all().order_by('name')
     sprints = Sprint.objects.all().order_by('-number')
@@ -937,6 +938,7 @@ def retro_browse_points(request):
         selected_team_name = request.GET["team"]
         selected_sprint_number = request.GET["sprint"]
         selected_sticker_type = request.GET["type"]
+        count = request.GET["count"]
     except KeyError:
         LOGGER.warn('Request with incorrect parameters. Using defaults.')
 
@@ -952,6 +954,8 @@ def retro_browse_points(request):
 
     if selected_sticker_type != 'alltypes':
         stickers = stickers.filter(type=selected_sticker_type)
+
+    stickers = stickers[:count]
 
     types_dict = {}
     for item in BoardSticker.TYPE_CHOICES:
@@ -971,4 +975,6 @@ def retro_browse_points(request):
                                                        'selected_team': selected_team_name,
                                                        'selected_sprint': selected_sprint_number,
                                                        'selected_type': selected_sticker_type,
+                                                       'count': int(count),
+                                                       'count_options': [15, 30, 45, 60],
                                                        'active_branches': get_active_branches()}))

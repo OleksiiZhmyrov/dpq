@@ -29,6 +29,13 @@
         {% endfor %}
     </select>
 
+    <label>Stickers to show</label>
+    <select name="count">
+        {% for val in count_options %}
+            <option {% if val == count %} selected="selected"{% endif %} value="{{ val }}">{{ val }}</option>
+        {% endfor %}
+    </select>
+
     <button type="submit" class="btn pull-right">Apply</button>
 
   </fieldset>

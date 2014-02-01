@@ -1,6 +1,3 @@
-
-
-
 <form id="dpq-filter-points-form">
   <fieldset>
     <legend>Filter points</legend>
@@ -31,13 +28,6 @@
             <option {% if selected_type == type.0 %}selected="selected"{% endif %} value="{{ type.0 }}">{{ type.1 }}</option>
         {% endfor %}
     </select>
-
-{#    <label>Sort by</label>#}
-{#    <select name="sort">#}
-{#        <option value="">Status</option>#}
-{#        <option value="">Creation date</option>#}
-{#        <option value=""></option>#}
-{#    </select>#}
 
     <button type="submit" class="btn pull-right">Apply</button>
 

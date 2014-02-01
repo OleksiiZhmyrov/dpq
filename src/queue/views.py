@@ -3,7 +3,7 @@ from exceptions import TypeError
 from json import loads, dumps
 from uuid import uuid1
 from django.views.decorators.csrf import csrf_exempt
-from jira import JiraIssue
+from logger import LOGGER
 from dpq_util import CanbanCardsUtil
 
 from django.contrib.admin.views.decorators import staff_member_required
@@ -919,3 +919,56 @@ def ci_sync_desk_check_data(request):
     JiraUtil.store_outdated_issues()
     ConfluenceDeskCheckUtil.save_statistics()
     return HttpResponse("OK")
+
+
+def retro_browse_points(request):
+
+    selected_team_name = 'allteams'
+    selected_sprint_number = 'allsprints'
+    selected_sticker_type = 'alltypes'
+
+    teams = Team.objects.all().order_by('name')
+    sprints = Sprint.objects.all().order_by('-number')
+    types = BoardSticker.TYPE_CHOICES
+
+    stickers = BoardSticker.objects.all().order_by('-creation_date')
+
+    try:
+        selected_team_name = request.GET["team"]
+        selected_sprint_number = request.GET["sprint"]
+        selected_sticker_type = request.GET["type"]
+    except KeyError:
+        LOGGER.warn('Request with incorrect parameters. Using defaults.')
+
+    if selected_team_name != 'allteams':
+        selected_team = Team.objects.get(name=selected_team_name)
+        board = RetroBoard.objects.filter(team=selected_team)
+        stickers = stickers.filter(retroBoard__in=board)
+
+    if selected_sprint_number != 'allsprints':
+        selected_sprint = Sprint.objects.get(number=selected_sprint_number)
+        boards = RetroBoard.objects.filter(sprint=selected_sprint)
+        stickers = stickers.filter(retroBoard__in=boards)
+
+    if selected_sticker_type != 'alltypes':
+        stickers = stickers.filter(type=selected_sticker_type)
+
+    types_dict = {}
+    for item in BoardSticker.TYPE_CHOICES:
+        types_dict[item[0]] = item[1]
+
+    for point in stickers:
+        point.type_str = types_dict[point.type]
+
+    if selected_sprint_number != 'allsprints':
+        selected_sprint_number = int(selected_sprint_number)
+
+    return render_to_response('retro/dpq_retro_action_points.html',
+                              RequestContext(request, {'stickers': stickers,
+                                                       'teams': teams,
+                                                       'sprints': sprints,
+                                                       'types': types,
+                                                       'selected_team': selected_team_name,
+                                                       'selected_sprint': selected_sprint_number,
+                                                       'selected_type': selected_sticker_type,
+                                                       'active_branches': get_active_branches()}))

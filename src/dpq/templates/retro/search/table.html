@@ -1,0 +1,35 @@
+<script src="/media/js/retro.js"></script>
+
+<table class="table table-condensed">
+    <thead>
+        <tr>
+            <th>Team</th>
+            <th>Sprint</th>
+            <th style="width: 120px;">Type</th>
+            <th>Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for sticker in stickers %}
+            <tr {% if sticker.type == sticker.ACTION and sticker.is_completed == False %} class="error"{% endif %}>
+                <td>
+                    {{ sticker.retroBoard.team.name }}
+                </td>
+                <td>
+                    {{ sticker.retroBoard.sprint.number }}
+                </td>
+                <td>
+                    {{ sticker.type_str }}
+                </td>
+                <td>
+                    {{ sticker.summary }}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+{% if user.is_authenticated %}
+    {% include "retro/popups/dpq_retro_modify_popup.html" %}
+{% endif %}

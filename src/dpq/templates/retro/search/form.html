@@ -1,0 +1,47 @@
+
+
+
+<form id="dpq-filter-points-form">
+  <fieldset>
+    <legend>Filter points</legend>
+    <label>Team</label>
+    <select name="team">
+        <option {% if selected_team == 'allteams' %}selected="selected"{% endif %} value="allteams">All teams</option>
+        {% for team in teams %}
+            <option {% if selected_team == team.name %}selected="selected"{% endif %}value="{{ team.name }}">{{ team.name }}</option>
+        {% endfor %}
+    </select>
+
+    <label>Sprint</label>
+    <select name="sprint">
+        <option {% if selected_sprint == 'allsprints' %}selected="selected"{% endif %} value="allsprints">All sprints</option>
+        {% for sprint in sprints %}
+            <option {% if sprint.number == selected_sprint %} selected="selected"{% endif %} value="{{ sprint.number }}">
+                Sprint {{ sprint.number }} ({{ sprint.start_date|date:"M j"|default:"n/a" }}
+                &mdash;
+                {{ sprint.finish_date|date:"M j"|default:"n/a" }})
+            </option>
+        {% endfor %}
+    </select>
+
+    <label>Type</label>
+    <select name="type">
+        <option {% if selected_type == 'alltypes' %}selected="selected"{% endif %} value="alltypes">All types</option>
+        {% for type in types %}
+            <option {% if selected_type == type.0 %}selected="selected"{% endif %} value="{{ type.0 }}">{{ type.1 }}</option>
+        {% endfor %}
+    </select>
+
+{#    <label>Sort by</label>#}
+{#    <select name="sort">#}
+{#        <option value="">Status</option>#}
+{#        <option value="">Creation date</option>#}
+{#        <option value=""></option>#}
+{#    </select>#}
+
+    <button type="submit" class="btn pull-right">Apply</button>
+
+  </fieldset>
+</form>
+
+<hr/>

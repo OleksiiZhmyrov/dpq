@@ -42,3 +42,6 @@
 </form>
 
 <hr/>
+{% if user.is_superuser %}
+    <small>Click action point status indicator to toggle its value.</small>
+{% endif %}

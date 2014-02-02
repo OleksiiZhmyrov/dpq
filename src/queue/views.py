@@ -978,3 +978,26 @@ def retro_browse_points(request):
                                                        'count': int(count),
                                                        'count_options': [15, 30, 45, 60],
                                                        'active_branches': get_active_branches()}))
+
+
+@login_required()
+def change_action_point_status(request):
+    if request.user.is_superuser:
+        try:
+            data = loads(request.body)
+            sticker_id = data['id']
+
+            sticker = BoardSticker.objects.get(id=sticker_id)
+            is_completed = sticker.is_completed
+            sticker.is_completed = not is_completed
+            sticker.save()
+            if is_completed:
+                return HttpResponse('<span class="label label-error">completed</span>')
+            else:
+                return HttpResponse('<span class="label label-success">completed</span>')
+
+        except KeyError, sticker.ObjectDoesNotExist:
+            return Http404("Does not exist")
+    else:
+        return Http404("You do not have appropriate permission for this action")
+    

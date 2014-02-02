@@ -1,3 +1,22 @@
+<script>
+    function changeActionPointStatus(id) {
+        if(confirm("Change action point status?")) {
+            $.ajax({
+                url: "/api/retro/sticker/change_status/",
+                headers: {
+                    "Content-type": "application/x-www-form-urlencoded",
+                    "X-CSRFToken": $.cookie('csrftoken')
+                },
+                data: JSON.stringify({
+                    "id": id
+                })
+            }).done(function (data) {
+                location.reload();
+                });
+        };
+    }
+</script>
+
 <table class="table table-condensed">
     <thead>
         <tr>
@@ -28,10 +47,16 @@
                 </td>
                 <td style="text-align: right">
                     {% if sticker.type == sticker.ACTION %}
+                        {% if user.is_superuser %}
+                            <a href="#" id="ap{{ sticker.id }}" class="prevent-default" onclick="changeActionPointStatus({{ sticker.id }})">
+                        {% endif %}
                         {% if sticker.is_completed %}
                             <span class="label label-success">completed</span>
                         {% else %}
                             <span class="label label-important">in progress</span>
+                        {% endif %}
+                        {% if user.is_superuser %}
+                            </a>
                         {% endif %}
                     {% elif sticker.type == sticker.GOOD or sticker.type == sticker.CHANGE %}
                         {% if sticker.votes == 1 %}

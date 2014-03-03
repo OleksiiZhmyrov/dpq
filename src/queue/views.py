@@ -988,13 +988,9 @@ def change_action_point_status(request):
             sticker_id = data['id']
 
             sticker = BoardSticker.objects.get(id=sticker_id)
-            is_completed = sticker.is_completed
-            sticker.is_completed = not is_completed
+            sticker.status_code = (sticker.status_code + 1) % 3
             sticker.save()
-            if is_completed:
-                return HttpResponse('<span class="label label-error">completed</span>')
-            else:
-                return HttpResponse('<span class="label label-success">completed</span>')
+            return HttpResponse('OK')
 
         except KeyError, sticker.ObjectDoesNotExist:
             return Http404("Does not exist")

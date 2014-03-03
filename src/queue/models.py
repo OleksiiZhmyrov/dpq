@@ -171,6 +171,7 @@ class BoardSticker(models.Model):
     votes = models.IntegerField(default=0)
     voters = models.CharField('Voters', max_length=512, null=True, blank=True)
     is_completed = models.BooleanField('Is Completed', default=False)
+    status_code = models.PositiveSmallIntegerField('Status code', default=0, null=True, blank=True)
     GOOD = "G"
     CHANGE = "C"
     ACTION = "A"
@@ -185,7 +186,6 @@ class BoardSticker(models.Model):
         return 'Sticker ({type}, {votes} votes, sprint {sprint}: {summary} )'.format(type=self.type, votes=self.votes,
                                                                                      sprint=self.retroBoard.sprint,
                                                                                      summary=self.summary)
-
 
 class UserToRetroBoardConnector(models.Model):
     custom_user_record = models.ForeignKey(CustomUserRecord)

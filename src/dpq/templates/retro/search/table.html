@@ -50,10 +50,12 @@
                         {% if user.is_superuser %}
                             <a href="#" id="ap{{ sticker.id }}" class="prevent-default" onclick="changeActionPointStatus({{ sticker.id }})">
                         {% endif %}
-                        {% if sticker.is_completed %}
+                        {% if sticker.status_code == 2 %}
                             <span class="label label-success">completed</span>
+                        {% elif sticker.status_code == 1 %}
+                            <span class="label label-warning">in progress</span>
                         {% else %}
-                            <span class="label label-important">in progress</span>
+                            <span class="label label-important">scheduled</span>
                         {% endif %}
                         {% if user.is_superuser %}
                             </a>

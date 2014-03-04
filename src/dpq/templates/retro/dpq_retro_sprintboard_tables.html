@@ -106,7 +106,7 @@
             {% endif %}
             {% for sticker in stickers_actions %}
                 <tr title="Created by {{ sticker.created_by.django_user.username }}"
-                        {% if sticker.is_completed %}class="success"{% endif %}>
+                        {% if sticker.status_code == 2 %}class="success"{% endif %}>
                     <td>{{ sticker.summary }}</td>
                     <td>
                     {% if user.is_superuser %}

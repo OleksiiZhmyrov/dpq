@@ -841,6 +841,7 @@ def retro_board_modify_sticker(request):
             sticker.type = sticker_type
 
         sticker.is_completed = is_completed
+        sticker.status_code = (0, 2)[is_completed]
 
         sticker.save()
 

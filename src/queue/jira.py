@@ -127,6 +127,7 @@ class JiraIssue(object):
 
         self.key = raw_data.key
         self.summary = raw_data.summary
+        self.status = self.__get_status_str__(raw_data.status)
         self.description = raw_data.description
         self.assignee = str(raw_data.assignee).replace('_', ' ')
         self.reporter = str(raw_data.reporter).replace('_', ' ')
@@ -174,3 +175,16 @@ class JiraIssue(object):
         if custom_fields_dict:
             value = custom_fields_dict.get(name, None)
         return value
+
+    @staticmethod
+    def __get_status_str__(code):
+        if code == "3":
+            return "in progress"
+        elif code == "10305":
+            return "defined"
+        elif code == "10117":
+            return "completed"
+        elif code == "10031":
+            return "accepted"
+        else:
+            return "unknown status code {code}".format(code=code)

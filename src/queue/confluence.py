@@ -1,12 +1,13 @@
 import SOAPpy
 from bs4 import BeautifulSoup
+from queue.dpq_util import JiraUtil
 from queue.models import ConfluenceSettings, DeskCheckStatistic
-from jira import *
-from utils import log_info
+from time import gmtime, strftime
+
+from logger import LOGGER
 
 confluence_settings = ConfluenceSettings.objects.all()[0]
 soap = SOAPpy.WSDL.Proxy(confluence_settings.url)
-
 
 
 def store_statistics():
@@ -54,11 +55,10 @@ def __parse_html_to_data_sets(html):
 
 def __get_array_of_table_rows_from_data_sets(data_sets):
     lines = []
-    auth = get_auth()
     for item in data_sets:
         record = TableRecord(item)
         try:
-            record.sp = int(JIRAStory(record.story_number, 0, auth).points)
+            record.sp = int(JiraUtil.get_issues([record.story_number])[0].points)
         except AttributeError:
             record.sp = 0
         lines.append(record)
@@ -83,7 +83,7 @@ def __save_statistics_to_database(lines):
             total_sp += item.sp
         except TypeError:
             skip = True
-            log_info('Story {key} is not estimated'.format(key=item.story_number))
+            LOGGER.info('Story {key} is not estimated'.format(key=item.story_number))
         if item.status == 'Pass':
             passed.append(item)
             if not skip:
@@ -140,4 +140,37 @@ def __save_statistics_to_database(lines):
     db_item.save()
 
 
+def update_sprint_goals():
+    page_name = confluence_settings.SvG_page_title
+    page = __get_page_from_confluence(page_name)
+    soup = BeautifulSoup(page.content)
 
+    keys = []
+    for item in soup.findAll("tr")[1:]:
+        keys.append(item.findAll("td")[-2:][0].find("a").text)
+
+    jira_sp_array = {}
+    for story in JiraUtil.get_issues(keys):
+        jira_sp_array[story.key] = story.status
+        LOGGER.info("{key}: {status}".format(key=story.key, status=story.status))
+
+    for item in soup.findAll("tr")[1:]:
+        key = item.findAll("td")[-2:][0].find("a").text
+        status = jira_sp_array[key]
+        tag = BeautifulSoup('<td>{status}</td>'.format(status=status))
+        item.findAll("td")[-2:][-1].replace_with(tag)
+
+    update_message = "Page automatically updated by {login} on {datetime}<br\>"\
+        .format(login=confluence_settings.login, datetime=strftime("%Y-%m-%d %H:%M:%S %z", gmtime()))
+
+    npage = {}
+    npage["content"] = update_message + str(soup.find("table"))
+    npage["space"] = page["space"]
+    npage["title"] = page["title"]
+    npage["id"] = SOAPpy.Types.longType(long(page["id"]))
+    npage["version"] = SOAPpy.Types.intType(int(page["version"]))
+    npage["parentId"] = SOAPpy.Types.longType(long(page["parentId"]))
+
+    auth = soap.login(confluence_settings.login, confluence_settings.password)
+    npage = soap.storePage(auth, npage)
+    LOGGER.info(str(npage))

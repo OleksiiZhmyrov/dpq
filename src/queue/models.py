@@ -201,6 +201,7 @@ class ConfluenceSettings(models.Model):
     url = models.CharField('URL', max_length=128, null=True, blank=True)
     namespace = models.CharField('Namespace', max_length=32, null=True, blank=True)
     page_title = models.CharField('Page title', max_length=64, null=True, blank=True)
+    SvG_page_title = models.CharField('Stories vs Goals Page title', max_length=64, null=True, blank=True)
 
     def __unicode__(self):
         return '{namespace}: {page_title}'.format(namespace=self.namespace, page_title=self.page_title)

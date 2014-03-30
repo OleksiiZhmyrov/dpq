@@ -15,6 +15,7 @@ TESTER = jira_settings.custom_field_tester
 DESK_CHECK = jira_settings.custom_field_desk_check
 TEAM = jira_settings.custom_field_team
 ESTIMATION_DATE = jira_settings.custom_field_estimation_date
+ONSHORE_BA = jira_settings.custom_field_onshore_ba
 
 
 class AdvancedSearchRequest():
@@ -135,6 +136,11 @@ class JiraIssue(object):
         self.tester = str(self.__get_custom_field_value__(custom_fields, TESTER)).replace('_', ' ')
         self.story_points = self.__get_custom_field_value__(custom_fields, STORY_POINTS)
         self.team = self.__get_custom_field_value__(custom_fields, TEAM)
+
+        self.onshore_ba = self.__get_custom_field_value__(custom_fields, ONSHORE_BA)
+        if self.onshore_ba:
+            self.onshore_ba = self.onshore_ba.replace('_', ' ')
+
         self.desk_check = (False, True)[self.__get_custom_field_value__(custom_fields, DESK_CHECK) == 'Yes']
 
         estimation_date = self.__get_custom_field_value__(custom_fields, ESTIMATION_DATE)

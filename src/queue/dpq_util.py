@@ -69,7 +69,7 @@ class ConfluenceDeskCheckUtil(object):
         ConfluenceDeskCheckUtil.save_tabe_records_to_database(table_records)
 
     @staticmethod
-    def save_tabe_records_to_database(table_records):
+    def save_table_records_to_database(table_records):
         all_items = table_records
         passed = []
         ready = []
@@ -82,28 +82,32 @@ class ConfluenceDeskCheckUtil(object):
         other_sp = 0
 
         for item in all_items:
+            if item.story_points:
+                item.story_points = int(item.story_points)
+            else:
+                item.story_points = 0
             skip = False
             try:
-                total_sp += item.sp
+                total_sp += item.story_points
             except TypeError:
                 skip = True
-                LOGGER.info('Story {key} is not estimated'.format(key=item.story_number))
-            if item.status == 'Pass':
+                LOGGER.info('Story {key} is not estimated'.format(key=item.key))
+            if item.desk_check_status == 'Pass':
                 passed.append(item)
                 if not skip:
-                    passed_sp += item.sp
-            elif item.status == 'Ready':
+                    passed_sp += item.story_points
+            elif item.desk_check_status == 'Ready':
                 ready.append(item)
                 if not skip:
-                    ready_sp += item.sp
-            elif item.status == 'Failed':
+                    ready_sp += item.story_points
+            elif item.desk_check_status == 'Failed':
                 failed.append(item)
                 if not skip:
-                    failed_sp += item.sp
+                    failed_sp += item.story_points
             else:
                 other.append(item)
                 if not skip:
-                    other_sp += item.sp
+                    other_sp += item.story_points
 
         total = len(all_items)
 
@@ -209,6 +213,8 @@ class JiraUtil(object):
         search_request = AdvancedSearchRequest(request)
         search_request.request()
         response = search_request.get_response()
+
+        LOGGER.info(response[-1])
 
         return JiraUtil.__raw_data_to_issues_list__(response)
 

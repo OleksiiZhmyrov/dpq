@@ -15,7 +15,7 @@ CONFLUENCE_WSDL_URL = confluence_settings.url
 CONFLUENCE_USERNAME = confluence_settings.login
 CONFLUENCE_PASSWORD = confluence_settings.password
 CONFLUENCE_NAMESPACE = confluence_settings.namespace
-CONFLUENCE_PAGE_TITLE = confluence_settings.page_title
+CONFLUENCE_PAGE_TITLE = confluence_settings.SvG_page_title
 
 
 def get_jira_client(logger):

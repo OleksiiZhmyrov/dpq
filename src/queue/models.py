@@ -200,11 +200,10 @@ class ConfluenceSettings(models.Model):
     password = models.CharField('Password', max_length=64, null=True, blank=True)
     url = models.CharField('URL', max_length=128, null=True, blank=True)
     namespace = models.CharField('Namespace', max_length=32, null=True, blank=True)
-    page_title = models.CharField('Page title', max_length=64, null=True, blank=True)
     SvG_page_title = models.CharField('Stories vs Goals Page title', max_length=64, null=True, blank=True)
 
     def __unicode__(self):
-        return '{namespace}: {page_title}'.format(namespace=self.namespace, page_title=self.page_title)
+        return '{namespace}: {page_title}'.format(namespace=self.namespace, page_title=self.SvG_page_title)
 
 
 class JiraSettings(models.Model):
@@ -222,6 +221,7 @@ class JiraSettings(models.Model):
     custom_field_team = models.CharField('Custom field: team', null=True, max_length=32, default='')
     custom_field_estimation_date = models.CharField('Custom field: est. date', null=True, max_length=32, default='')
     custom_field_desk_check = models.CharField('Custom field: is desk check', null=True, max_length=32, default='')
+    custom_field_onshore_ba = models.CharField('Custom field: onshore BA', null=True, max_length=32, default='')
 
     def __unicode__(self):
         return 'Jira settings: {login}'.format(login=self.login)

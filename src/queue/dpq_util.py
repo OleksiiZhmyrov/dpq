@@ -62,13 +62,6 @@ class ConfluenceDeskCheckUtil(object):
         }
 
     @staticmethod
-    def save_statistics():
-        html = ConfluenceDeskCheckUtil.get_confluence_page_content()
-        data_sets = ConfluenceDeskCheckUtil.html_to_data_sets(html)
-        table_records = ConfluenceDeskCheckUtil.data_sets_to_table_records(data_sets)
-        ConfluenceDeskCheckUtil.save_tabe_records_to_database(table_records)
-
-    @staticmethod
     def save_table_records_to_database(table_records):
         all_items = table_records
         passed = []

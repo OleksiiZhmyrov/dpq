@@ -2,10 +2,8 @@ from datetime import timedelta
 from exceptions import TypeError
 from json import loads, dumps
 from uuid import uuid1
-from django.views.decorators.csrf import csrf_exempt
-from logger import LOGGER
-from dpq_util import CanbanCardsUtil
 
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.auth import logout
 from django.contrib.auth.decorators import login_required
@@ -13,12 +11,16 @@ from django.core.paginator import EmptyPage, PageNotAnInteger
 from django.http import HttpResponse
 from django.shortcuts import render_to_response, redirect
 from django.template import RequestContext
-
-from queue.forms import *
 from django.db.models import Q, Count
+
+from logger import LOGGER
+from dpq_util import CanbanCardsUtil
+from queue.confluence import update_sprint_goals
+from queue.forms import *
 from queue.paginators import DiggPaginator
 from queue.utils import *
 from queue.dpq_util import JiraUtil, ConfluenceDeskCheckUtil
+
 
 jira_settings = JiraSettings.objects.all()[0]
 
@@ -917,8 +919,7 @@ def ci_display_outdated_stories(request):
 
 @csrf_exempt
 def ci_sync_desk_check_data(request):
-    JiraUtil.store_outdated_issues()
-    ConfluenceDeskCheckUtil.save_statistics()
+    update_sprint_goals()
     return HttpResponse("OK")
 
 

@@ -37,11 +37,11 @@ def update_sprint_goals():
         line = item.findAll("td")[-9:]
 
         if story.status == 'in progress':
-            status = BeautifulSoup('<td><span style="color: rgb(255,0,0);">{status}</span></td>'.format(status=story.status))
+            status = BeautifulSoup('<td><span style="color: rgb(255,128,0);"><b>{status}</b></span></td>'.format(status=story.status))
         elif story.status == 'completed':
             status = BeautifulSoup('<td><span style="color: rgb(0,0,255);">{status}</span></td>'.format(status=story.status))
         elif story.status == 'accepted':
-            status = BeautifulSoup('<td><span style="color: rgb(153,204,0);">{status}</span></td>'.format(status=story.status))
+            status = BeautifulSoup('<td><span style="color: rgb(153,204,0);"><b>{status}</b></span></td>'.format(status=story.status))
         else:
             status = BeautifulSoup('<td>{status}</td>'.format(status=story.status))
         line[-8].replace_with(status)

@@ -214,8 +214,6 @@ class JiraUtil(object):
         search_request.request()
         response = search_request.get_response()
 
-        LOGGER.info(response[-1])
-
         return JiraUtil.__raw_data_to_issues_list__(response)
 
     @staticmethod

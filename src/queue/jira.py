@@ -150,6 +150,8 @@ class JiraIssue(object):
                 self.estimation_date = datetime.fromtimestamp(mktime(time_struct))
             except TypeError:
                 LOGGER.warn('Issue {key} does not have valid estimation date'.format(key=self.key))
+        else:
+            self.estimation_date = None
 
         epic_name = self.__get_custom_field_value__(custom_fields, EPIC_NAME)
         self.epic_key = epic_name

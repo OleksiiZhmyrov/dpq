@@ -24,7 +24,6 @@ def update_sprint_goals():
 
     keys = []
     for item in soup.findAll("tr")[1:]:
-        LOGGER.info(item.findAll("td")[-9:][0])
         if item.findAll("td")[-9:][0].find("a"):
             keys.append(item.findAll("td")[-9:][0].find("a").text)
 

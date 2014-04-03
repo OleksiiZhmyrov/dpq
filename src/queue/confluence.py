@@ -24,26 +24,34 @@ def update_sprint_goals():
 
     keys = []
     for item in soup.findAll("tr")[1:]:
-        keys.append(item.findAll("td")[-9:][0].find("a").text)
+        LOGGER.info(item.findAll("td")[-9:][0])
+        if item.findAll("td")[-9:][0].find("a"):
+            keys.append(item.findAll("td")[-9:][0].find("a").text)
 
     stories = {}
     for story in JiraUtil.get_issues(keys):
         stories[story.key] = story
 
     for item in soup.findAll("tr")[1:]:
+
+        if not item.findAll("td")[-9:][0].find("a"):
+            continue
+
         key = item.findAll("td")[-9:][0].find("a").text
         story = stories[key]
 
         line = item.findAll("td")[-9:]
 
         if story.status == 'in progress':
-            status = BeautifulSoup('<td><span style="color: rgb(255,128,0);"><b>{status}</b></span></td>'.format(status=story.status))
+            status = BeautifulSoup('<td><span style="color: rgb(255,128,0);"><b>In Progress</b></span></td>')
         elif story.status == 'completed':
-            status = BeautifulSoup('<td><span style="color: rgb(0,0,255);">{status}</span></td>'.format(status=story.status))
+            status = BeautifulSoup('<td><span style="color: rgb(0,0,255);">Completed</span></td>')
         elif story.status == 'accepted':
-            status = BeautifulSoup('<td><span style="color: rgb(153,204,0);"><b>{status}</b></span></td>'.format(status=story.status))
+            status = BeautifulSoup('<td><span style="color: rgb(153,204,0);"><b>Accepted</b></span></td>')
+        elif story.status == 'unknown status code 10304':
+            status = BeautifulSoup('<td><span style="color: rgb(255,0,0);"><b>Undefined</b></span></td>')
         else:
-            status = BeautifulSoup('<td>{status}</td>'.format(status=story.status))
+            status = BeautifulSoup('<td>{status}</td>'.format(status=story.status.capitalize()))
         line[-8].replace_with(status)
 
         if story.desk_check:

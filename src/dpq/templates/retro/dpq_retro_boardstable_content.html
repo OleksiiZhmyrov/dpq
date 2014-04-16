@@ -10,8 +10,9 @@
     <table class="table table-hover table-stripped">
         <thead>
             <tr>
-                <th>Sprint</th>
                 <th>Team</th>
+                <th>Description</th>
+                <th>Number</th>
                 <th>Creation date</th>
                 <th>Vote limit</th>
                 <th>Status</th>
@@ -23,8 +24,9 @@
             {% for item in page %}
                 <tr{% if item.is_active %} class="success"{% endif %}
                         onclick="navigate('/retro/{{ item.sprint.number }}/{{ item.team.name }}/')">
-                    <td>Sprint {{ item.sprint.number }}</td>
                     <td>{{ item.team.name }}</td>
+                    <td>{{ item.sprint.description }}</td>
+                    <td>{{ item.sprint.number }}</td>
                     <td>{{ item.creation_date|date:"d.m.Y" }}</td>
                     <td>{{ item.vote_limit }}</td>
                     <td>{% if item.is_active %}voting in progress{% else %}voting closed{% endif %}</td>

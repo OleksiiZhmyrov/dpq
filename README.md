@@ -1,3 +1,5 @@
+This project is discontinued and remains here as a history of professional growth of author.
+
 # Django Push Queue Application
 
 This application requires Django 1.4 to run.
